@@ -11,7 +11,10 @@ export default withAuth(
         }
 
         if (pathname.includes("/me")) {
-          return searchParams.get("email") === token?.email
+          const email = searchParams.get("email")
+          // fix for #107
+          if (email == null) return true;
+          return email === token?.email;
         }
 
         // otherwise, if you were allowed to login, you're good.

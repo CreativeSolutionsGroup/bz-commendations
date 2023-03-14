@@ -13,7 +13,7 @@ export default withAuth(
         if (pathname.includes("/me")) {
           const email = searchParams.get("email")
           // fix for #107
-          if (!email) return true;
+          if (email == null) return true;
           return email === token?.email;
         }
 

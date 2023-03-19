@@ -3,7 +3,6 @@ import { grey } from "@mui/material/colors";
 import { Raleway } from "@next/font/google";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
-import Head from "next/head";
 import { readUserCommendations } from "../lib/api/commendations";
 import { authOptions } from "./api/auth/[...nextauth]";
 import Image from "next/image";

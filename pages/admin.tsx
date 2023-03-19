@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
-import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
 import bz from "../assets/BZ-letters.png"

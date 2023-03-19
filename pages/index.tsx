@@ -1,6 +1,5 @@
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { getServerSession } from 'next-auth';
-import Head from 'next/head';
 import CommendationForm from "../components/CommendationForm";
 import { readAllMembers } from '../lib/api/commendations';
 import { authOptions } from './api/auth/[...nextauth]';

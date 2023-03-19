@@ -4,6 +4,9 @@ import { Header } from "./Header";
 
 import { Roboto } from '@next/font/google'
 import theme from "../config/theme";
+import Head from "next/head";
+import Link from "next/link";
+import favicon from "../assets/favicon.ico"
 
 const roboto = Roboto({ weight: ["400", "700"], subsets: ["latin"] });
 

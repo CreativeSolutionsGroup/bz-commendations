@@ -1,6 +1,6 @@
-import '../styles/globals.css'
+import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
-import { Layout } from '../components/Layout'
+import { Layout } from '@/components/Layout'
 import { SessionProvider } from 'next-auth/react'
 import { EmotionCache } from '@emotion/react';
 

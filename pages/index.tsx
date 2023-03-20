@@ -1,7 +1,7 @@
 import { InferGetStaticPropsType } from 'next';
-import { getServerSession } from 'next-auth';
-import CommendationForm from "../components/CommendationForm";
-import { readAllMembers } from '../lib/api/commendations';
+import { readAllMembers } from '@/lib/api/commendations';
+import CommendationForm from '@/components/CommendationForm';
+import IndexAbsoluteElements from '@/components/IndexAbsoluteElements';
 
 export async function getStaticProps() {
   const members = await readAllMembers();
@@ -18,6 +18,8 @@ export default function Home({ members }: InferGetStaticPropsType<typeof getStat
       <main>
         <CommendationForm members={members} />
       </main>
+
+      <IndexAbsoluteElements />
     </>
   )
 }

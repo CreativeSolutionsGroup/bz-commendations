@@ -1,11 +1,11 @@
+import { prisma } from "@/lib/api/db";
 import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { Raleway } from "@next/font/google";
-import { GetStaticPropsContext } from "next";
+import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { readUserCommendations } from "../../lib/api/commendations";
-import { prisma } from "../../lib/api/db";
 
 export async function getStaticPaths() {
   const users = await prisma.member.findMany();

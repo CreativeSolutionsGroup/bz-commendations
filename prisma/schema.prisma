@@ -25,19 +25,29 @@ model Member {
   imageURL          String?
   commendations     Commendation[] @relation("recipient")
   sentCommendations Commendation[] @relation("sender")
+  TeamLeaders       TeamLeaders[]
   roles             Role[]         @relation("MemberToRole")
   team              Team[]         @relation("MemberToTeam")
 }
 
 model Team {
-  id       String   @id @default(uuid())
-  name     String
-  imageURL String?
-  members  Member[] @relation("MemberToTeam")
+  id          String        @id @default(uuid())
+  name        String
+  imageURL    String?
+  TeamLeaders TeamLeaders[]
+  members     Member[]      @relation("MemberToTeam")
 }
 
 model Role {
   id      String   @id @default(uuid())
   name    String
   members Member[] @relation("MemberToRole")
+}
+
+model TeamLeaders {
+  id       String @id
+  memberId String
+  teamId   String
+  Member   Member @relation(fields: [memberId], references: [id])
+  Team     Team   @relation(fields: [teamId], references: [id])
 }

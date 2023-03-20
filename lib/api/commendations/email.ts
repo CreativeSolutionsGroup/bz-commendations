@@ -3,7 +3,7 @@ import { SendEmailCommandInput } from "@aws-sdk/client-ses/dist-types/commands";
 
 const client = new SES({ region: "us-east-2" });
 
-export const send_bz_email = async (senderEmail: string, recipientEmail: string, senderName: string, message: string) => {
+export const sendBzEmail = async (senderEmail: string, recipientEmail: string, senderName: string, message: string) => {
     const params: SendEmailCommandInput = {
         Source: "test@bz-cedarville.com",
         Destination: {
@@ -43,4 +43,6 @@ export const send_bz_email = async (senderEmail: string, recipientEmail: string,
 
     const command = new SendEmailCommand(params);
     const response = await client.send(command);
+
+    return response;
 }

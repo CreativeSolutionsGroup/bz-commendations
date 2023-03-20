@@ -1,8 +1,8 @@
 import * as React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import createEmotionServer from '@emotion/server/create-instance';
-import createEmotionCache from '../config/createEmotionCache';
-import theme from '../config/theme';
+import createEmotionCache from '@/config/createEmotionCache';
+import theme from '@/config/theme';
 
 // This is from the https://github.com/mui/material-ui/tree/master/examples/material-next-ts/pages
 export default class MyDocument extends Document {

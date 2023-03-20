@@ -1,18 +1,18 @@
-import { Button, Fab, TextField, Typography, MenuItem, Stack, Avatar, Paper, Autocomplete } from "@mui/material"
+import { Button, Fab, TextField, Typography, MenuItem, Stack, Avatar, Paper, Autocomplete, Snackbar, Alert } from "@mui/material"
 import { Box } from "@mui/system"
-import { useState } from "react"
+import { SyntheticEvent, useState } from "react"
 import { Member, Team } from "@prisma/client";
 import SendIcon from "@mui/icons-material/Send"
-import GroupsIcon from '@mui/icons-material/Groups';
 import { Raleway } from "@next/font/google";
 import Image from "next/image";
-import bz from "../assets/bz-logo.png"
+import bz from "@/assets/bz-logo.png"
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
 export default ({ members }: { members: Array<Member & { team: Array<Team> }> }) => {
   const [sending, setSending] = useState(false);
   const [memberData, setToMember] = useState("");
+
 
   return (
     <Paper sx={{ mt: 4, mx: "auto", maxWidth: "30rem", p: 2 }}>
@@ -46,9 +46,6 @@ export default ({ members }: { members: Array<Member & { team: Array<Team> }> })
           </Button>
         </Stack>
       </form>
-      <Fab color="secondary" aria-label="teams" sx={{ position: "absolute", bottom: 16, right: 16 }}>
-        <GroupsIcon />
-      </Fab>
     </Paper>
   )
 }

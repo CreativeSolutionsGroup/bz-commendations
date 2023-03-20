@@ -6,7 +6,7 @@ const apiSecret = process.env.TWILIO_SECRET;
 
 const client = twilio(apiKey, apiSecret, { accountSid });
 
-export const send_bz_text = async (recipientNumber: string, senderName: string, message: string) => {
+export const sendBzText = async (recipientNumber: string, senderName: string, message: string) => {
     let messageSplit = message.split(" ");
     await client.messages.create({
         body: "You received a BZ Commendation!\n\n" + 

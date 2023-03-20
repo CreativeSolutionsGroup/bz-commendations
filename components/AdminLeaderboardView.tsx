@@ -24,7 +24,7 @@ export default ({ sendingUsers, receivingUsers }: {
         <Typography fontWeight={700} textAlign={"center"}>Sent</Typography>
         {
           sendingUsers.map((currentPerson) => (
-            <Paper sx={{ margin: 1, padding: 1, display: "flex" }} >
+            <Paper key={currentPerson.id} sx={{ margin: 1, padding: 1, display: "flex" }} >
               <Image src={currentPerson.imageURL ?? "https://via.placeholder.com/50?text="} alt={"User image"} width={50} height={50} style={{ borderRadius: "100%" }}></Image>
               <Typography ml={2} my={"auto"} fontSize={20} fontWeight={700} flexGrow={1}>{currentPerson.name}</Typography>
               <Box my={"auto"} mr={2} textAlign={"center"} sx={{ backgroundColor: "#005288", borderRadius: "100%" }} color={"white"} height={35} width={35} display={"flex"} flexDirection={"column"}>
@@ -38,7 +38,7 @@ export default ({ sendingUsers, receivingUsers }: {
         <Typography fontWeight={700} textAlign={"center"}>Received</Typography>
         {
           receivingUsers.map((currentPerson) => (
-            <Paper sx={{ margin: 1, padding: 1, display: "flex" }} >
+            <Paper key={currentPerson.id} sx={{ margin: 1, padding: 1, display: "flex" }} >
               <Image src={currentPerson.imageURL ?? "https://via.placeholder.com/50?text="} alt={"User image"} width={50} height={50} style={{ borderRadius: "100%" }}></Image>
               <Typography ml={2} my={"auto"} fontSize={20} fontWeight={700} flexGrow={1}>{currentPerson.name}</Typography>
               <Box my={"auto"} mr={2} textAlign={"center"} sx={{ backgroundColor: "#005288", borderRadius: "100%" }} color={"white"} height={35} width={35} display={"flex"} flexDirection={"column"}>

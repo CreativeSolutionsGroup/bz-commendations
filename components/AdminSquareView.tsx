@@ -2,8 +2,8 @@ import { Group, MoveToInbox, Send } from "@mui/icons-material";
 import { Box, Card, Typography } from "@mui/material";
 import { Member, Team } from "@prisma/client";
 import Image from "next/image";
-import solid from "../assets/BZ-letters-solid.png";
-import bz from "../assets/BZ-letters.png";
+import solid from "@/assets/BZ-letters-solid.png";
+import bz from "@/assets/BZ-letters.png";
 
 
 type TeamsList = (Team & {
@@ -21,7 +21,7 @@ export default ({ teams, commendationsSent, commendationsReceived }: { teams: Te
   return (<Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={10}>
     {
       teams.map((currentTeam, currentIndex) =>
-        <Card sx={{ height: 320, flexGrow: 1, marginX: 4, marginTop: 3, width: 250 }}>
+        <Card key={currentIndex} sx={{ height: 320, flexGrow: 1, marginX: 4, marginTop: 3, width: 250 }}>
           <Box position={"relative"} height={"60%"} marginRight={2.5}>
             <Image placeholder="blur" blurDataURL={solid.src} sizes="(max-width: 350px) 16vw" src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain", margin: 10 }} fill />
           </Box>

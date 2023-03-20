@@ -1,4 +1,4 @@
-import { prisma } from "../db";
+import { prisma } from "@/lib/api/db";
 
 export const getTeams = async () => {
     return await prisma

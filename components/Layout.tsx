@@ -1,9 +1,8 @@
 import { ThemeProvider } from "@mui/material/styles";
 import { PropsWithChildren } from "react"
-import { Header } from "./Header";
-
 import { Roboto } from '@next/font/google'
-import theme from "../config/theme";
+import theme from "@/config/theme";
+import { Header } from "./Header";
 
 const roboto = Roboto({ weight: ["400", "700"], subsets: ["latin"] });
 

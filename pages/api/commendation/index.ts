@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
-import { createCommendation, emailToId, idToEmail, idToName, idToPhoneNumber, readAllCommendations, send_bz_email, send_bz_text, updateMemberImageURL } from "../../../lib/api/commendations";
+import { createCommendation, emailToId, idToEmail, idToName, idToPhoneNumber, readAllCommendations, send_bz_email, send_bz_text, updateMemberImageURL, getMemberTeamLeaders, getMemberWithTeams } from "../../../lib/api/commendations";
 import { revalidate } from "../../../lib/revalidate";
 import { authOptions } from "../auth/[...nextauth]";
 
@@ -20,7 +20,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const sender = await emailToId((session?.user?.email) as string);
       const recipient = req.body.recipient as string;
       const msg = req.body.msg as string;
-      const recipientEmail = await idToEmail(recipient);
+      const recipientObject = await getMemberWithTeams(recipient);
+      const recipientEmail = recipientObject?.email ?? "";
+      const teams = recipientObject?.teams.map(t => t.id);
 
       if (sender == null || session?.user?.email === recipientEmail) {
         console.log("Error: Bad email");
@@ -36,6 +38,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const update = await updateMemberImageURL(session?.user?.image as string, sender as string)
       const commendation = await createCommendation(sender as string, recipient, msg);
+      const teamLeaders = await getMemberTeamLeaders(teams ?? []);
+      const teamLeadersEmails = teamLeaders.flatMap(l => l.teams.flatMap(t => t.TeamLeaders.map(tl => tl.Member.email)))
+      console.log(teamLeadersEmails);
+      
       send_bz_email(session?.user?.email as string, recipientEmail, session?.user?.name as string, msg);
       send_bz_text(await idToPhoneNumber(recipient), session?.user?.name as string, msg);
       await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);

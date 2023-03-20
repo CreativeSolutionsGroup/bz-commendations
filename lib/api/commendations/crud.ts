@@ -78,7 +78,7 @@ export const readAllMembers = async (currentUserEmail = "") => {
       }
     },
     include: {
-      team: true
+      teams: true
     },
     orderBy: {
       name: "asc"
@@ -117,4 +117,39 @@ export const readUserCommendations = async (email: string) => {
     }
   });
   return user?.commendations;
+}
+
+export const getMemberTeamLeaders = async (teams: string[]) => {
+  return await prisma.member.findMany({
+    where: {
+      teams: {
+        some: {
+          id: { in: teams }
+        }
+      }
+    },
+    include: {
+      teams: {
+        include: {
+          TeamLeaders: {
+            distinct: "id",
+            include: {
+              Member: true
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+export const getMemberWithTeams = async (id: string) => {
+  return await prisma.member.findFirst({
+    where: {
+      id
+    },
+    include: {
+      teams: true
+    }
+  })
 }

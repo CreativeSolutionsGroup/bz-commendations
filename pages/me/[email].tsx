@@ -1,23 +1,46 @@
 import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { Raleway } from "@next/font/google";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import { getServerSession } from "next-auth";
-import { readUserCommendations } from "../lib/api/commendations";
-import { authOptions } from "./api/auth/[...nextauth]";
+import { GetStaticPropsContext } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { readUserCommendations } from "../../lib/api/commendations";
+import { prisma } from "../../lib/api/db";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  const comms = await readUserCommendations(session!.user!.email!);
+export async function getStaticPaths() {
+  const users = await prisma.member.findMany();
+
   return {
-    props: { comms }
+    paths: users.map(u => ({
+      params: {
+        email: u.email
+      }
+    })),
+    fallback: true
+  }
+}
+
+export async function getStaticProps({ params }: GetStaticPropsContext) {
+  if (!params) throw new Error("No path parameters found");
+  const comms = await readUserCommendations(params?.email as string ?? "");
+
+  if (!comms) return { notFound: true, revalidate: 10 };
+
+  return {
+    props: { comms },
+    revalidate: 3600
   }
 }
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
-export default function MyCommendations({ comms }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function MyCommendations({ comms }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <>
       <main>

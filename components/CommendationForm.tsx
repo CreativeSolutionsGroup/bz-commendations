@@ -30,7 +30,7 @@ export default ({ members }: { members: Array<Member & { team: Array<Team> }> })
                   </Avatar>
                   <Typography ml={1.5} mt={1}>{member.name}</Typography>
                   <Box flexGrow={1}></Box>
-                  <Typography mt={1.5} variant="caption" color="CaptionText" align="right" maxWidth='10rem' overflow="hidden">
+                  <Typography mt={1.5} variant="caption" color="GrayText" align="right" maxWidth='10rem' overflow="hidden">
                     {member.team.map((team) => team.name).join(", ")}
                   </Typography>
                 </Box>

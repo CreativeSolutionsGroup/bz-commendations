@@ -1,28 +1,18 @@
-import { ArrowRight, Group, MoveToInbox, Send, Settings } from "@mui/icons-material";
-import GridViewIcon from "@mui/icons-material/GridView";
+import { ArrowRight, EmojiEvents, GridView, Settings } from "@mui/icons-material";
 import { Card, IconButton, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
+import { InferGetStaticPropsType,  } from "next";
+import Head from "next/head";
 import { useState } from "react";
-import bz from "../assets/BZ-letters.png"
-import solid from "../assets/BZ-letters-solid.png"
+import AdminLeaderboardView from "../components/AdminLeaderboardView";
+import AdminSquareView from "../components/AdminSquareView";
+import { getMembersWithReceivedCommendations, getMembersWithSentCommendations } from "../lib/api/members";
 import { getLastMonthCommendations, getTeams, getThisMonthCommendations } from "../lib/api/teams";
-import { authOptions } from "./api/auth/[...nextauth]";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  let session = await getServerSession(context.req, context.res, authOptions);
-  if (!session?.isAdmin) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/"
-      }
-    }
-  }
-
+export async function getStaticProps() {
   const teams = await getTeams();
 
   // Reduce all teams from an array of teams to an array of # of commendations sent PER team.
@@ -49,11 +39,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const lastMonthCommendations = await getLastMonthCommendations();
   const thisMonthCommendations = await getThisMonthCommendations();
 
-  return { props: { teams, commendationsReceived, commendationsSent, lastMonthCommendations, thisMonthCommendations } };
+  const sending = await getMembersWithSentCommendations();
+  const receiving = await getMembersWithReceivedCommendations();
+
+  return { props: { teams, sending, receiving, commendationsReceived, commendationsSent, lastMonthCommendations, thisMonthCommendations } };
 }
 
-export default function Admin({ teams, commendationsReceived, commendationsSent, lastMonthCommendations, thisMonthCommendations }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-
+export default function Admin({ teams, sending, receiving, commendationsReceived, commendationsSent, lastMonthCommendations, thisMonthCommendations }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [viewMode, setViewMode] = useState("square");
   const [sortMode, setSortMode] = useState("atoz");
 
@@ -65,8 +57,14 @@ export default function Admin({ teams, commendationsReceived, commendationsSent,
           <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => setViewMode(e.target.value)}>
             <MenuItem key={1} value={"square"}>
               <Box display={"flex"} flexDirection={"row"}>
-                <GridViewIcon></GridViewIcon>
+                <GridView />
                 <Typography ml={1} fontWeight="bold">Square View</Typography>
+              </Box>
+            </MenuItem>
+            <MenuItem key={2} value={"leaderboard"}>
+              <Box display={"flex"} flexDirection={"row"}>
+                <EmojiEvents />
+                <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
               </Box>
             </MenuItem>
           </Select>
@@ -90,34 +88,10 @@ export default function Admin({ teams, commendationsReceived, commendationsSent,
             <Settings sx={{ marginY: "auto", marginX: 2 }}></Settings>
           </IconButton>
         </Box>
-        <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={10}>
-          {
-            teams.map((currentTeam, currentIndex) =>
-              <Card sx={{ height: 320, flexGrow: 1, marginX: 4, marginTop: 3, width: 250 }}>
-                <Box position={"relative"} height={"60%"} marginRight={2.5}>
-                  <Image placeholder="blur" blurDataURL={solid.src} sizes="(max-width: 350px) 16vw" src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain", margin: 10 }} fill />
-                </Box>
-                <Typography textAlign={"center"} fontSize={20} mt={3}>{currentTeam.name}</Typography>
-                <Box display={"flex"} mt={2}>
-                  <Box flexGrow={1} />
-                  <Box sx={{ borderRadius: 5, backgroundColor: "#005288", paddingY: 1, paddingX: 2, marginRight: 1, color: "white" }} display={"flex"}>
-                    <Group />
-                    <Typography ml={1} textAlign={"right"}>{currentTeam.members.length}</Typography>
-                  </Box>
-                  <Box sx={{ borderRadius: 5, backgroundColor: "#005288", paddingY: 1, paddingX: 2, color: "white" }} display={"flex"}>
-                    <Send />
-                    <Typography ml={1} textAlign={"right"}>{commendationsSent[currentIndex]}</Typography>
-                  </Box>
-                  <Box sx={{ borderRadius: 5, backgroundColor: "#005288", paddingY: 1, paddingX: 2, marginLeft: 1, color: "white" }} display={"flex"}>
-                    <MoveToInbox />
-                    <Typography ml={1} textAlign={"right"}>{commendationsReceived[currentIndex]}</Typography>
-                  </Box>
-                  <Box flexGrow={1}></Box>
-                </Box>
-              </Card>
-            )
-          }
-        </Box>
+        {viewMode === "square" ?
+          <AdminSquareView teams={teams} commendationsReceived={commendationsReceived} commendationsSent={commendationsSent} /> :
+          <AdminLeaderboardView receivingUsers={receiving} sendingUsers={sending} />
+        }
         <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
           <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>Commendations sent last month: {lastMonthCommendations}</Card>
           <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>Commendations sent this month: {thisMonthCommendations}</Card>

@@ -18,7 +18,14 @@ declare module "next-auth" {
    */
   interface Session {
     id_token: unknown,
-    roles: Array<Role>,
+    roles: Array<string>,
+    isAdmin: boolean
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    roles: Array<string>,
     isAdmin: boolean
   }
 }
@@ -41,16 +48,20 @@ export const authOptions: AuthOptions = {
       if (account) {
         token.id_token = account.id_token;
       }
+
+      let member = await prisma.member.findFirst({ where: { email: token.email ?? "" }, include: { roles: true } });
+      // we think that member here is not undefined because `singIn` should have caught anyone not in the database.
+      // token.roles = member!.roles.map(r => r.name);
+      token.isAdmin = member!.roles.find(r => r.name === "admin") != undefined;
+
       return token;
     },
     async session({ session, token }) {
-      let member = await prisma.member.findFirst({ where: { email: token.email ?? "" }, include: { roles: true } });
-
       // Send send the id_token to the client
       session.id_token = token.id_token;
-      // // we think that member here is not undefined because `singIn` should have caught anyone not in the database.
-      session.roles = member!.roles;
-      session.isAdmin = member!.roles.find(r => r.name === "admin") != undefined;
+
+      // session.roles = token.roles;
+      session.isAdmin = token.isAdmin
 
       return session;
     },

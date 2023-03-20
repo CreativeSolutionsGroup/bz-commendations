@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
-import { createCommendation, emailToId, idToEmail, idToPhoneNumber, readAllCommendations, sendBzEmail, sendBzText, updateMemberImageURL } from "@/lib/api/commendations";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { createCommendation, emailToId, idToEmail, idToName, idToPhoneNumber, readAllCommendations, sendBzEmail, sendBzText, updateMemberImageURL } from "../../../lib/api/commendations";
+import { revalidate } from "../../../lib/revalidate";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions);
@@ -36,7 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const commendation = await createCommendation(sender as string, recipient, msg);
       sendBzEmail(session?.user?.email as string, recipientEmail, session?.user?.name as string, msg);
       sendBzText(await idToPhoneNumber(recipient), session?.user?.name as string, msg);
-      res.redirect(307, "/?success=true");
+      await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
+      res.redirect(302, "/");
       break;
   }
 }

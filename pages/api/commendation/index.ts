@@ -39,15 +39,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const teams = recipient.teams.map(t => t.id);
 
       const teamLeaders = await getMemberTeamLeaders(teams);
-      const teamLeadersEmails = teamLeaders.flatMap(l => l.teams.flatMap(t => t.TeamLeaders.map(tl => tl.Member.email)));
+      const teamLeadersEmails = teamLeaders.reduce((curr, l) => {
+        const leads = l.teams.flatMap(t => t.teamLeaders.map(tl => tl.member.email));
+        const rem = leads.filter(l => !curr.includes(l));
+        return [...curr, ...rem];
+      }, [] as Array<string>);
 
       const pImage = (recipient.imageURL == null) && updateMemberImageURL(session?.user?.image as string, sender as string);
+      // log the commendation
       const pCommendation = createCommendation(sender as string, recipientId, msg);      
-      const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail, ...teamLeadersEmails], session?.user?.name as string, msg);
+      // send email to the recip
+      const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg);
+      // send text to the recip
       const pText = (recipient.phone != null) ? sendBzText(recipient.phone, session?.user?.name as string, msg) : null;
+      // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
+      const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
       const pValidate = revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
       try {
-        await Promise.all([pImage, pCommendation, pEmail, pText, pValidate]);
+        await Promise.all([pImage, pCommendation, pEmail, pTeamEmail, pText, pValidate]);
       } catch (e) {
         console.error(`Error creating commendation ${JSON.stringify(e)}`);
         return res.redirect(500, "/?success=false");

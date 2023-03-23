@@ -108,7 +108,6 @@ export const getMemberTeamLeaders = async (teams: string[]) => {
       teams: {
         include: {
           teamLeaders: {
-            distinct: "id",
             include: {
               member: true
             }

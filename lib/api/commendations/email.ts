@@ -8,7 +8,7 @@ export const sendBzEmail = async (
     recipientEmails: string[],
     senderName: string,
     message: string,
-    { isTeam, teamName } = { isTeam: false, teamName: "" }
+    { isTeam } = { isTeam: false }
 ) => {
     const params: SendEmailCommandInput = {
         Source: "test@bz-cedarville.com",
@@ -25,7 +25,7 @@ export const sendBzEmail = async (
                     <img width="500" height="100" src="http://drive.google.com/uc?export=view&id=1hReQjYUGqZXHK_WT1Q7TAhFbx4jVWa4z"/>
                     <div style="margin-top: 20px">
                         <div style="margin-left: 20px">
-                            <h2>${isTeam ? "Your team, " + teamName + " has" : "You have"} received a new commendation!</h2>
+                            <h2>${isTeam ? "Your team has" : "You have"} received a new commendation!</h2>
                         </div>
                         <p style="margin-left: 40px; white-space: pre-line">${message}</p>
                         <div style="margin-left: 20px">

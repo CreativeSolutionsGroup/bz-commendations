@@ -48,6 +48,6 @@ model TeamLeaders {
   id       String @id
   memberId String
   teamId   String
-  Member   Member @relation(fields: [memberId], references: [id])
-  Team     Team   @relation(fields: [teamId], references: [id])
+  member   Member @relation(fields: [memberId], references: [id])
+  team     Team   @relation(fields: [teamId], references: [id])
 }

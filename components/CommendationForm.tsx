@@ -10,9 +10,9 @@ import bz from "@/assets/bz-logo.png"
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
 type TeamListItem = Team & { members: Array<Member> };
-type MemberListItem = Member & { team: Array<Team> };
+type MemberListItem = Member & { teams: Array<Team> };
 
-export default ({ recipients, team }: { recipients: (MemberListItem | TeamListItem)[], team?: boolean }) => {
+export default ({ recipients, teamTab }: { recipients: (MemberListItem | TeamListItem)[], teamTab?: boolean }) => {
   const [sending, setSending] = useState(false);
   const [itemData, setToItem] = useState("");
 
@@ -21,7 +21,7 @@ export default ({ recipients, team }: { recipients: (MemberListItem | TeamListIt
     <Paper sx={{ mt: 4, mx: "auto", maxWidth: "30rem", p: 2 }}>
       <form onSubmit={() => setSending(true)} action="api/commendation" method="POST">
         <Stack spacing={1}>
-          <Typography color="primary" className={raleway.className} fontSize={25} fontWeight={900}>Create Commendation</Typography>
+          <Typography color="primary" className={raleway.className} fontSize={25} fontWeight={900}>Create {teamTab ? "Team" : ""} Commendation</Typography>
           <TextField sx={{ display: "none" }} hidden name="recipient" value={itemData} />
           <Autocomplete
             onChange={(_e, v) => setToItem(v?.id ?? "")}
@@ -36,9 +36,9 @@ export default ({ recipients, team }: { recipients: (MemberListItem | TeamListIt
                     <Image fill src={option.imageURL ?? "https://via.placeholder.com/25?text="} alt="" placeholder="blur" blurDataURL={bz.src} />
                   </Avatar>
                   <Typography ml={1.5} mt={1}>{option.name}</Typography>
-                  {!team ?
-                    <Typography mt={1.5} variant="caption" color="CaptionText" align="right" maxWidth='10rem' overflow="hidden">
-                      {(option as MemberListItem).team.map((team) => team.name).join(", ")}
+                  {!teamTab ?
+                    <Typography mt={1.5} ml="auto" variant="caption" color="CaptionText" align="right" maxWidth='10rem' overflow="hidden">
+                      {(option as MemberListItem).teams.map((team) => team.name).join(", ")}
                     </Typography>
                     : <></>
                   }

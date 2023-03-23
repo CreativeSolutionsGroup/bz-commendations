@@ -21,7 +21,7 @@ export default function TeamCommendation({ teams }: InferGetServerSidePropsType<
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <CommendationForm recipients={teams} team />
+        <CommendationForm recipients={teams} teamTab />
       </main>
     </>
   )

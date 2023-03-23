@@ -38,7 +38,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       sendBzEmail(session?.user?.email as string, recipientEmail, session?.user?.name as string, msg);
       sendBzText(await idToPhoneNumber(recipient), session?.user?.name as string, msg);
       try {
-        console.log(req.headers.host)
         await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
       } catch (e) {
         console.error("Revalidation failed");

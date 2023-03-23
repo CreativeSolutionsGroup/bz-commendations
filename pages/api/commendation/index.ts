@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.json(commendations);
       break;
     case "POST":
-      const sender = await emailToId((session?.user?.email) as string);
+      const sender = await emailToId(session?.user?.email as string);
       const recipient = req.body.recipient as string;
       const msg = req.body.msg as string;
       const recipientEmail = await idToEmail(recipient);
@@ -37,8 +37,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const commendation = await createCommendation(sender as string, recipient, msg);
       sendBzEmail(session?.user?.email as string, recipientEmail, session?.user?.name as string, msg);
       sendBzText(await idToPhoneNumber(recipient), session?.user?.name as string, msg);
-      await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
-      res.redirect(302, "/");
+      try {
+        await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
+      } catch (e) {
+        console.error("Revalidation failed");
+      }
+      res.redirect(302, "/?success=true");
       break;
   }
 }

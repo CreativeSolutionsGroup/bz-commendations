@@ -27,7 +27,7 @@ model Member {
   sentCommendations Commendation[] @relation("sender")
   TeamLeaders       TeamLeaders[]
   roles             Role[]         @relation("MemberToRole")
-  teams              Team[]         @relation("MemberToTeam")
+  teams             Team[]         @relation("MemberToTeam")
 }
 
 model Team {

@@ -9,7 +9,8 @@ import bz from "@/assets/bz-logo.png"
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
-export default ({ members }: { members: Array<Member & { team: Array<Team> }> }) => {
+export default ({ members }: { members: Array<Member & { teams: Array<Team> }> }) => {
+  console.log(members);
   const [sending, setSending] = useState(false);
   const [memberData, setToMember] = useState("");
 
@@ -31,7 +32,7 @@ export default ({ members }: { members: Array<Member & { team: Array<Team> }> })
                   <Typography ml={1.5} mt={1}>{member.name}</Typography>
                   <Box flexGrow={1}></Box>
                   <Typography mt={1.5} variant="caption" color="GrayText" align="right" maxWidth='10rem' overflow="hidden">
-                    {member.team.map((team) => team.name).join(", ")}
+                    {member.teams.map((team) => team.name).join(", ")}
                   </Typography>
                 </Box>
               </MenuItem>}

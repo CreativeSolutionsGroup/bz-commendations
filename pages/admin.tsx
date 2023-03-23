@@ -2,9 +2,7 @@ import { ArrowRight, EmojiEvents, GridView, Settings } from "@mui/icons-material
 import { Card, IconButton, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import { getServerSession } from "next-auth";
-import Image from "next/image";
-import { InferGetStaticPropsType,  } from "next";
+import { InferGetServerSidePropsType, InferGetStaticPropsType, } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import AdminLeaderboardView from "../components/AdminLeaderboardView";
@@ -68,25 +66,7 @@ export default function Admin({ teams, sending, receiving, commendationsReceived
               </Box>
             </MenuItem>
           </Select>
-          <Select label="Sort By" name="sortBy" value={sortMode} onChange={(e: SelectChangeEvent) => setSortMode(e.target.value)} sx={{ marginLeft: 1 }}>
-            <MenuItem key={"atoz"} value={"atoz"}>
-              <Box display={"flex"} flexDirection={"row"}>
-                <Typography>A</Typography>
-                <ArrowRight></ArrowRight>
-                <Typography>Z</Typography>
-              </Box>
-            </MenuItem>
-            <MenuItem key={"ztoa"} value={"ztoa"}>
-              <Box display={"flex"} flexDirection={"row"}>
-                <Typography>Z</Typography>
-                <ArrowRight></ArrowRight>
-                <Typography>A</Typography>
-              </Box>
-            </MenuItem>
-          </Select>
-          <IconButton>
-            <Settings sx={{ marginY: "auto", marginX: 2 }}></Settings>
-          </IconButton>
+          <Settings sx={{ marginY: "auto", marginX: 2 }}></Settings>
         </Box>
         {viewMode === "square" ?
           <AdminSquareView teams={teams} commendationsReceived={commendationsReceived} commendationsSent={commendationsSent} /> :

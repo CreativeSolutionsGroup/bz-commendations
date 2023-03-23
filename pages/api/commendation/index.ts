@@ -1,7 +1,8 @@
+import { getContactInfo } from "@/lib/api/teams";
+import { revalidate } from "@/lib/revalidate";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
-import { createCommendation, emailToId, idToEmail, idToName, idToPhoneNumber, readAllCommendations, sendBzEmail, sendBzText, updateMemberImageURL, getMemberTeamLeaders, getMemberWithTeams } from "../../../lib/api/commendations";
-import { revalidate } from "../../../lib/revalidate";
+import { createCommendation, emailToId, getMemberTeamLeaders, getMemberWithTeams, readAllCommendations, sendBzEmail, sendBzText, updateMemberImageURL } from "../../../lib/api/commendations";
 import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,33 +18,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       break;
     case "POST":
       const sender = await emailToId((session?.user?.email) as string);
-      const recipient = req.body.recipient as string;
-      const msg = req.body.msg as string;
-      const recipientObject = await getMemberWithTeams(recipient);
-      const recipientEmail = recipientObject?.email ?? "";
-      const teams = recipientObject?.teams.map(t => t.id);
 
-      if (sender == null || session?.user?.email === recipientEmail) {
+      if (sender == null) {
         console.log("Error: Bad email");
-        res.redirect("/?success=false");
-        return
+        return res.redirect("/?success=false");
       }
 
       if (req.body.recipient == null || req.body.msg == null) {
         console.error("Error: No recipient or no message. ")
-        res.redirect("/?success=false")
-        return
+        return res.redirect("/?success=false")
       }
 
-      const update = await updateMemberImageURL(session?.user?.image as string, sender as string)
-      const commendation = await createCommendation(sender as string, recipient, msg);
-      const teamLeaders = await getMemberTeamLeaders(teams ?? []);
-      const teamLeadersEmails = teamLeaders.flatMap(l => l.teams.flatMap(t => t.TeamLeaders.map(tl => tl.Member.email)))
-      console.log(teamLeadersEmails);
-      
-      sendBzEmail(session?.user?.email as string, recipientEmail, session?.user?.name as string, msg);
-      sendBzText(await idToPhoneNumber(recipient), session?.user?.name as string, msg);
-      await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
+      const recipientId = req.body.recipient as string;
+      const msg = req.body.msg as string;
+      const recipient = await getMemberWithTeams(recipientId);
+
+      if (recipient == null) return res.redirect("/?success=false");
+
+      const recipientEmail = recipient.email;
+      const teams = recipient.teams.map(t => t.id);
+
+      const teamLeaders = await getMemberTeamLeaders(teams);
+      const teamLeadersEmails = teamLeaders.flatMap(l => l.teams.flatMap(t => t.TeamLeaders.map(tl => tl.Member.email)));
+
+      const pImage = (recipient.imageURL == null) && updateMemberImageURL(session?.user?.image as string, sender as string);
+      const pCommendation = createCommendation(sender as string, recipientId, msg);      
+      const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail, ...teamLeadersEmails], session?.user?.name as string, msg);
+      const pText = (recipient.phone != null) ? sendBzText(recipient.phone, session?.user?.name as string, msg) : null;
+      const pValidate = revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
+      try {
+        await Promise.all([pImage, pCommendation, pEmail, pText, pValidate]);
+      } catch (e) {
+        console.error(`Error creating commendation ${JSON.stringify(e)}`);
+        return res.redirect(500, "/?success=false");
+      }
+
       res.redirect(302, "/");
       break;
   }

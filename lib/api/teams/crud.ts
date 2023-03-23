@@ -1,9 +1,56 @@
-import { prisma } from "@/lib/api/db";
+import { Member, Team } from "@prisma/client";
+import { prisma } from "../db";
 
 export const getTeams = async () => {
-    return await prisma
-        .team
-        .findMany({ include: { members: { include: { commendations: { select: { id: true } }, sentCommendations: { select: { id: true } } } } }, orderBy: { name: "asc" } })
+    return await prisma.team.findMany({
+        include: {
+            members: {
+                include: {
+                    commendations: { select: { id: true } },
+                    sentCommendations: { select: { id: true } }
+                }
+            }
+        },
+        orderBy: { name: "asc" }
+    })
+}
+
+export const getContactInfo = async (id: string) => {
+    const member = await prisma.member.findFirst({
+        where: {
+            id
+        }
+    })
+
+    if (member) {
+        return { emails: [member.email], phoneNumbers: [member.phone ?? ""] };
+    }
+
+    const team = await prisma.team.findFirst({
+        where: {
+            id
+        },
+        include: {
+            members: true
+        }
+    })
+
+    if (team) {
+        const emails = team.members.map((currentMember) => currentMember.email);
+        const phoneNumbers = team.members.map((currentMember) => currentMember.phone ?? "");
+
+        return { emails, phoneNumbers };
+    }
+
+    return { emails: [], phoneNumbers: [] };
+}
+
+export const idToEmail = async (memberId: string) => {
+    return (await prisma.member.findFirst({
+        where: {
+            id: memberId
+        }
+    }))?.email ?? "";
 }
 
 export const getLastMonthCommendations = async () => {

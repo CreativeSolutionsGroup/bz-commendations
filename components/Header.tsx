@@ -43,7 +43,7 @@ export const Header = () => {
               </Link>
             </IconButton>}
           <IconButton>
-            <Link href={`/me/${session?.user?.email}`}>
+            <Link href={`/me/received/${session?.user?.email}`}>
               <ChatBubbleIcon color="secondary" />
             </Link>
           </IconButton>

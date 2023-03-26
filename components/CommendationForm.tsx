@@ -42,7 +42,7 @@ export default ({ members }: { members: Array<Member & { team: Array<Team> }> })
               required />} />
           <TextField required label="Message" variant="filled" name="msg" minRows={8} multiline={true} />
           <Button disabled={sending} variant="contained" color="secondary" type="submit" endIcon={<SendIcon />} sx={{ fontSize: 18, textTransform: "uppercase", minWidth: "fit-content" }}>
-            Send
+            <Typography className={raleway.className} fontSize={18} fontWeight={900}>Send</Typography>
           </Button>
         </Stack>
       </form>

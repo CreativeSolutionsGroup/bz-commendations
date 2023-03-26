@@ -1,11 +1,12 @@
+import { BottomBar } from "@/components/BottomBar";
 import { prisma } from "@/lib/api/db";
-import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
+import { Avatar, BottomNavigation, BottomNavigationAction, Box, Paper, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { Raleway } from "@next/font/google";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { readUserCommendations } from "../../lib/api/commendations";
+import { readUserSentCommendations } from "../../../lib/api/commendations";
 
 export async function getStaticPaths() {
   const users = await prisma.member.findMany();
@@ -22,7 +23,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   if (!params) throw new Error("No path parameters found");
-  const comms = await readUserCommendations(params?.email as string ?? "");
+  const comms = await readUserSentCommendations(params?.email as string ?? "");
 
   if (!comms) return { notFound: true, revalidate: 10 };
 
@@ -44,20 +45,21 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
   return (
     <>
       <main>
-        <Typography className={raleway.className} fontSize={30} fontWeight={900} mt={2} align="center" color={grey[500]}>YOUR COMMENDATIONS</Typography>
+        <Typography className={raleway.className} fontSize={30} fontWeight={900} mt={2} align="center" color={grey[500]}>SENT COMMENDATIONS</Typography>
         {comms.map((comm, i) =>
           <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
             <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
               <Avatar>
-                <Image fill src={comm.sender.imageURL ?? "https://via.placeholder.com/25?text="} alt={comm.sender.name} />
+                <Image fill src={comm.recipient.imageURL ?? "https://via.placeholder.com/25?text="} alt={comm.recipient.name} />
               </Avatar>
               <Stack ml={2}>
-                <Typography fontWeight="bold">{comm.sender.name}</Typography>
+                <Typography fontWeight="bold">{comm.recipient.name}</Typography>
                 <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
               </Stack>
             </Box>
           </Paper>
         )}
+        <BottomBar />
       </main>
     </>
   )

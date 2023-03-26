@@ -118,3 +118,25 @@ export const readUserCommendations = async (email: string) => {
   });
   return user?.commendations;
 }
+
+export const readUserSentCommendations = async (email: string) => {
+  const user = await prisma.member.findFirst({
+    select: {
+      sentCommendations: {
+        select: {
+          recipient: {
+            select: {
+              name: true,
+              imageURL: true
+            }
+          },
+          message: true
+        }
+      }
+    },
+    where: {
+      email
+    }
+  });
+  return user?.sentCommendations;
+}

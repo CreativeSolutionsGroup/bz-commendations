@@ -20,7 +20,7 @@ type TeamsList = (Team & {
 
 const DataChip = ({ label, icon }: { label: string | null, icon: ReactElement }) => {
   return (
-    <Chip icon={icon} label={label} sx={{ flex: 1, mx: 1 }} />
+    <Chip icon={icon} label={label} sx={{ padding: 0.3, flex: 1, mx: 1 }} />
   )
 }
 

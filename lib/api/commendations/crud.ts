@@ -128,3 +128,11 @@ export const getMemberWithTeams = async (id: string) => {
     }
   })
 }
+
+export const idIsMember = async (id: string) => {
+  return !!await prisma.member.count({
+    where: {
+      id
+    }
+  });
+}

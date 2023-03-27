@@ -1,8 +1,10 @@
-import { getContactInfo } from "@/lib/api/teams";
+import {
+  createCommendation, emailToId, getMemberTeamLeaders, getMemberWithTeams,
+  idIsMember, readAllCommendations, sendBzEmail, sendBzText, updateMemberImageURL
+} from "@/lib/api/commendations";
 import { revalidate } from "@/lib/revalidate";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
-import { createCommendation, emailToId, getMemberTeamLeaders, getMemberWithTeams, readAllCommendations, sendBzEmail, sendBzText, updateMemberImageURL } from "../../../lib/api/commendations";
 import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -31,38 +33,52 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const recipientId = req.body.recipient as string;
       const msg = req.body.msg as string;
-      const recipient = await getMemberWithTeams(recipientId);
 
-      if (recipient == null) return res.redirect("/?success=false");
+      if (await idIsMember(recipientId)) {
+        const recipient = await getMemberWithTeams(recipientId);
 
-      const recipientEmail = recipient.email;
-      const teams = recipient.teams.map(t => t.id);
+        if (recipient == null) return res.redirect("/?success=false");
 
-      const teamLeaders = await getMemberTeamLeaders(teams);
-      const teamLeadersEmails = teamLeaders.reduce((curr, l) => {
-        const leads = l.teams.flatMap(t => t.teamLeaders.map(tl => tl.member.email));
-        const rem = leads.filter(l => !curr.includes(l));
-        return [...curr, ...rem];
-      }, [] as Array<string>);
+        const recipientEmail = recipient.email;
 
-      const pImage = (recipient.imageURL == null) && updateMemberImageURL(session?.user?.image as string, sender as string);
-      // log the commendation
-      const pCommendation = createCommendation(sender as string, recipientId, msg);      
-      // send email to the recip
-      const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg);
-      // send text to the recip
-      const pText = (recipient.phone != null) ? sendBzText(recipient.phone, session?.user?.name as string, msg) : null;
-      // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
-      const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
-      const pValidate = revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
-      try {
-        await Promise.all([pImage, pCommendation, pEmail, pTeamEmail, pText, pValidate]);
-      } catch (e) {
-        console.error(`Error creating commendation ${JSON.stringify(e)}`);
-        return res.redirect(500, "/?success=false");
+        const pImage = (recipient.imageURL == null) && updateMemberImageURL(session?.user?.image as string, sender as string);
+        // log the commendation
+        const pCommendation = createCommendation(sender as string, recipientId, msg);
+        // send email to the recip
+        const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg);
+        // send text to the recip
+        const pText = (recipient.phone != null) ? sendBzText(recipient.phone, session?.user?.name as string, msg) : null;
+        const pValidate = revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
+        try {
+          await Promise.all([pCommendation, pEmail, pText, pImage, pValidate]);
+        } catch (e) {
+          console.error(`Error creating commendation ${JSON.stringify(e)}`);
+          return res.redirect(500, "/?success=false");
+        }
+        res.redirect(302, "/");
+      } else {
+        const teamLeaders = await getMemberTeamLeaders([recipientId]);
+        const teamLeadersEmails = teamLeaders.reduce((curr, l) => {
+          const leads = l.teams.flatMap(t => t.teamLeaders.map(tl => tl.member.email));
+          const rem = leads.filter(l => !curr.includes(l));
+          return [...curr, ...rem];
+        }, [] as Array<string>);
+
+        console.log(teamLeadersEmails);
+
+        // log the commendation
+        const pCommendation = createCommendation(sender as string, await emailToId(teamLeadersEmails[0]) ?? "", msg);
+        // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
+        const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
+        const pValidate = revalidate(req.headers.host ?? "https://next.bz-cedarville.com", teamLeadersEmails[0]);
+        try {
+          await Promise.all([pCommendation, pTeamEmail, pValidate]);
+        } catch (e) {
+          console.error(`Error creating commendation ${JSON.stringify(e)}`);
+          return res.redirect(500, "/?success=false");
+        }
+        res.redirect(302, "/team");
       }
-
-      res.redirect(302, "/");
       break;
   }
 }

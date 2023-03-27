@@ -15,36 +15,6 @@ export const getTeams = async () => {
     })
 }
 
-export const getContactInfo = async (id: string) => {
-    const member = await prisma.member.findFirst({
-        where: {
-            id
-        }
-    })
-
-    if (member) {
-        return { emails: [member.email], phoneNumbers: [member.phone ?? ""] };
-    }
-
-    const team = await prisma.team.findFirst({
-        where: {
-            id
-        },
-        include: {
-            members: true
-        }
-    })
-
-    if (team) {
-        const emails = team.members.map((currentMember) => currentMember.email);
-        const phoneNumbers = team.members.map((currentMember) => currentMember.phone ?? "");
-
-        return { emails, phoneNumbers };
-    }
-
-    return { emails: [], phoneNumbers: [] };
-}
-
 export const idToEmail = async (memberId: string) => {
     return (await prisma.member.findFirst({
         where: {

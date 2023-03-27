@@ -48,14 +48,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg);
         // send text to the recip
         const pText = (recipient.phone != null) ? sendBzText(recipient.phone, session?.user?.name as string, msg) : null;
-        const pValidate = revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
         try {
-          await Promise.all([pCommendation, pEmail, pText, pImage, pValidate]);
+          await Promise.all([pCommendation, pEmail, pText, pImage]);
         } catch (e) {
           console.error(`Error creating commendation ${JSON.stringify(e)}`);
           return res.redirect(500, "/?success=false");
         }
-        res.redirect(302, "/");
+        try {
+          await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
+        } catch (e) {
+          console.error("Revalidation failed");
+        }
+        res.redirect(302, "/?success=true");
       } else {
         const teamLeaders = await getMemberTeamLeaders([recipientId]);
         const teamLeadersEmails = teamLeaders.reduce((curr, l) => {
@@ -63,21 +67,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           const rem = leads.filter(l => !curr.includes(l));
           return [...curr, ...rem];
         }, [] as Array<string>);
-
-        console.log(teamLeadersEmails);
-
+        
         // log the commendation
         const pCommendation = createCommendation(sender as string, await emailToId(teamLeadersEmails[0]) ?? "", msg);
         // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
         const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
-        const pValidate = revalidate(req.headers.host ?? "https://next.bz-cedarville.com", teamLeadersEmails[0]);
         try {
-          await Promise.all([pCommendation, pTeamEmail, pValidate]);
+          await Promise.all([pCommendation, pTeamEmail]);
         } catch (e) {
           console.error(`Error creating commendation ${JSON.stringify(e)}`);
           return res.redirect(500, "/?success=false");
         }
-        res.redirect(302, "/team");
+        try {
+          await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", teamLeadersEmails[0]);
+        } catch (e) {
+          console.error("Revalidation failed");
+        }
+        res.redirect(302, "/team?success=true");
       }
       break;
   }

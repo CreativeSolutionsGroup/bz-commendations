@@ -12,8 +12,11 @@ const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse,
   const msg = req.body.msg as string;
 
   const recipient = await getMemberWithTeams(recipientId);
-
   if (recipient == null) return res.redirect("/?success=false");
+
+  // we also want to send emails to the team leaders.
+  const teamLeaders = await getMemberTeamLeaders([recipientId]);
+  const teamLeadersEmails = teamLeaders.map(t => t.email);
 
   const recipientEmail = recipient.email;
 
@@ -24,8 +27,11 @@ const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse,
   const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg);
   // send text to the recip
   const pText = (recipient.phone != null) ? sendBzText(recipient.phone, session?.user?.name as string, msg) : null;
+  
+  // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
+  const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
   try {
-    await Promise.all([pCommendation, pEmail, pText, pImage]);
+    await Promise.all([pTeamEmail, pCommendation, pEmail, pText, pImage]);
   } catch (e) {
     console.error(`Error creating commendation ${JSON.stringify(e)}`);
     return res.redirect(500, "/?success=false");
@@ -43,11 +49,7 @@ const sendTeamCommendation = async (req: NextApiRequest, res: NextApiResponse, s
   const msg = req.body.msg as string;
 
   const teamLeaders = await getMemberTeamLeaders([recipientId]);
-  const teamLeadersEmails = teamLeaders.reduce((curr, l) => {
-    const leads = l.teams.flatMap(t => t.teamLeaders.map(tl => tl.member.email));
-    const rem = leads.filter(l => !curr.includes(l));
-    return [...curr, ...rem];
-  }, [] as Array<string>);
+  const teamLeadersEmails = teamLeaders.map(t => t.email);
 
   // log the commendation (except don't because we don't have a recipient)
   // const pCommendation = createCommendation(sender as string, await emailToId(teamLeadersEmails[0]) ?? "", msg);
@@ -55,17 +57,13 @@ const sendTeamCommendation = async (req: NextApiRequest, res: NextApiResponse, s
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
   const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
   try {
-    await Promise.all([/*pCommendation,*/ pTeamEmail]);
+    await pTeamEmail;
   } catch (e) {
     console.error(`Error creating commendation ${JSON.stringify(e)}`);
     return res.redirect(500, "/?success=false");
   }
-  // Remove revalidation because we aren't actually adding a commendation to the database
-  // try {
-  //   await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", teamLeadersEmails[0]);
-  // } catch (e) {
-  //   console.error("Revalidation failed");
-  // }
+
+  // No revalidation because we aren't actually adding a commendation to the database
   res.redirect(302, "/team?success=true");
 }
 

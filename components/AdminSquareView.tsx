@@ -1,9 +1,10 @@
 import { Group, MoveToInbox, Send } from "@mui/icons-material";
-import { Box, Card, Typography } from "@mui/material";
+import { Box, Card, Chip, Typography } from "@mui/material";
 import { Member, Team } from "@prisma/client";
 import Image from "next/image";
-import solid from "@/assets/BZ-letters-solid.png";
+import hash from "@/assets/bz-letters-hash.png";
 import bz from "@/assets/BZ-letters.png";
+import { ReactElement } from "react";
 
 
 type TeamsList = (Team & {
@@ -15,32 +16,27 @@ type TeamsList = (Team & {
       id: string;
     }[];
   })[];
-})[]
+})[];
+
+const DataChip = ({ label, icon }: { label: string | null, icon: ReactElement }) => {
+  return (
+    <Chip icon={icon} label={label} sx={{ flex: 1, mx: 1 }} />
+  )
+}
 
 export default ({ teams, commendationsSent, commendationsReceived }: { teams: TeamsList, commendationsSent: number[], commendationsReceived: number[] }) => {
   return (<Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={10}>
     {
       teams.map((currentTeam, currentIndex) =>
-        <Card key={currentIndex} sx={{ height: 320, flexGrow: 1, marginX: 4, marginTop: 3, width: 250 }}>
-          <Box position={"relative"} height={"60%"} marginRight={2.5}>
-            <Image placeholder="blur" blurDataURL={solid.src} sizes="(max-width: 350px) 16vw" src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain", margin: 10 }} fill />
+        <Card key={currentIndex} sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, marginTop: 3, width: 250, mx: 1 }}>
+          <Box position={"relative"} height={"60%"} width={"90%"}>
+            <Image placeholder="blur" blurDataURL={hash.src} sizes="(max-width: 250px) 100vw" src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain",  }} fill />
           </Box>
           <Typography textAlign={"center"} fontSize={20} mt={3}>{currentTeam.name}</Typography>
           <Box display={"flex"} mt={2}>
-            <Box flexGrow={1} />
-            <Box sx={{ borderRadius: 5, backgroundColor: "#005288", paddingY: 1, paddingX: 2, marginRight: 1, color: "white" }} display={"flex"}>
-              <Group />
-              <Typography ml={1} textAlign={"right"}>{currentTeam.members.length}</Typography>
-            </Box>
-            <Box sx={{ borderRadius: 5, backgroundColor: "#005288", paddingY: 1, paddingX: 2, color: "white" }} display={"flex"}>
-              <Send />
-              <Typography ml={1} textAlign={"right"}>{commendationsSent[currentIndex]}</Typography>
-            </Box>
-            <Box sx={{ borderRadius: 5, backgroundColor: "#005288", paddingY: 1, paddingX: 2, marginLeft: 1, color: "white" }} display={"flex"}>
-              <MoveToInbox />
-              <Typography ml={1} textAlign={"right"}>{commendationsReceived[currentIndex]}</Typography>
-            </Box>
-            <Box flexGrow={1}></Box>
+            <DataChip label={currentTeam.members.length.toString()} icon={<Group />} />
+            <DataChip label={commendationsSent[currentIndex].toString()} icon={<Send />} />
+            <DataChip label={commendationsReceived[currentIndex].toString()} icon={<MoveToInbox />} />
           </Box>
         </Card>
       )

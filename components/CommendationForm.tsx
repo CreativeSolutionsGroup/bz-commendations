@@ -41,7 +41,7 @@ function renderRow(props: ListChildComponentProps) {
         <Typography ml={1.5} mt={1}>{member.name}</Typography>
         <Box flexGrow={1}></Box>
         <Typography mt={1.5} variant="caption" color="GrayText" align="right" maxWidth='10rem' overflow="hidden">
-          {member.team.map((team: Team) => team.name).join(", ")}
+          {member.teams.map((team: Team) => team.name).join(", ")}
         </Typography>
       </Box>
     </MenuItem>
@@ -128,27 +128,28 @@ const StyledPopper = styled(Popper)({
   }
 })
 
-export default ({ members }: { members: Array<Member & { team: Array<Team> }> }) => {
+type TeamListItem = Team & { members: Array<Member> };
+type MemberListItem = Member & { teams: Array<Team> };
+
+export default ({ recipients, teamTab }: { recipients: (MemberListItem | TeamListItem)[], teamTab?: boolean }) => {
   const [sending, setSending] = useState(false);
-  const [memberData, setToMember] = useState("");
-
-
+  const [itemData, setToItem] = useState("");
 
   return (
     <Paper sx={{ mt: 4, mx: "auto", maxWidth: "30rem", p: 2 }}>
       <form onSubmit={() => setSending(true)} action="api/commendation" method="POST">
         <Stack spacing={1}>
-          <Typography color="primary" className={raleway.className} fontSize={25} fontWeight={900}>Create Commendation</Typography>
-          <TextField sx={{ display: "none" }} hidden name="recipient" value={memberData} />
+          <Typography color="primary" className={raleway.className} fontSize={25} fontWeight={900}>Create {teamTab ? "Team" : ""} Commendation</Typography>
+          <TextField sx={{ display: "none" }} hidden name="recipient" value={itemData} />
           <Autocomplete
-            onChange={(_e, v) => setToMember(v?.id ?? "")}
+            onChange={(_e, v) => setToItem(v?.id ?? "")}
             id="virtualize-commendation"
             sx={{ width: "100%" }}
             disableListWrap
             PopperComponent={StyledPopper}
             ListboxComponent={ListboxComponent}
-            options={members}
-            getOptionLabel={(member) => member.name}
+            options={recipients}
+            getOptionLabel={(recip) => recip.name}
             groupBy={(option) => option.name[0].toUpperCase()}
             renderInput={(params) => <TextField {...params} label="To *" />}
             renderOption={(props, option, state) =>

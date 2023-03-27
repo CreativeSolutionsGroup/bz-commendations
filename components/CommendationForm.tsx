@@ -9,6 +9,7 @@ import { Member, Team } from "@prisma/client";
 import Image from "next/image";
 import { createContext, forwardRef, HTMLAttributes, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
+import { Person } from "@mui/icons-material";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
@@ -22,6 +23,7 @@ function renderRow(props: ListChildComponentProps) {
     top: (style.top as number) + LISTBOX_PADDING,
   };
 
+
   if (dataSet.hasOwnProperty("group")) {
     return (
       <ListSubheader key={dataSet.key} component="div" style={{ ...inlineStyle, height: 36}}>
@@ -30,13 +32,13 @@ function renderRow(props: ListChildComponentProps) {
     );
   }
 
-  const [, member] = dataSet;
+  const [optionProps, member] = dataSet;
 
   return (
-    <MenuItem key={index} {...props} sx={{ width: "100%" }}>
+    <MenuItem key={index} {...optionProps} sx={{ width: "100%" }}>
       <Box display="flex" flexDirection="row" width="100%">
         <Avatar>
-          <Image fill src={member.imageURL ?? "https://via.placeholder.com/25?text="} alt="" placeholder="blur" blurDataURL={bz.src} />
+          {member.imageUrl ? <Image fill src={member.imageURL} alt="" placeholder="blur" blurDataURL={bz.src} /> : <Person />}
         </Avatar>
         <Typography ml={1.5} mt={1}>{member.name}</Typography>
         <Box flexGrow={1}></Box>

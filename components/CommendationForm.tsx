@@ -35,7 +35,7 @@ function renderRow(props: ListChildComponentProps) {
   const [optionProps, member] = dataSet;
 
   return (
-    <MenuItem key={index} {...optionProps} sx={{ width: "100%" }}>
+    <MenuItem key={index} {...optionProps} {...props} sx={{ width: "100%" }}>
       <Box display="flex" flexDirection="row" width="100%">
         <Avatar>
           {member.imageUrl ? <Image fill src={member.imageURL} alt="" placeholder="blur" blurDataURL={bz.src} /> : <Person />}

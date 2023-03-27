@@ -1,9 +1,26 @@
-import { prisma } from "@/lib/api/db";
+import { Member, Team } from "@prisma/client";
+import { prisma } from "../db";
 
 export const getTeams = async () => {
-    return await prisma
-        .team
-        .findMany({ include: { members: { include: { commendations: { select: { id: true } }, sentCommendations: { select: { id: true } } } } }, orderBy: { name: "asc" } })
+    return await prisma.team.findMany({
+        include: {
+            members: {
+                include: {
+                    commendations: { select: { id: true } },
+                    sentCommendations: { select: { id: true } }
+                }
+            }
+        },
+        orderBy: { name: "asc" }
+    })
+}
+
+export const idToEmail = async (memberId: string) => {
+    return (await prisma.member.findFirst({
+        where: {
+            id: memberId
+        }
+    }))?.email ?? "";
 }
 
 export const getLastMonthCommendations = async () => {

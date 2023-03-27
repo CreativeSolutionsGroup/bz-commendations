@@ -45,7 +45,7 @@ model Role {
 }
 
 model TeamLeaders {
-  id       String @id
+  id       String @id @default(uuid())
   memberId String
   teamId   String
   member   Member @relation(fields: [memberId], references: [id])

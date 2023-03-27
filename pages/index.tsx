@@ -16,7 +16,7 @@ export default function Home({ members }: InferGetStaticPropsType<typeof getStat
   return (
     <>
       <main>
-        <CommendationForm members={members} />
+        <CommendationForm recipients={members} />
       </main>
 
       <IndexAbsoluteElements />

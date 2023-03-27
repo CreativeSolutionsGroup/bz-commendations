@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Commendation {
-  id                 String   @id @default(uuid())
-  message            String
-  recipientId        String
-  senderId           String
-  createdAt          DateTime @default(now())
-  recipient          Member   @relation("recipient", fields: [recipientId], references: [id])
-  sender             Member   @relation("sender", fields: [senderId], references: [id])
+  id          String   @id @default(uuid())
+  message     String
+  recipientId String
+  senderId    String
+  createdAt   DateTime @default(now())
+  recipient   Member   @relation("recipient", fields: [recipientId], references: [id])
+  sender      Member   @relation("sender", fields: [senderId], references: [id])
 }
 
 model Member {
@@ -25,16 +25,16 @@ model Member {
   imageURL          String?
   commendations     Commendation[] @relation("recipient")
   sentCommendations Commendation[] @relation("sender")
-  TeamLeaders       TeamLeaders[]
+  leadsTeams        TeamLeaders[]
   roles             Role[]         @relation("MemberToRole")
-  team              Team[]         @relation("MemberToTeam")
+  teams             Team[]         @relation("MemberToTeam")
 }
 
 model Team {
   id          String        @id @default(uuid())
   name        String
   imageURL    String?
-  TeamLeaders TeamLeaders[]
+  teamLeaders TeamLeaders[]
   members     Member[]      @relation("MemberToTeam")
 }
 
@@ -45,9 +45,9 @@ model Role {
 }
 
 model TeamLeaders {
-  id       String @id
+  id       String @id @default(uuid())
   memberId String
   teamId   String
-  Member   Member @relation(fields: [memberId], references: [id])
-  Team     Team   @relation(fields: [teamId], references: [id])
+  member   Member @relation(fields: [memberId], references: [id])
+  team     Team   @relation(fields: [teamId], references: [id])
 }

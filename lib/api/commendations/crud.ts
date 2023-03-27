@@ -1,29 +1,5 @@
 import { prisma } from "@/lib/api/db";
 
-export const idToEmail = async (studentId: string) => {
-  const student = await prisma.member.findFirst({ where: { id: studentId } });
-
-  if (!student) {
-    return "";
-  }
-
-  const { email } = student;
-
-  return email as string;
-}
-
-export const idToPhoneNumber = async (studentId: string) => {
-  const student = await prisma.member.findFirst({ where: { id: studentId } });
-
-  if (!student) {
-    return "";
-  }
-
-  const { phone } = student;
-
-  return phone as string;
-}
-
 export const idToName = async (studentId: string) => {
   const student = await prisma.member.findFirst({ where: { id: studentId } });
 
@@ -78,7 +54,7 @@ export const readAllMembers = async (currentUserEmail = "") => {
       }
     },
     include: {
-      team: true
+      teams: true
     },
     orderBy: {
       name: "asc"
@@ -139,4 +115,46 @@ export const readUserSentCommendations = async (email: string) => {
     }
   });
   return user?.sentCommendations;
+}
+
+export const getMemberTeamLeaders = async (teams: string[]) => {
+  return await prisma.member.findMany({
+    where: {
+      teams: {
+        some: {
+          id: { in: teams }
+        }
+      }
+    },
+    include: {
+      teams: {
+        include: {
+          teamLeaders: {
+            include: {
+              member: true
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+export const getMemberWithTeams = async (id: string) => {
+  return await prisma.member.findFirst({
+    where: {
+      id
+    },
+    include: {
+      teams: true
+    }
+  })
+}
+
+export const idIsMember = async (id: string) => {
+  return !!await prisma.member.count({
+    where: {
+      id
+    }
+  });
 }

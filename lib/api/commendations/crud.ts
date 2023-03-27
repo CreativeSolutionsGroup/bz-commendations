@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/api/db";
+import { Member } from "@prisma/client";
 
 export const idToName = async (studentId: string) => {
   const student = await prisma.member.findFirst({ where: { id: studentId } });
@@ -118,7 +119,7 @@ export const readUserSentCommendations = async (email: string) => {
 }
 
 export const getMemberTeamLeaders = async (teams: string[]) => {
-  return await prisma.member.findMany({
+  const m = await prisma.member.findMany({
     where: {
       teams: {
         some: {
@@ -138,6 +139,15 @@ export const getMemberTeamLeaders = async (teams: string[]) => {
       }
     }
   });
+
+  // reduces `m` (all members that have team leaders)
+  // to their team leaders Member objects.
+  return m.reduce((curr, l) => {
+    const leads: Array<Member> = l.teams.flatMap(t => t.teamLeaders.map(tl => tl.member));
+    // array intersection
+    const rem = leads.filter(l => !curr.map(c => c.id).includes(l.id));
+    return [...curr, ...rem];
+  }, [] as Array<Member>);
 }
 
 export const getMemberWithTeams = async (id: string) => {

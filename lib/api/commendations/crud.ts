@@ -118,36 +118,25 @@ export const readUserSentCommendations = async (email: string) => {
   return user?.sentCommendations;
 }
 
+/**
+ * The function name here is misleading.
+ * This gets all of the team leaders for a given team.
+ * @param teams A list of the teams that you want to get the team leaders for. This is an id.
+ * @returns A list of the team leaders in `Member[]` format.
+ */
 export const getMemberTeamLeaders = async (teams: string[]) => {
-  const m = await prisma.member.findMany({
+  const teamLeaders = await prisma.teamLeaders.findMany({
     where: {
-      teams: {
-        some: {
-          id: { in: teams }
-        }
+      team: {
+        id: { in: teams }
       }
     },
-    include: {
-      teams: {
-        include: {
-          teamLeaders: {
-            include: {
-              member: true
-            }
-          }
-        }
-      }
+    select: {
+      member: true
     }
   });
 
-  // reduces `m` (all members that have team leaders)
-  // to their team leaders Member objects.
-  return m.reduce((curr, l) => {
-    const leads: Array<Member> = l.teams.flatMap(t => t.teamLeaders.map(tl => tl.member));
-    // array intersection
-    const rem = leads.filter(l => !curr.map(c => c.id).includes(l.id));
-    return [...curr, ...rem];
-  }, [] as Array<Member>);
+  return teamLeaders.map(l => l.member)
 }
 
 export const getMemberWithTeams = async (id: string) => {

@@ -15,40 +15,40 @@ const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse,
   if (recipient == null) return res.redirect("/?success=false");
 
   // we also want to send emails to the team leaders.
-  const teamLeaders = await getMemberTeamLeaders([recipientId]);
+  const teamLeaders = await getMemberTeamLeaders(recipient.teams.map(t => t.id));
   const teamLeadersEmails = teamLeaders.map(t => t.email);
 
   const recipientEmail = recipient.email;
 
   const pImage = (recipient.imageURL == null) && updateMemberImageURL(session?.user?.image as string, sender);
-  // log the commendation
+  // // log the commendation
   const pCommendation = createCommendation(sender as string, recipientId, msg);
-  // send email to the recip
+  // // send email to the recip
   const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg);
-  // send text to the recip
+  // // send text to the recip
   const pText = (recipient.phone != null) ? sendBzText(recipient.phone, session?.user?.name as string, msg) : null;
   
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
-  const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
+  const pTeamEmail = (teamLeadersEmails && teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
   try {
     await Promise.all([pTeamEmail, pCommendation, pEmail, pText, pImage]);
   } catch (e) {
     console.error(`Error creating commendation ${JSON.stringify(e)}`);
-    return res.redirect(500, "/?success=false");
+    return res.redirect(302, "/?success=false");
   }
   try {
     await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
   } catch (e) {
     console.error("Revalidation failed");
   }
-  res.redirect(302, "/?success=true");
+  return res.redirect(302, "/?success=true");
 }
 
 const sendTeamCommendation = async (req: NextApiRequest, res: NextApiResponse, session: Session, sender: string) => {
-  const recipientId = req.body.recipient as string;
+  const teamId = req.body.recipient as string;
   const msg = req.body.msg as string;
 
-  const teamLeaders = await getMemberTeamLeaders([recipientId]);
+  const teamLeaders = await getMemberTeamLeaders([teamId]);
   const teamLeadersEmails = teamLeaders.map(t => t.email);
 
   // log the commendation (except don't because we don't have a recipient)

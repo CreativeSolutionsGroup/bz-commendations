@@ -40,7 +40,18 @@ export async function getStaticProps() {
   const sending = await getMembersWithSentCommendations();
   const receiving = await getMembersWithReceivedCommendations();
 
-  return { props: { teams, sending, receiving, commendationsReceived, commendationsSent, lastMonthCommendations, thisMonthCommendations } };
+  return {
+    props: {
+      teams,
+      sending, 
+      receiving, 
+      commendationsReceived, 
+      commendationsSent, 
+      lastMonthCommendations, 
+      thisMonthCommendations
+    },
+    revalidate: 60
+  };
 }
 
 export default function Admin({ teams, sending, receiving, commendationsReceived, commendationsSent, lastMonthCommendations, thisMonthCommendations }: InferGetStaticPropsType<typeof getStaticProps>) {

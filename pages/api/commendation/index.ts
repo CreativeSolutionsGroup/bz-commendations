@@ -37,9 +37,9 @@ const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse,
     return res.redirect(302, "/?success=false");
   }
   try {
-    await revalidate(req.headers.host ?? "https://next.bz-cedarville.com", recipientEmail);
+    await revalidate("https://next.bz-cedarville.com", recipientEmail);
   } catch (e) {
-    console.error("Revalidation failed");
+    console.error(`Revalidation failed ${JSON.stringify(e)}`);
   }
   return res.redirect(302, "/?success=true");
 }

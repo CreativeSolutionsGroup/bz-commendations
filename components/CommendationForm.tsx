@@ -10,6 +10,7 @@ import Image from "next/image";
 import { createContext, forwardRef, HTMLAttributes, ReactNode, useContext, useEffect, useRef, useState } from "react";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
 import { Person } from "@mui/icons-material";
+import { useSession } from "next-auth/react";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
@@ -133,9 +134,23 @@ const StyledPopper = styled(Popper)({
 type TeamListItem = Team & { members: Array<Member> };
 type MemberListItem = Member & { teams: Array<Team> };
 
+const isMemberListItem = (obj: any): obj is Array<MemberListItem> => {
+  return obj[0].email !== undefined;
+}
+
 export default ({ recipients, teamTab }: { recipients: (MemberListItem | TeamListItem)[], teamTab?: boolean }) => {
   const [sending, setSending] = useState(false);
   const [itemData, setToItem] = useState("");
+  const [_recipients, setRecipients] = useState(recipients);
+
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+    if (isMemberListItem(_recipients)) {
+      setRecipients(_recipients.filter(member => member.email !== session?.user?.email));
+    }
+  }, [status]);
 
   return (
     <Paper sx={{ mt: 4, mx: "auto", maxWidth: "30rem", p: 2 }}>
@@ -150,7 +165,7 @@ export default ({ recipients, teamTab }: { recipients: (MemberListItem | TeamLis
             disableListWrap
             PopperComponent={StyledPopper}
             ListboxComponent={ListboxComponent}
-            options={recipients}
+            options={_recipients}
             getOptionLabel={(recip) => recip.name}
             groupBy={(option) => option.name[0].toUpperCase()}
             renderInput={(params) => <TextField {...params} label="To *" />}

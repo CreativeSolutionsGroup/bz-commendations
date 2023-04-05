@@ -12,7 +12,9 @@ const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse,
   const msg = req.body.msg as string;
 
   const recipient = await getMemberWithTeams(recipientId);
-  if (recipient == null) return res.redirect("/?success=false");
+  if (recipient == null || recipientId === sender) return res.redirect("/?success=false");
+
+
 
   // we also want to send emails to the team leaders.
   const teamLeaders = await getMemberTeamLeaders(recipient.teams.map(t => t.id));

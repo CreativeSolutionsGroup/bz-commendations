@@ -59,7 +59,7 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
             </Box>
           </Paper>
         )}
-        <BottomBar />
+        <BottomBar page="/received" />
       </main>
     </>
   )

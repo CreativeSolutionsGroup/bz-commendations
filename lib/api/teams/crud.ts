@@ -6,8 +6,14 @@ export const getTeams = async () => {
         include: {
             members: {
                 include: {
-                    commendations: { select: { id: true } },
-                    sentCommendations: { select: { id: true } }
+                    commendations: {
+                        select: { id: true },
+                        orderBy: { createdAt: "asc" },
+                    },
+                    sentCommendations: {
+                        select: { id: true },
+                        orderBy: { createdAt: "asc" },
+                    }
                 }
             }
         },
@@ -23,75 +29,98 @@ export const idToEmail = async (memberId: string) => {
     }))?.email ?? "";
 }
 
-export const getLastMonthCommendations = async () => {
-    const lastMonth = new Date(Date.now());
-    lastMonth.setMonth(lastMonth.getMonth() - 1);
-    if (lastMonth.getMonth() < 0) {
-        lastMonth.setMonth(12);
+export type TimeRangeCommendations = {
+    teams: {
+        sentCommendations: number;
+        commendations: number;
+        id: string;
+        name: string;
+        imageURL: string | null;
+        members: (Member & {
+            commendations: {
+                id: string;
+            }[];
+            sentCommendations: {
+                id: string;
+            }[];
+        })[];
+    }[],
+    members: {
+        sendMembers: (Member & {
+            sentCommendations: {
+                id: string;
+            }[];
+        })[];
+        recvMembers: (Member & {
+            commendations: {
+                id: string;
+            }[];
+        })[];
     }
-    lastMonth.setDate(1);
-    lastMonth.setHours(0, 0, 0);
+};
 
-    const thisMonth = new Date(Date.now());
-    thisMonth.setDate(1);
-    thisMonth.setHours(0, 0, 0);
-
-    const teams = await prisma
-        .team
-        .findMany({
-            select: {
-                members: {
-                    select: {
-                        sentCommendations: {
-                            where: {
-                                createdAt: {
-                                    gte: lastMonth,
-                                    lte: thisMonth
-                                }
-                            },
-                            select: { id: true }
-                        }
+export const getTimeRangeCommendations = async (dateRange: { createdAt: { gte: Date, lte: Date } }): Promise<TimeRangeCommendations> => {
+    const teams = await prisma.team.findMany({
+        include: {
+            members: {
+                include: {
+                    sentCommendations: {
+                        where: dateRange,
+                        select: { id: true },
+                    },
+                    commendations: {
+                        where: dateRange,
+                        select: { id: true },
                     }
                 }
-            }, orderBy: { name: "asc" }
-        });
+            },
+        },
+        orderBy: { name: "asc" },
+    });
 
-    return teams.reduce((previous, current) => {
-        previous += current.members.reduce((previousCommendationsCount, currentMember) => {
-            return previousCommendationsCount + currentMember.sentCommendations.length;
-        }, 0)
-        return previous;
-    }, 0);
-}
+    const recvMembers = await prisma.member.findMany({
+        where: {
+            commendations: {
+                some: {}
+            }
+        },
+        include: {
+            commendations: {
+                where: dateRange,
+                select: { id: true },
+            },
+        },
+        orderBy: {
+            commendations: { _count: "desc" },
+        }
+    });
 
-export const getThisMonthCommendations = async () => {
-    const thisMonth = new Date(Date.now());
-    thisMonth.setDate(1);
-    thisMonth.setHours(0, 0, 0);
+    const sendMembers = await prisma.member.findMany({
+        where: {
+            commendations: {
+                some: {}
+            }
+        },
+        include: {
+            sentCommendations: {
+                where: dateRange,
+                select: { id: true },
+            },
+        },
+        orderBy: {
+            commendations: { _count: "desc" },
+        }
+    });
 
-    const teams = await prisma
-        .team
-        .findMany({
-            select: {
-                members: {
-                    select: {
-                        sentCommendations: {
-                            where: {
-                                createdAt: {
-                                    gte: thisMonth
-                                }
-                            },
-                            select: { id: true }
-                        }
-                    }
-                }
-            }, orderBy: { name: "asc" }
-        });
-
-    return teams.reduce((previous, current) => {
-        previous += current.members.reduce((previousCommendationsCount, currentMember) => {
-            return previousCommendationsCount + currentMember.sentCommendations.length;
-        }, 0)
-        return previous;
-    }, 0);
+    return {
+        teams: teams.map((current) => ({
+            ...current,
+            sentCommendations: current.members.reduce((prev, curr) => prev + curr.sentCommendations.length, 0),
+            commendations: current.members.reduce((prev, curr) => prev + curr.commendations.length, 0),
+        })),
+        members: {
+            sendMembers,
+            recvMembers,
+        }
+    };
 }

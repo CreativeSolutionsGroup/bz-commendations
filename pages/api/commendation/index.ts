@@ -6,6 +6,7 @@ import { revalidate } from "@/lib/revalidate";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import { getTimeRangeCommendations } from "@/lib/api/teams";
 
 const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse, session: Session, sender: string) => {
   const recipientId = req.body.recipient as string;
@@ -27,7 +28,7 @@ const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse,
   const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg);
   // // send text to the recip
   const pText = (recipient.phone != null) ? sendBzText(recipient.phone, session?.user?.name as string, msg) : null;
-  
+
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
   const pTeamEmail = (teamLeadersEmails && teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
   try {
@@ -75,7 +76,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   switch (req.method) {
     case "GET":
-      const commendations = await readAllCommendations();
+      if (!session.isAdmin) {
+        return res.status(401).send("401 UNAUTHORIZED");
+      }
+
+      const { firstDate, secondDate } = req.query;
+      const dateRange = {
+        createdAt: {
+          gte: firstDate ? new Date(firstDate as string) : new Date(0),
+          lte: secondDate ? new Date(secondDate as string) : new Date(3000, 0),
+        },
+      }
+      const commendations = await getTimeRangeCommendations(dateRange);
+
       res.json(commendations);
       break;
     case "POST":

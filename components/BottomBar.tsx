@@ -5,9 +5,9 @@ import CallMadeIcon from '@mui/icons-material/CallMade';
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-export const BottomBar = () => {
+export const BottomBar = ({ page } : { page : string }) => {
     const { data: session } = useSession()
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState(page);
     
     return (
       <Box pt={8} >

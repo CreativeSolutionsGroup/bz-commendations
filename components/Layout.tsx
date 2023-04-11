@@ -1,6 +1,6 @@
 import { ThemeProvider } from "@mui/material/styles";
-import { PropsWithChildren } from "react"
-import { Roboto } from '@next/font/google'
+import { PropsWithChildren } from "react";
+import { Roboto } from "@next/font/google";
 import theme from "@/config/theme";
 import { Header } from "./Header";
 
@@ -14,5 +14,5 @@ export const Layout = ({ children }: PropsWithChildren<{ children: any }>) => {
         <main>{children}</main>
       </div>
     </ThemeProvider>
-  )
-}
+  );
+};

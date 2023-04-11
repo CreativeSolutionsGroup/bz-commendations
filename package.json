@@ -33,5 +33,9 @@
     "sharp": "^0.31.3",
     "twilio": "^4.7.2",
     "typescript": "4.9.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.38.0",
+    "eslint-config-next": "^13.3.0"
   }
 }

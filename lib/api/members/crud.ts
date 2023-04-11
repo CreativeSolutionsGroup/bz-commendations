@@ -14,8 +14,8 @@ export const getMembersWithSentCommendations = async () => {
         }
       },
     }
-  })
-}
+  });
+};
 
 export const getMembersWithReceivedCommendations = async () => {
   return await prisma.member.findMany({
@@ -31,5 +31,5 @@ export const getMembersWithReceivedCommendations = async () => {
         }
       },
     }
-  })
-}
+  });
+};

@@ -27,7 +27,7 @@ function renderRow(props: ListChildComponentProps) {
 
   if (dataSet.hasOwnProperty("group")) {
     return (
-      <ListSubheader key={dataSet.key} component="div" style={{ ...inlineStyle, height: 36}}>
+      <ListSubheader key={dataSet.key} component="div" style={{ ...inlineStyle, height: 36 }}>
         {dataSet.group}
       </ListSubheader>
     );
@@ -48,15 +48,15 @@ function renderRow(props: ListChildComponentProps) {
         </Typography>
       </Box>
     </MenuItem>
-  )
+  );
 }
 
 const OuterElementContext = createContext({});
 
-const OuterElementType = forwardRef<HTMLDivElement>((props, ref) => {
+const OuterElementType = forwardRef<HTMLDivElement>(function CommendationOuter(props, ref) {
   const outerProps = useContext(OuterElementContext);
-  return <div ref={ref} {...props} {...outerProps} />
-})
+  return <div ref={ref} {...props} {...outerProps} />;
+});
 
 function useResetCache(data: any) {
   const ref = useRef<VariableSizeList>(null);
@@ -129,16 +129,16 @@ const StyledPopper = styled(Popper)({
       margin: 0
     }
   }
-})
+});
 
 type TeamListItem = Team & { members: Array<Member> };
 type MemberListItem = Member & { teams: Array<Team> };
 
 const isMemberListItem = (obj: any): obj is Array<MemberListItem> => {
   return obj[0].email !== undefined;
-}
+};
 
-export default ({ recipients, teamTab }: { recipients: (MemberListItem | TeamListItem)[], teamTab?: boolean }) => {
+export default function CommendationForm({ recipients, teamTab }: { recipients: (MemberListItem | TeamListItem)[], teamTab?: boolean }) {
   const [sending, setSending] = useState(false);
   const [itemData, setToItem] = useState("");
   const [_recipients, setRecipients] = useState(recipients);
@@ -150,7 +150,7 @@ export default ({ recipients, teamTab }: { recipients: (MemberListItem | TeamLis
     if (isMemberListItem(_recipients)) {
       setRecipients(_recipients.filter(member => member.email !== session?.user?.email));
     }
-  }, [status]);
+  }, [status, _recipients, session?.user?.email]);
 
   return (
     <Paper sx={{ mt: 4, mx: "auto", maxWidth: "30rem", p: 2 }}>
@@ -169,7 +169,9 @@ export default ({ recipients, teamTab }: { recipients: (MemberListItem | TeamLis
             getOptionLabel={(recip) => recip.name}
             groupBy={(option) => option.name[0].toUpperCase()}
             renderInput={(params) => <TextField {...params} label="To *" />}
-            renderOption={(props, option, state) =>
+            renderOption={(
+              props, option, state
+            ) =>
               [props, option, state.index] as ReactNode
             }
             renderGroup={(params) => params as unknown as ReactNode}
@@ -181,5 +183,5 @@ export default ({ recipients, teamTab }: { recipients: (MemberListItem | TeamLis
         </Stack>
       </form>
     </Paper>
-  )
-}
+  );
+};

@@ -1,29 +1,29 @@
 import { Snackbar, Alert, Fab, Link } from "@mui/material";
 import { useState, SyntheticEvent, useEffect } from "react";
-import GroupsIcon from '@mui/icons-material/Groups';
+import GroupsIcon from "@mui/icons-material/Groups";
 import { useRouter } from "next/router";
 
 interface ElementsProps {
   defaultOpen: boolean
 }
 
-export default function () {
+export default function IndexAbsoluteElements() {
   const router = useRouter();
   const [open, setOpen] = useState(router.query.success === "true");
 
-  useEffect(() => setOpen(router.query.success === "true"), [router.query.success])
+  useEffect(() => setOpen(router.query.success === "true"), [router.query.success]);
 
   const handleClose = async (_?: SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpen(false);
-  }
+  };
 
   return (
     <>
       <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ wdith: '100%' }}>
+        <Alert onClose={handleClose} severity="success" sx={{ wdith: "100%" }}>
           Successfully sent!
         </Alert>
       </Snackbar>
@@ -31,5 +31,5 @@ export default function () {
         <GroupsIcon />
       </Fab>
     </>
-  )
+  );
 }

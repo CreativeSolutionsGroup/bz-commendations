@@ -1,6 +1,6 @@
-import { Box, Paper, Typography } from "@mui/material"
-import { Member } from "@prisma/client"
-import Image from "next/image"
+import { Box, Paper, Typography } from "@mui/material";
+import { Member } from "@prisma/client";
+import Image from "next/image";
 
 export type MemberWithCommendations = Member & {
   commendations: {
@@ -11,10 +11,10 @@ export type MemberWithCommendations = Member & {
   }[];
 }
 
-export default ({ sendingUsers, receivingUsers }: {
+export default function AdminLeaderboardView({ sendingUsers, receivingUsers }: {
   sendingUsers: (Member & { sentCommendations: { id: string }[] })[]
   receivingUsers: (Member & { commendations: { id: string }[] })[]
-}) => {
+}) {
   receivingUsers.sort((a, b) => b.commendations.length - a.commendations.length);
   sendingUsers.sort((a, b) => b.sentCommendations.length - a.sentCommendations.length);
 
@@ -49,5 +49,5 @@ export default ({ sendingUsers, receivingUsers }: {
         }
       </Box>
     </Box>
-  )
-}
+  );
+};

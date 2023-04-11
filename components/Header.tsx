@@ -13,7 +13,7 @@ import { MouseEvent, useEffect, useState } from "react";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
-export const Header = () => {
+export function Header() {
   const { data: session } = useSession();
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorElement);

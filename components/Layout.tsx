@@ -6,7 +6,7 @@ import { Header } from "./Header";
 
 const roboto = Roboto({ weight: ["400", "700"], subsets: ["latin"] });
 
-export const Layout = ({ children }: PropsWithChildren<{ children: any }>) => {
+export function Layout({ children }: PropsWithChildren<{ children: any }>) {
   return (
     <ThemeProvider theme={theme}>
       <div className={roboto.className}>

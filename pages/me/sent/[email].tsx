@@ -19,7 +19,7 @@ export async function getStaticPaths() {
       }
     })),
     fallback: true
-  }
+  };
 }
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
@@ -31,7 +31,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   return {
     props: { comms },
     revalidate: 60
-  }
+  };
 }
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
@@ -58,10 +58,9 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
                 <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
               </Stack>
             </Box>
-          </Paper>
-        )}
+          </Paper>)}
         <BottomBar page="/sent" />
       </main>
     </>
-  )
+  );
 }

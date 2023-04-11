@@ -15,24 +15,20 @@ export async function getStaticProps() {
 
   // Reduce all teams from an array of teams to an array of # of commendations sent PER team.
   const commendationsSent = teams.reduce((previous, current) => {
-    previous.push(
-      current.members.reduce((previousCommendationsCount, currentMember) => {
-        return previousCommendationsCount + currentMember.sentCommendations.length;
-      }, 0)
-    )
+    previous.push(current.members.reduce((previousCommendationsCount, currentMember) => {
+      return previousCommendationsCount + currentMember.sentCommendations.length;
+    }, 0));
     return previous;
-  }, [] as number[])
+  }, [] as number[]);
 
 
   // Reduce all teams from an array of teams to an array of # of commendations received PER team.
   const commendationsReceived = teams.reduce((previousTeamCommendationCount, currentTeam) => {
-    previousTeamCommendationCount.push(
-      currentTeam.members.reduce((previousCommendationsCount, currentMember) => {
-        return previousCommendationsCount + currentMember.commendations.length;
-      }, 0)
-    )
+    previousTeamCommendationCount.push(currentTeam.members.reduce((previousCommendationsCount, currentMember) => {
+      return previousCommendationsCount + currentMember.commendations.length;
+    }, 0));
     return previousTeamCommendationCount;
-  }, [] as number[])
+  }, [] as number[]);
 
   const lastMonthCommendations = await getLastMonthCommendations();
   const thisMonthCommendations = await getThisMonthCommendations();
@@ -89,5 +85,5 @@ export default function Admin({ teams, sending, receiving, commendationsReceived
         </Box>
       </main>
     </>
-  )
+  );
 }

@@ -6,7 +6,6 @@ import hash from "@/assets/bz-letters-hash.png";
 import bz from "@/assets/BZ-letters.png";
 import { ReactElement } from "react";
 
-
 type TeamsList = (Team & {
   members: (Member & {
     commendations: {
@@ -18,13 +17,13 @@ type TeamsList = (Team & {
   })[];
 })[];
 
-const DataChip = ({ label, icon }: { label: string | null, icon: ReactElement }) => {
+function DataChip({ label, icon }: { label: string | null, icon: ReactElement }) {
   return (
     <Chip icon={icon} label={label} sx={{ padding: 0.3, flex: 1, mx: 1 }} />
-  )
-}
+  );
+};
 
-export default ({ teams, commendationsSent, commendationsReceived }: { teams: TeamsList, commendationsSent: number[], commendationsReceived: number[] }) => {
+export default function AdminSquareView({ teams, commendationsSent, commendationsReceived }: { teams: TeamsList, commendationsSent: number[], commendationsReceived: number[] }) {
   return (<Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={10}>
     {
       teams.map((currentTeam, currentIndex) =>
@@ -38,8 +37,7 @@ export default ({ teams, commendationsSent, commendationsReceived }: { teams: Te
             <DataChip label={commendationsSent[currentIndex].toString()} icon={<Send />} />
             <DataChip label={commendationsReceived[currentIndex].toString()} icon={<MoveToInbox />} />
           </Box>
-        </Card>
-      )
+        </Card>)
     }
-  </Box>)
-}
+  </Box>);
+};

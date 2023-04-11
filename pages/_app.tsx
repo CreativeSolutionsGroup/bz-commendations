@@ -1,19 +1,19 @@
-import '@/styles/globals.css'
-import type { AppProps } from 'next/app'
-import { Layout } from '@/components/Layout'
-import { SessionProvider } from 'next-auth/react'
-import { EmotionCache } from '@emotion/react';
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { Layout } from "@/components/Layout";
+import { SessionProvider } from "next-auth/react";
+import { EmotionCache } from "@emotion/react";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
 import { CacheProvider } from "@emotion/react";
-import createCache from '@emotion/cache';
-import Head from 'next/head';
+import createCache from "@emotion/cache";
+import Head from "next/head";
 
 function createEmotionCache() {
-    return createCache({ key: 'css', prepend: true });
+  return createCache({ key: "css", prepend: true });
 }
 
 const clientSideEmotionCache = createEmotionCache();
@@ -34,5 +34,5 @@ export default function App({ Component, pageProps, emotionCache = clientSideEmo
         </Layout>
       </SessionProvider>
     </CacheProvider>
-  )
+  );
 }

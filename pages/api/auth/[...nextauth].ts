@@ -1,6 +1,6 @@
 import { Role } from "@prisma/client";
-import NextAuth, { AuthOptions } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
+import NextAuth, { AuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "@/lib/api/db";
 
 declare global {
@@ -61,11 +61,11 @@ export const authOptions: AuthOptions = {
       session.id_token = token.id_token;
 
       // session.roles = token.roles;
-      session.isAdmin = token.isAdmin
+      session.isAdmin = token.isAdmin;
 
       return session;
     },
   },
-}
+};
 
 export default NextAuth(authOptions);

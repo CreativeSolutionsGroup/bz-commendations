@@ -118,7 +118,9 @@ export default function Admin() {
           <AdminLeaderboardView members={data.members} />
         }
         <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
-          <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>Total commendations sent: {data.teams?.reduce((prev, curr) => prev + curr.sentCommendations, 0)}</Card>
+          <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>
+            <Typography>Total commendations sent: {data.teams?.reduce((prev, curr) => prev + curr.sentCommendations, 0)}</Typography>
+          </Card>
         </Box>
       </main>
     </>

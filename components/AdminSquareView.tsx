@@ -28,8 +28,8 @@ function SquareView({ teams }: { teams: TeamsList }) {
     {
       teams?.map((currentTeam, currentIndex) =>
         <Card key={currentIndex} sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
-          <Box position={"relative"} height={"60%"} width={"90%"}>
-            <Image placeholder="blur" blurDataURL={hash.src} sizes="(max-width: 250px) 100vw" src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain", }} fill />
+          <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center">
+            <Image placeholder="blur" blurDataURL={hash.src} src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain", }} width={200} height={200} />
           </Box>
           <Typography textAlign={"center"} fontSize={20} mt={3}>{currentTeam.name}</Typography>
           <Box display={"flex"} mt={2}>

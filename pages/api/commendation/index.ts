@@ -8,12 +8,16 @@ import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import { getTimeRangeCommendations } from "@/lib/api/teams";
 
-const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse, session: Session, sender: string) => {
+const sendMemberCommendation = async (
+  req: NextApiRequest, res: NextApiResponse, session: Session, sender: string
+) => {
   const recipientId = req.body.recipient as string;
   const msg = req.body.msg as string;
 
   const recipient = await getMemberWithTeams(recipientId);
-  if (recipient == null) return res.redirect("/?success=false");
+  if (recipient == null || recipientId === sender) return res.redirect("/?success=false");
+
+
 
   // we also want to send emails to the team leaders.
   const teamLeaders = await getMemberTeamLeaders(recipient.teams.map(t => t.id));
@@ -23,14 +27,22 @@ const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse,
 
   const pImage = (recipient.imageURL == null) && updateMemberImageURL(session?.user?.image as string, sender);
   // // log the commendation
-  const pCommendation = createCommendation(sender as string, recipientId, msg);
+  const pCommendation = createCommendation(
+sender as string, recipientId, msg
+  );
   // // send email to the recip
-  const pEmail = sendBzEmail(session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg);
+  const pEmail = sendBzEmail(
+session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg
+  );
   // // send text to the recip
-  const pText = (recipient.phone != null) ? sendBzText(recipient.phone, session?.user?.name as string, msg) : null;
-
+  const pText = (recipient.phone != null) ? sendBzText(
+    recipient.phone, session?.user?.name as string, msg
+  ) : null;
+  
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
-  const pTeamEmail = (teamLeadersEmails && teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
+  const pTeamEmail = (teamLeadersEmails && teamLeadersEmails.length < 10) && sendBzEmail(
+session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true }
+  );
   try {
     await Promise.all([pTeamEmail, pCommendation, pEmail, pText, pImage]);
   } catch (e) {
@@ -43,9 +55,11 @@ const sendMemberCommendation = async (req: NextApiRequest, res: NextApiResponse,
     console.error(`Revalidation failed ${JSON.stringify(e)}`);
   }
   return res.redirect(302, "/?success=true");
-}
+};
 
-const sendTeamCommendation = async (req: NextApiRequest, res: NextApiResponse, session: Session, sender: string) => {
+const sendTeamCommendation = async (
+  req: NextApiRequest, res: NextApiResponse, session: Session, sender: string
+) => {
   const teamId = req.body.recipient as string;
   const msg = req.body.msg as string;
 
@@ -56,7 +70,9 @@ const sendTeamCommendation = async (req: NextApiRequest, res: NextApiResponse, s
   // const pCommendation = createCommendation(sender as string, await emailToId(teamLeadersEmails[0]) ?? "", msg);
 
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
-  const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true });
+  const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(
+session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true }
+  );
   try {
     await pTeamEmail;
   } catch (e) {
@@ -66,12 +82,14 @@ const sendTeamCommendation = async (req: NextApiRequest, res: NextApiResponse, s
 
   // No revalidation because we aren't actually adding a commendation to the database
   res.redirect(302, "/team?success=true");
-}
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
+  const session = await getServerSession(
+    req, res, authOptions
+  );
   if (!session || !session.user) {
-    return res.redirect("/api/auth/signin")
+    return res.redirect("/api/auth/signin");
   }
 
   switch (req.method) {
@@ -86,7 +104,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           gte: firstDate ? new Date(firstDate as string) : new Date(0),
           lte: secondDate ? new Date(secondDate as string) : new Date(3000, 0),
         },
-      }
+      };
       const commendations = await getTimeRangeCommendations(dateRange);
 
       res.json(commendations);
@@ -100,14 +118,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       if (req.body.recipient == null || req.body.msg == null) {
-        console.error("Error: No recipient or no message. ")
-        return res.redirect("/?success=false")
+        console.error("Error: No recipient or no message. ");
+        return res.redirect("/?success=false");
       }
 
       if (await idIsMember(req.body.recipient as string)) {
-        sendMemberCommendation(req, res, session, sender as string);
+        sendMemberCommendation(
+          req, res, session, sender as string
+        );
       } else {
-        sendTeamCommendation(req, res, session, sender);
+        sendTeamCommendation(
+          req, res, session, sender
+        );
       }
       break;
   }

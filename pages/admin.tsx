@@ -122,5 +122,5 @@ export default function Admin() {
         </Box>
       </main>
     </>
-  )
+  );
 }

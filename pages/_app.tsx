@@ -1,21 +1,21 @@
-import { Layout } from '@/components/Layout';
-import '@/styles/globals.css';
-import { EmotionCache } from '@emotion/react';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { SessionProvider } from 'next-auth/react';
-import type { AppProps } from 'next/app';
+import { Layout } from "@/components/Layout";
+import "@/styles/globals.css";
+import { EmotionCache } from "@emotion/react";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
 }
 
-import createCache from '@emotion/cache';
+import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import Head from 'next/head';
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import Head from "next/head";
 
 function createEmotionCache() {
-  return createCache({ key: 'css', prepend: true });
+  return createCache({ key: "css", prepend: true });
 }
 
 const clientSideEmotionCache = createEmotionCache();
@@ -38,5 +38,5 @@ export default function App({ Component, pageProps, emotionCache = clientSideEmo
         </SessionProvider>
       </CacheProvider>
     </LocalizationProvider>
-  )
+  );
 }

@@ -8,7 +8,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: { teams }
-  }
+  };
 }
 
 export default function TeamCommendation({ teams }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -24,5 +24,5 @@ export default function TeamCommendation({ teams }: InferGetServerSidePropsType<
         <CommendationForm recipients={teams} teamTab />
       </main>
     </>
-  )
+  );
 }

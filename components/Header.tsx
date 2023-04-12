@@ -1,25 +1,25 @@
-import { AppBar, Toolbar, IconButton, Typography, Stack, Menu, MenuItem, Box, Avatar } from "@mui/material"
-import ChatBubbleIcon from "@mui/icons-material/ChatBubble"
+import { AppBar, Toolbar, IconButton, Typography, Stack, Menu, MenuItem, Box, Avatar } from "@mui/material";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 
-import bravo from "@/assets/BZ-flag-red.png"
-import zulu from "@/assets/BZ-flag.png"
-import bz from "@/assets/BZ-letters-solid.png"
-import Image from "next/image"
-import Link from "next/link"
-import { signOut, useSession } from "next-auth/react"
-import { Raleway } from "@next/font/google"
-import { Analytics, Logout } from "@mui/icons-material"
-import { MouseEvent, useEffect, useState } from "react"
+import bravo from "@/assets/BZ-flag-red.png";
+import zulu from "@/assets/BZ-flag.png";
+import bz from "@/assets/BZ-letters-solid.png";
+import Image from "next/image";
+import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
+import { Raleway } from "@next/font/google";
+import { Analytics, Logout } from "@mui/icons-material";
+import { MouseEvent, useEffect, useState } from "react";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
-export const Header = () => {
-  const { data: session } = useSession()
+export function Header() {
+  const { data: session } = useSession();
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorElement);
   const handleClose = () => {
     setAnchorElement(null);
-  }
+  };
 
   return (
     <AppBar position="static" color="primary">
@@ -47,7 +47,7 @@ export const Header = () => {
               <ChatBubbleIcon color="secondary" />
             </Link>
           </IconButton>
-          <IconButton onClick={(e: MouseEvent<HTMLElement>) => { setAnchorElement(e.currentTarget) }}>
+          <IconButton onClick={(e: MouseEvent<HTMLElement>) => { setAnchorElement(e.currentTarget); }}>
             <Avatar sx={{ ml: 0.5 }}>
               <Image fill src={session?.user?.image ?? "https://via.placeholder.com/25?text="} alt="" />
             </Avatar>
@@ -81,5 +81,5 @@ export const Header = () => {
       </Toolbar>
 
     </AppBar>
-  )
-}
+  );
+};

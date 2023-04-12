@@ -1,7 +1,7 @@
-import { InferGetStaticPropsType } from 'next';
-import { readAllMembers } from '@/lib/api/commendations';
-import CommendationForm from '@/components/CommendationForm';
-import IndexAbsoluteElements from '@/components/IndexAbsoluteElements';
+import { InferGetStaticPropsType } from "next";
+import { readAllMembers } from "@/lib/api/commendations";
+import CommendationForm from "@/components/CommendationForm";
+import IndexAbsoluteElements from "@/components/IndexAbsoluteElements";
 
 export async function getStaticProps() {
   const members = await readAllMembers();
@@ -9,7 +9,7 @@ export async function getStaticProps() {
   return {
     props: { members },
     revalidate: 60
-  }
+  };
 }
 
 export default function Home({ members }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -21,5 +21,5 @@ export default function Home({ members }: InferGetStaticPropsType<typeof getStat
 
       <IndexAbsoluteElements />
     </>
-  )
+  );
 }

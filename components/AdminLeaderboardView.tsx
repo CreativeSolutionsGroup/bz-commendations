@@ -1,6 +1,6 @@
-import { Box, Paper, Typography } from "@mui/material"
-import { Member } from "@prisma/client"
-import Image from "next/image"
+import { Box, Paper, Typography } from "@mui/material";
+import { Member } from "@prisma/client";
+import Image from "next/image";
 
 export type MemberWithCommendations = {
   sendMembers: (Member & {
@@ -15,7 +15,7 @@ export type MemberWithCommendations = {
   })[];
 }
 
-export default ({ members }: { members: MemberWithCommendations }) => {
+function Leaderboard({ members }: { members: MemberWithCommendations }) {
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
@@ -47,5 +47,7 @@ export default ({ members }: { members: MemberWithCommendations }) => {
         }
       </Box>
     </Box>
-  )
+  );
 }
+
+export default Leaderboard;

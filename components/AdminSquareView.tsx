@@ -6,7 +6,6 @@ import hash from "@/assets/bz-letters-hash.png";
 import bz from "@/assets/BZ-letters.png";
 import { ReactElement } from "react";
 
-
 type TeamsList = (Team & {
   members: (Member & {
     commendations: {
@@ -18,13 +17,13 @@ type TeamsList = (Team & {
   })[];
 })[];
 
-const DataChip = ({ label, icon }: { label: string | null, icon: ReactElement }) => {
+function DataChip({ label, icon }: { label: string | null, icon: ReactElement }) {
   return (
     <Chip icon={icon} label={label} sx={{ padding: 0.3, flex: 1, mx: 1 }} />
-  )
-}
+  );
+};
 
-export default ({ teams }: { teams: TeamsList }) => {
+function SquareView({ teams }: { teams: TeamsList }) {
   return (<Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={10}>
     {
       teams?.map((currentTeam, currentIndex) =>
@@ -38,8 +37,9 @@ export default ({ teams }: { teams: TeamsList }) => {
             <DataChip label={currentTeam.members.reduce((prev, curr) => prev + curr.sentCommendations.length, 0).toString()} icon={<Send />} />
             <DataChip label={currentTeam.members.reduce((prev, curr) => prev + curr.commendations.length, 0).toString()} icon={<MoveToInbox />} />
           </Box>
-        </Card>
-      )
+        </Card>)
     }
-  </Box>)
+  </Box>);
 }
+
+export default SquareView;

@@ -11,7 +11,7 @@ export const idToName = async (studentId: string) => {
   const { name } = student;
 
   return name as string;
-}
+};
 
 export const emailToId = async (sender: string) => {
   const member = await prisma.member.findFirst({ where: { email: sender } });
@@ -22,10 +22,12 @@ export const emailToId = async (sender: string) => {
 
   const { id } = member;
 
-  return id as string
-}
+  return id as string;
+};
 
-export const createCommendation = async (sender: string, recipient: string, msg: string) => {
+export const createCommendation = async (
+  sender: string, recipient: string, msg: string
+) => {
   return await prisma.commendation.create({
     data: {
       sender: {
@@ -41,11 +43,11 @@ export const createCommendation = async (sender: string, recipient: string, msg:
       message: msg
     }
   });
-}
+};
 
 export const readAllCommendations = async () => {
-  return await prisma.commendation.findMany()
-}
+  return await prisma.commendation.findMany();
+};
 
 export const readAllMembers = async (currentUserEmail = "") => {
   return await prisma.member.findMany({
@@ -60,8 +62,8 @@ export const readAllMembers = async (currentUserEmail = "") => {
     orderBy: {
       name: "asc"
     }
-  })
-}
+  });
+};
 
 export const updateMemberImageURL = async (image: string, id: string) => {
   return await prisma.member.update({
@@ -71,8 +73,8 @@ export const updateMemberImageURL = async (image: string, id: string) => {
     where: {
       id
     }
-  })
-}
+  });
+};
 
 export const readUserCommendations = async (email: string) => {
   const user = await prisma.member.findFirst({
@@ -94,7 +96,7 @@ export const readUserCommendations = async (email: string) => {
     }
   });
   return user?.commendations;
-}
+};
 
 export const readUserSentCommendations = async (email: string) => {
   const user = await prisma.member.findFirst({
@@ -116,7 +118,7 @@ export const readUserSentCommendations = async (email: string) => {
     }
   });
   return user?.sentCommendations;
-}
+};
 
 /**
  * The function name here is misleading.
@@ -136,8 +138,8 @@ export const getMemberTeamLeaders = async (teams: string[]) => {
     }
   });
 
-  return teamLeaders.map(l => l.member)
-}
+  return teamLeaders.map(l => l.member);
+};
 
 export const getMemberWithTeams = async (id: string) => {
   return await prisma.member.findFirst({
@@ -147,8 +149,8 @@ export const getMemberWithTeams = async (id: string) => {
     include: {
       teams: true
     }
-  })
-}
+  });
+};
 
 export const idIsMember = async (id: string) => {
   return !!await prisma.member.count({
@@ -156,4 +158,4 @@ export const idIsMember = async (id: string) => {
       id
     }
   });
-}
+};

@@ -24,9 +24,7 @@ export default function Admin() {
   };
 
   useEffect(() => {
-    fetch(`/api/commendation?firstDate=${firstDate}&secondDate=${secondDate}`).then((res) => {
-      res.json().then((value) => setData(value));
-    });
+    fetch(`/api/commendation?firstDate=${firstDate}&secondDate=${secondDate}`).then(r => r.json()).then(j => setData(j));
   }, [firstDate, secondDate]);
 
   useEffect(() => {
@@ -46,83 +44,81 @@ export default function Admin() {
 
   return (
     <>
-      <main>
-        <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
-          <Typography
-            sx={{
-              textAlign: "center",
-              fontSize: 24,
-              fontWeight: "bold",
-              marginTop: 1,
-              flexGrow: 1,
-            }}
-          >
-            Admin Dashboard
-          </Typography>
-          <Menu
-            anchorEl={settingsAnchorEl}
-            open={settingsOpen}
-            onClose={handleSettingsClose}
-          >
-            <MenuItem sx={{ display: "flex" }}>
-              <Box flexGrow={1} />
-              <Typography mr={1}>Start Date</Typography>
-              <DatePicker
-                value={firstDate}
-                onChange={v => {
-                  v && setFirstDate(v);
-                  v && fetch(`/api/admin?first=${v}`, { method: "POST" });
-                  handleSettingsClose();
-                }}
-                sx={{ width: 175, marginRight: 1 }}
-              />
-            </MenuItem>
-            <MenuItem sx={{ display: "flex" }}>
-              <Box flexGrow={1} />
-              <Typography mr={1}>End Date</Typography>
-              <DatePicker
-                value={secondDate}
-                onChange={v => {
-                  v && setSecondDate(v);
-                  v && fetch(`/api/admin?second=${v}`, { method: "POST" });
-                  handleSettingsClose();
-                }}
-                sx={{ width: 175, marginRight: 1 }}
-              />
-            </MenuItem>
-            <MenuItem onClick={handleSettingsClose} sx={{ display: "flex" }}>
-              <Box flexGrow={1} />
-              <Typography mr={1}>Mode</Typography>
-              <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => setViewMode(e.target.value)} sx={{ marginRight: 1 }}>
-                <MenuItem key={1} value={"square"}>
-                  <Box display={"flex"} flexDirection={"row"}>
-                    <GridView />
-                    <Typography ml={1} fontWeight="bold">Square View</Typography>
-                  </Box>
-                </MenuItem>
-                <MenuItem key={2} value={"leaderboard"}>
-                  <Box display={"flex"} flexDirection={"row"}>
-                    <EmojiEvents />
-                    <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
-                  </Box>
-                </MenuItem>
-              </Select>
-            </MenuItem>
-          </Menu>
-          <IconButton onClick={handleSettingsClick} sx={{ position: "absolute", right: 6, top: 70 }}>
-            <Settings sx={{ marginY: "auto" }}></Settings>
-          </IconButton>
-        </Box>
-        {viewMode === "square" ?
-          <AdminSquareView teams={data.teams} /> :
-          <AdminLeaderboardView members={data.members} />
-        }
-        <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
-          <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>
-            <Typography>Total commendations sent: {data.teams?.reduce((prev, curr) => prev + curr.sentCommendations, 0)}</Typography>
-          </Card>
-        </Box>
-      </main>
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
+        <Typography
+          sx={{
+            textAlign: "center",
+            fontSize: 24,
+            fontWeight: "bold",
+            marginTop: 1,
+            flexGrow: 1,
+          }}
+        >
+          Admin Dashboard
+        </Typography>
+        <Menu
+          anchorEl={settingsAnchorEl}
+          open={settingsOpen}
+          onClose={handleSettingsClose}
+        >
+          <MenuItem sx={{ display: "flex" }}>
+            <Box flexGrow={1} />
+            <Typography mr={1}>Start Date</Typography>
+            <DatePicker
+              value={firstDate}
+              onChange={v => {
+                v && setFirstDate(v);
+                v && fetch(`/api/admin?first=${v}`, { method: "POST" });
+                handleSettingsClose();
+              }}
+              sx={{ width: 175, marginRight: 1 }}
+            />
+          </MenuItem>
+          <MenuItem sx={{ display: "flex" }}>
+            <Box flexGrow={1} />
+            <Typography mr={1}>End Date</Typography>
+            <DatePicker
+              value={secondDate}
+              onChange={v => {
+                v && setSecondDate(v);
+                v && fetch(`/api/admin?second=${v}`, { method: "POST" });
+                handleSettingsClose();
+              }}
+              sx={{ width: 175, marginRight: 1 }}
+            />
+          </MenuItem>
+          <MenuItem onClick={handleSettingsClose} sx={{ display: "flex" }}>
+            <Box flexGrow={1} />
+            <Typography mr={1}>Mode</Typography>
+            <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => setViewMode(e.target.value)} sx={{ marginRight: 1 }}>
+              <MenuItem key={1} value={"square"}>
+                <Box display={"flex"} flexDirection={"row"}>
+                  <GridView />
+                  <Typography ml={1} fontWeight="bold">Square View</Typography>
+                </Box>
+              </MenuItem>
+              <MenuItem key={2} value={"leaderboard"}>
+                <Box display={"flex"} flexDirection={"row"}>
+                  <EmojiEvents />
+                  <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
+                </Box>
+              </MenuItem>
+            </Select>
+          </MenuItem>
+        </Menu>
+        <IconButton onClick={handleSettingsClick} sx={{ position: "absolute", right: 6, top: 70 }}>
+          <Settings sx={{ marginY: "auto" }}></Settings>
+        </IconButton>
+      </Box>
+      {viewMode === "square" ?
+        <AdminSquareView teams={data.teams} /> :
+        <AdminLeaderboardView members={data.members} />
+      }
+      <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
+        <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>
+          <Typography>Total commendations sent: {data.teams?.reduce((prev, curr) => prev + curr.sentCommendations, 0)}</Typography>
+        </Card>
+      </Box>
     </>
   );
 }

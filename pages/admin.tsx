@@ -12,8 +12,8 @@ import { MouseEvent, useEffect, useState } from "react";
 export default function Admin() {
   const [viewMode, setViewMode] = useState("square");
   const [data, setData] = useState<TimeRangeCommendations>({} as TimeRangeCommendations);
-  const [firstDate, setFirstDate] = useState<dayjs.Dayjs>(dayjs().set("date", 1).set("hours", 0));
-  const [secondDate, setSecondDate] = useState<dayjs.Dayjs>(dayjs());
+  const [firstDate, setFirstDate] = useState<dayjs.Dayjs | null>(dayjs().set("date", 1).set("hours", 1));
+  const [secondDate, setSecondDate] = useState<dayjs.Dayjs | null>(dayjs());
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>();
   const settingsOpen = Boolean(settingsAnchorEl);
   const handleSettingsClick = (event: MouseEvent<HTMLElement>) => {
@@ -28,6 +28,21 @@ export default function Admin() {
       res.json().then((value) => setData(value));
     });
   }, [firstDate, secondDate]);
+
+  useEffect(() => {
+    const first = getCookie("admin-first-date");
+    const second = getCookie("admin-second-date");
+
+    if (first && second) {
+      setFirstDate(dayjs(decodeURIComponent(first)));
+      setSecondDate(dayjs(decodeURIComponent(second)));
+    }
+  }, []);
+
+  function getCookie(key: string) {
+    const b = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
+    return b ? b.pop() : "";
+  }
 
   return (
     <>
@@ -51,11 +66,29 @@ export default function Admin() {
           >
             <MenuItem sx={{ display: "flex" }}>
               <Box flexGrow={1} />
-              <Typography mr={1}>Start Date</Typography><DatePicker value={firstDate} onChange={v => { v && setFirstDate(v); handleSettingsClose(); }} sx={{ width: 175, marginRight: 1 }} />
+              <Typography mr={1}>Start Date</Typography>
+              <DatePicker
+                value={firstDate}
+                onChange={v => {
+                  v && setFirstDate(v);
+                  v && fetch(`/api/admin?first=${v}`, { method: "POST" });
+                  handleSettingsClose();
+                }}
+                sx={{ width: 175, marginRight: 1 }}
+              />
             </MenuItem>
             <MenuItem sx={{ display: "flex" }}>
               <Box flexGrow={1} />
-              <Typography mr={1}>End Date</Typography><DatePicker value={secondDate} onChange={v => { v && setSecondDate(v); handleSettingsClose(); }} sx={{ width: 175, marginRight: 1 }} />
+              <Typography mr={1}>End Date</Typography>
+              <DatePicker
+                value={secondDate}
+                onChange={v => {
+                  v && setSecondDate(v);
+                  v && fetch(`/api/admin?second=${v}`, { method: "POST" });
+                  handleSettingsClose();
+                }}
+                sx={{ width: 175, marginRight: 1 }}
+              />
             </MenuItem>
             <MenuItem onClick={handleSettingsClose} sx={{ display: "flex" }}>
               <Box flexGrow={1} />

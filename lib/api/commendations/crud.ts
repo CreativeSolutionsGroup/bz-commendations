@@ -159,3 +159,16 @@ export const idIsMember = async (id: string) => {
     }
   });
 };
+
+export const getMemberImage = async (id: string) => {
+  const image = await prisma.member.findFirst({
+    select: {
+      imageURL: true
+    },
+    where: {
+      id
+    }
+  });
+
+  return image?.imageURL;
+};

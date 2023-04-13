@@ -1,5 +1,5 @@
 import {
-  createCommendation, emailToId, getMemberTeamLeaders, getMemberWithTeams,
+  createCommendation, emailToId, getMemberImage, getMemberTeamLeaders, getMemberWithTeams,
   idIsMember, sendBzEmail, sendBzText, updateMemberImageURL
 } from "@/lib/api/commendations";
 import { getTimeRangeCommendations } from "@/lib/api/teams";
@@ -15,10 +15,22 @@ const sendMemberCommendation = async (
   const msg = req.body.msg as string;
   const sender = await emailToId(session.user?.email ?? "") ?? "";
 
+  if (recipientId === sender) return res.redirect("/?success=false");
+
+  // log the commendation
+  const pCommendation = createCommendation(
+    sender as string, recipientId, msg
+  );
+  try {
+    await pCommendation;
+    res.redirect(302, "/?success=true");
+  } catch (e) {
+    console.error(`Error creating commendation ${JSON.stringify(e)}`);
+    return res.redirect(302, "/?success=false");
+  }
+
   const recipient = await getMemberWithTeams(recipientId);
-  if (recipient == null || recipientId === sender) return res.redirect("/?success=false");
-
-
+  if (recipient == null) return res.redirect("/?success=false");
 
   // we also want to send emails to the team leaders.
   const teamLeaders = await getMemberTeamLeaders(recipient.teams.map(t => t.id));
@@ -26,16 +38,12 @@ const sendMemberCommendation = async (
 
   const recipientEmail = recipient.email;
 
-  const pImage = (recipient.imageURL == null) && updateMemberImageURL(session?.user?.image as string, sender);
-  // // log the commendation
-  const pCommendation = createCommendation(
-    sender as string, recipientId, msg
-  );
-  // // send email to the recip
+  const pImage = (await getMemberImage(sender) == null) && updateMemberImageURL(session?.user?.image as string, sender);
+  // send email to the recip
   const pEmail = sendBzEmail(
     session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg
   );
-  // // send text to the recip
+  // send text to the recip
   const pText = (recipient.phone != null) ? sendBzText(
     recipient.phone, session?.user?.name as string, msg
   ) : null;
@@ -44,18 +52,15 @@ const sendMemberCommendation = async (
   const pTeamEmail = (teamLeadersEmails && teamLeadersEmails.length < 10) && sendBzEmail(
     session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true }
   );
+
+
+
   try {
-    await Promise.all([pTeamEmail, pCommendation, pEmail, pText, pImage]);
-  } catch (e) {
-    console.error(`Error creating commendation ${JSON.stringify(e)}`);
-    return res.redirect(302, "/?success=false");
-  }
-  try {
-    await revalidate("https://next.bz-cedarville.com", recipientEmail);
+    await Promise.all([pTeamEmail, pEmail, pText, pImage, revalidate("https://next.bz-cedarville.com", recipientEmail)]);
   } catch (e) {
     console.error(`Revalidation failed ${JSON.stringify(e)}`);
   }
-  return res.redirect(302, "/?success=true");
+  return;
 };
 
 const sendTeamCommendation = async (

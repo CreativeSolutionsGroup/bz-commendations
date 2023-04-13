@@ -23,7 +23,7 @@ function DataChip({ label, icon }: { label: string | null, icon: ReactElement })
   );
 };
 
-function SquareView({ teams }: { teams: TeamsList }) {
+export default function AdminSquareView({ teams }: { teams: TeamsList }) {
   return (<Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={10}>
     {
       teams?.map((currentTeam, currentIndex) =>
@@ -41,5 +41,3 @@ function SquareView({ teams }: { teams: TeamsList }) {
     }
   </Box>);
 }
-
-export default SquareView;

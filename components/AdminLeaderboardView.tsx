@@ -15,7 +15,7 @@ export type MemberWithCommendations = {
   })[];
 }
 
-function Leaderboard({ members }: { members: MemberWithCommendations }) {
+export default function AdminLeaderboardView({ members }: { members: MemberWithCommendations }) {
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
@@ -49,5 +49,3 @@ function Leaderboard({ members }: { members: MemberWithCommendations }) {
     </Box>
   );
 }
-
-export default Leaderboard;

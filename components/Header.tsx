@@ -10,12 +10,14 @@ import { signOut, useSession } from "next-auth/react";
 import { Raleway } from "@next/font/google";
 import { Analytics, Logout } from "@mui/icons-material";
 import { MouseEvent, useEffect, useState } from "react";
+import Skeleton from "@mui/material/Skeleton";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
 export function Header() {
   const { data: session } = useSession();
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
+  const [pfpLoading, setPfpLoading] = useState(true);
   const open = Boolean(anchorElement);
   const handleClose = () => {
     setAnchorElement(null);
@@ -49,7 +51,7 @@ export function Header() {
           </IconButton>
           <IconButton onClick={(e: MouseEvent<HTMLElement>) => { setAnchorElement(e.currentTarget); }}>
             <Avatar sx={{ ml: 0.5 }}>
-              <Image fill src={session?.user?.image ?? "https://via.placeholder.com/25?text="} alt="" />
+              <Image fill onLoadingComplete={() => setPfpLoading(false)} src={session?.user?.image ?? ""} alt="" />
             </Avatar>
           </IconButton>
           <Menu

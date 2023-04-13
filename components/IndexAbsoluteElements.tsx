@@ -27,7 +27,7 @@ export default function IndexAbsoluteElements() {
           Successfully sent!
         </Alert>
       </Snackbar>
-      <Fab color="secondary" aria-label="teams" sx={{ position: "absolute", bottom: 16, right: 16 }} href="/team">
+      <Fab color="secondary" aria-label="teams" sx={{ position: "fixed", bottom: 16, right: 16 }} href="/team">
         <GroupsIcon />
       </Fab>
     </>

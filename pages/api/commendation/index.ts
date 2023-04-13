@@ -6,6 +6,7 @@ import { revalidate } from "@/lib/revalidate";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import { getTimeRangeCommendations } from "@/lib/api/teams";
 
 const sendMemberCommendation = async (
   req: NextApiRequest, res: NextApiResponse, session: Session, sender: string
@@ -98,7 +99,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   switch (req.method) {
     case "GET":
-      const commendations = await readAllCommendations();
+      if (!session.isAdmin) {
+        return res.status(401).send("401 UNAUTHORIZED");
+      }
+
+      const { firstDate, secondDate } = req.query;
+      const dateRange = {
+        createdAt: {
+          gte: firstDate ? new Date(firstDate as string) : new Date(0),
+          lte: secondDate ? new Date(secondDate as string) : new Date(3000, 0),
+        },
+      };
+      const commendations = await getTimeRangeCommendations(dateRange);
+
       res.json(commendations);
       break;
     case "POST":

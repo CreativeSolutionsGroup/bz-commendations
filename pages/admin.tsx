@@ -1,89 +1,124 @@
-import { ArrowRight, EmojiEvents, GridView, Settings } from "@mui/icons-material";
-import { Card, IconButton, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import AdminLeaderboardView from "@/components/AdminLeaderboardView";
+import AdminSquareView from "@/components/AdminSquareView";
+import { TimeRangeCommendations } from "@/lib/api/teams";
+import { EmojiEvents, GridView, Settings } from "@mui/icons-material";
+import { Card, IconButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
-import { InferGetServerSidePropsType, InferGetStaticPropsType, } from "next";
-import Head from "next/head";
-import { useState } from "react";
-import AdminLeaderboardView from "../components/AdminLeaderboardView";
-import AdminSquareView from "../components/AdminSquareView";
-import { getMembersWithReceivedCommendations, getMembersWithSentCommendations } from "../lib/api/members";
-import { getLastMonthCommendations, getTeams, getThisMonthCommendations } from "../lib/api/teams";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+import { MouseEvent, useEffect, useState } from "react";
 
-export async function getStaticProps() {
-  const teams = await getTeams();
-
-  // Reduce all teams from an array of teams to an array of # of commendations sent PER team.
-  const commendationsSent = teams.reduce((previous, current) => {
-    previous.push(current.members.reduce((previousCommendationsCount, currentMember) => {
-      return previousCommendationsCount + currentMember.sentCommendations.length;
-    }, 0));
-    return previous;
-  }, [] as number[]);
-
-
-  // Reduce all teams from an array of teams to an array of # of commendations received PER team.
-  const commendationsReceived = teams.reduce((previousTeamCommendationCount, currentTeam) => {
-    previousTeamCommendationCount.push(currentTeam.members.reduce((previousCommendationsCount, currentMember) => {
-      return previousCommendationsCount + currentMember.commendations.length;
-    }, 0));
-    return previousTeamCommendationCount;
-  }, [] as number[]);
-
-  const lastMonthCommendations = await getLastMonthCommendations();
-  const thisMonthCommendations = await getThisMonthCommendations();
-
-  const sending = await getMembersWithSentCommendations();
-  const receiving = await getMembersWithReceivedCommendations();
-
-  return {
-    props: {
-      teams,
-      sending, 
-      receiving, 
-      commendationsReceived, 
-      commendationsSent, 
-      lastMonthCommendations, 
-      thisMonthCommendations
-    },
-    revalidate: 60
-  };
-}
-
-export default function Admin({ teams, sending, receiving, commendationsReceived, commendationsSent, lastMonthCommendations, thisMonthCommendations }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function Admin() {
   const [viewMode, setViewMode] = useState("square");
-  const [sortMode, setSortMode] = useState("atoz");
+  const [data, setData] = useState<TimeRangeCommendations>({} as TimeRangeCommendations);
+  const [firstDate, setFirstDate] = useState<dayjs.Dayjs | null>(dayjs().set("date", 1).set("hours", 1));
+  const [secondDate, setSecondDate] = useState<dayjs.Dayjs | null>(dayjs());
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>();
+  const settingsOpen = Boolean(settingsAnchorEl);
+  const handleSettingsClick = (event: MouseEvent<HTMLElement>) => {
+    setSettingsAnchorEl(event.currentTarget);
+  };
+  const handleSettingsClose = () => {
+    setSettingsAnchorEl(null);
+  };
+
+  useEffect(() => {
+    fetch(`/api/commendation?firstDate=${firstDate}&secondDate=${secondDate}`).then(r => r.json()).then(j => setData(j));
+  }, [firstDate, secondDate]);
+
+  useEffect(() => {
+    const first = getCookie("admin-first-date");
+    const second = getCookie("admin-second-date");
+
+    if (first && second) {
+      setFirstDate(dayjs(decodeURIComponent(first)));
+      setSecondDate(dayjs(decodeURIComponent(second)));
+    }
+  }, []);
+
+  function getCookie(key: string) {
+    const b = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
+    return b ? b.pop() : "";
+  }
 
   return (
     <>
-      <main>
-        <Box display={"flex"} flexDirection={"row"} sx={{ marginTop: 1 }}>
-          <Typography flexGrow={1} textAlign={"center"} fontSize={24} fontWeight={"bold"} mt={1}>Admin Dashboard</Typography>
-          <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => setViewMode(e.target.value)}>
-            <MenuItem key={1} value={"square"}>
-              <Box display={"flex"} flexDirection={"row"}>
-                <GridView />
-                <Typography ml={1} fontWeight="bold">Square View</Typography>
-              </Box>
-            </MenuItem>
-            <MenuItem key={2} value={"leaderboard"}>
-              <Box display={"flex"} flexDirection={"row"}>
-                <EmojiEvents />
-                <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
-              </Box>
-            </MenuItem>
-          </Select>
-          <Settings sx={{ marginY: "auto", marginX: 2 }}></Settings>
-        </Box>
-        {viewMode === "square" ?
-          <AdminSquareView teams={teams} commendationsReceived={commendationsReceived} commendationsSent={commendationsSent} /> :
-          <AdminLeaderboardView receivingUsers={receiving} sendingUsers={sending} />
-        }
-        <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
-          <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>Commendations sent last month: {lastMonthCommendations}</Card>
-          <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>Commendations sent this month: {thisMonthCommendations}</Card>
-        </Box>
-      </main>
+      <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
+        <Typography
+          sx={{
+            textAlign: "center",
+            fontSize: 24,
+            fontWeight: "bold",
+            marginTop: 1,
+            flexGrow: 1,
+          }}
+        >
+          Admin Dashboard
+        </Typography>
+        <Menu
+          anchorEl={settingsAnchorEl}
+          open={settingsOpen}
+          onClose={handleSettingsClose}
+        >
+          <MenuItem sx={{ display: "flex" }}>
+            <Box flexGrow={1} />
+            <Typography mr={1}>Start Date</Typography>
+            <DatePicker
+              value={firstDate}
+              onChange={v => {
+                v && setFirstDate(v);
+                v && fetch(`/api/admin?first=${v}`, { method: "POST" });
+                handleSettingsClose();
+              }}
+              sx={{ width: 175, marginRight: 1 }}
+            />
+          </MenuItem>
+          <MenuItem sx={{ display: "flex" }}>
+            <Box flexGrow={1} />
+            <Typography mr={1}>End Date</Typography>
+            <DatePicker
+              value={secondDate}
+              onChange={v => {
+                v && setSecondDate(v);
+                v && fetch(`/api/admin?second=${v}`, { method: "POST" });
+                handleSettingsClose();
+              }}
+              sx={{ width: 175, marginRight: 1 }}
+            />
+          </MenuItem>
+          <MenuItem onClick={handleSettingsClose} sx={{ display: "flex" }}>
+            <Box flexGrow={1} />
+            <Typography mr={1}>Mode</Typography>
+            <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => setViewMode(e.target.value)} sx={{ marginRight: 1 }}>
+              <MenuItem key={1} value={"square"}>
+                <Box display={"flex"} flexDirection={"row"}>
+                  <GridView />
+                  <Typography ml={1} fontWeight="bold">Square View</Typography>
+                </Box>
+              </MenuItem>
+              <MenuItem key={2} value={"leaderboard"}>
+                <Box display={"flex"} flexDirection={"row"}>
+                  <EmojiEvents />
+                  <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
+                </Box>
+              </MenuItem>
+            </Select>
+          </MenuItem>
+        </Menu>
+        <IconButton onClick={handleSettingsClick} sx={{ position: "absolute", right: 6, top: 70 }}>
+          <Settings sx={{ marginY: "auto" }}></Settings>
+        </IconButton>
+      </Box>
+      {viewMode === "square" ?
+        <AdminSquareView teams={data.teams} /> :
+        <AdminLeaderboardView members={data.members} />
+      }
+      <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
+        <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>
+          <Typography>Total commendations sent: {data.teams?.reduce((prev, curr) => prev + curr.sentCommendations, 0)}</Typography>
+        </Card>
+      </Box>
     </>
   );
 }

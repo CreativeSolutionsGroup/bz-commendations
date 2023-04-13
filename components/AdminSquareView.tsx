@@ -1,5 +1,5 @@
 import { Group, MoveToInbox, Send } from "@mui/icons-material";
-import { Box, Card, Chip, Typography } from "@mui/material";
+import { Box, Card, Chip, CircularProgress, Typography } from "@mui/material";
 import { Member, Team } from "@prisma/client";
 import Image from "next/image";
 import hash from "@/assets/bz-letters-hash.png";
@@ -23,21 +23,23 @@ function DataChip({ label, icon }: { label: string | null, icon: ReactElement })
   );
 };
 
-export default function AdminSquareView({ teams, commendationsSent, commendationsReceived }: { teams: TeamsList, commendationsSent: number[], commendationsReceived: number[] }) {
+function SquareView({ teams }: { teams: TeamsList }) {
   return (<Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={10}>
     {
-      teams.map((currentTeam, currentIndex) =>
-        <Card key={currentIndex} sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, marginTop: 3, width: 250, mx: 1 }}>
-          <Box position={"relative"} height={"60%"} width={"90%"}>
-            <Image placeholder="blur" blurDataURL={hash.src} sizes="(max-width: 250px) 100vw" src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain",  }} fill />
+      teams?.map((currentTeam, currentIndex) =>
+        <Card key={currentIndex} sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
+          <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center">
+            <Image fill placeholder="blur" blurDataURL={hash.src} src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain" }} />
           </Box>
           <Typography textAlign={"center"} fontSize={20} mt={3}>{currentTeam.name}</Typography>
           <Box display={"flex"} mt={2}>
             <DataChip label={currentTeam.members.length.toString()} icon={<Group />} />
-            <DataChip label={commendationsSent[currentIndex].toString()} icon={<Send />} />
-            <DataChip label={commendationsReceived[currentIndex].toString()} icon={<MoveToInbox />} />
+            <DataChip label={currentTeam.members.reduce((prev, curr) => prev + curr.sentCommendations.length, 0).toString()} icon={<Send />} />
+            <DataChip label={currentTeam.members.reduce((prev, curr) => prev + curr.commendations.length, 0).toString()} icon={<MoveToInbox />} />
           </Box>
         </Card>)
     }
   </Box>);
-};
+}
+
+export default SquareView;

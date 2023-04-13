@@ -15,11 +15,7 @@ export async function getStaticProps() {
 export default function Home({ members }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <>
-      <main>
-        <CommendationForm recipients={members} />
-      </main>
-
-      <IndexAbsoluteElements />
+      <CommendationForm recipients={members} />
     </>
   );
 }

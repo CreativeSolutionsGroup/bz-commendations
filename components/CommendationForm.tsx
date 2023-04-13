@@ -33,19 +33,26 @@ function renderRow(props: ListChildComponentProps) {
     );
   }
 
-  const [optionProps, member] = dataSet;
+  const [optionProps, option] = dataSet;
 
   return (
     <MenuItem key={index} {...optionProps} {...props} sx={{ width: "100%" }}>
       <Box display="flex" flexDirection="row" width="100%">
         <Avatar>
-          {member.imageUrl ? <Image fill src={member.imageURL} alt="" placeholder="blur" blurDataURL={bz.src} /> : <Person />}
+          {
+            option.imageURL ?
+              <Image fill src={option.imageURL} alt="" placeholder="blur" blurDataURL={bz.src} style={{ objectFit: "contain" }} /> :
+              <Person />}
         </Avatar>
-        <Typography ml={1.5} mt={1}>{member.name}</Typography>
+        <Typography ml={1.5} mt={1}>{option.name}</Typography>
         <Box flexGrow={1}></Box>
-        <Typography mt={1.5} variant="caption" color="GrayText" align="right" maxWidth='10rem' overflow="hidden">
-          {member.teams.map((team: Team) => team.name).join(", ")}
-        </Typography>
+        {
+          option.teams ?
+            <Typography mt={1.5} variant="caption" color="GrayText" align="right" maxWidth='10rem' overflow="hidden">
+              {option.teams.map((team: Team) => team.name).join(", ")}
+            </Typography> :
+            <></>
+        }
       </Box>
     </MenuItem>
   );
@@ -147,10 +154,10 @@ export default function CommendationForm({ recipients, teamTab }: { recipients: 
 
   useEffect(() => {
     if (status !== "authenticated") return;
-    if (isMemberListItem(_recipients)) {
-      setRecipients(_recipients.filter(member => member.email !== session?.user?.email));
+    if (isMemberListItem(recipients)) {
+      setRecipients(recipients.filter(member => (member as MemberListItem).email !== session?.user?.email));
     }
-  }, [status, _recipients, session?.user?.email]);
+  }, [status, recipients, session?.user?.email]);
 
   return (
     <Paper sx={{ mt: 4, mx: "auto", maxWidth: "30rem", p: 2 }}>

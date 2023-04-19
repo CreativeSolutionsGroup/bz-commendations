@@ -2,7 +2,7 @@ import AdminLeaderboardView from "@/components/AdminLeaderboardView";
 import AdminSquareView from "@/components/AdminSquareView";
 import { TimeRangeCommendations } from "@/lib/api/teams";
 import { EmojiEvents, GridView, Settings } from "@mui/icons-material";
-import { Card, IconButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Button, Card, IconButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -61,36 +61,10 @@ export default function Admin() {
           open={settingsOpen}
           onClose={handleSettingsClose}
         >
-          <MenuItem sx={{ display: "flex" }}>
-            <Box flexGrow={1} />
-            <Typography mr={1}>Start Date</Typography>
-            <DatePicker
-              value={firstDate}
-              onChange={v => {
-                v && setFirstDate(v);
-                v && fetch(`/api/admin?first=${v}`, { method: "POST" });
-                handleSettingsClose();
-              }}
-              sx={{ width: 175, marginRight: 1 }}
-            />
-          </MenuItem>
-          <MenuItem sx={{ display: "flex" }}>
-            <Box flexGrow={1} />
-            <Typography mr={1}>End Date</Typography>
-            <DatePicker
-              value={secondDate}
-              onChange={v => {
-                v && setSecondDate(v);
-                v && fetch(`/api/admin?second=${v}`, { method: "POST" });
-                handleSettingsClose();
-              }}
-              sx={{ width: 175, marginRight: 1 }}
-            />
-          </MenuItem>
-          <MenuItem onClick={handleSettingsClose} sx={{ display: "flex" }}>
+          <Box sx={{ display: "flex", alignItems: "center", marginRight: 2 }}>
             <Box flexGrow={1} />
             <Typography mr={1}>Mode</Typography>
-            <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => setViewMode(e.target.value)} sx={{ marginRight: 1 }}>
+            <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => { setViewMode(e.target.value); handleSettingsClose(); }} sx={{ marginRight: 1 }}>
               <MenuItem key={1} value={"square"}>
                 <Box display={"flex"} flexDirection={"row"}>
                   <GridView />
@@ -104,7 +78,45 @@ export default function Admin() {
                 </Box>
               </MenuItem>
             </Select>
-          </MenuItem>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", marginRight: 2, marginTop: 1, marginLeft: 2 }}>
+            <Box flexGrow={1} />
+            <Typography mr={1}>Start Date</Typography>
+            <DatePicker
+              value={firstDate}
+              onChange={v => {
+                v && setFirstDate(v);
+                v && fetch(`/api/admin?first=${v}`, { method: "POST" });
+                handleSettingsClose();
+              }}
+              sx={{ width: 175, marginRight: 1 }}
+            />
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", marginRight: 2, marginTop: 1 }}>
+            <Box flexGrow={1} />
+            <Typography mr={1}>End Date</Typography>
+            <DatePicker
+              value={secondDate}
+              onChange={v => {
+                v && setSecondDate(v);
+                v && fetch(`/api/admin?second=${v}`, { method: "POST" });
+                handleSettingsClose();
+              }}
+              sx={{ width: 175, marginRight: 1 }}
+            />
+          </Box>
+          <Button
+            sx={{ float: "right", marginTop: 1, marginRight: 3, marginBottom: 2 }}
+            onClick={() => {
+              const first = dayjs().set("date", 1).set("hour", 1);
+              const second = dayjs();
+              setFirstDate(first);
+              fetch(`/api/admin?first=${first}`, { method: "POST" });
+              setSecondDate(second);
+              fetch(`/api/admin?second=${second}`, { method: "POST" });
+              handleSettingsClose();
+            }}
+          >Reset Date Range</Button>
         </Menu>
         <IconButton onClick={handleSettingsClick} sx={{ position: "absolute", right: 6, top: 70 }}>
           <Settings sx={{ marginY: "auto" }}></Settings>

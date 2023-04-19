@@ -1,24 +1,25 @@
 import {
-  createCommendation, emailToId, getMemberTeamLeaders, getMemberWithTeams,
-  idIsMember, readAllCommendations, sendBzEmail, sendBzText, updateMemberImageURL, getMemberImage
+  createCommendation, emailToId, getMemberImage, getMemberTeamLeaders, getMemberWithTeams,
+  idIsMember, sendBzEmail, sendBzText, updateMemberImageURL
 } from "@/lib/api/commendations";
+import { getTimeRangeCommendations } from "@/lib/api/teams";
 import { revalidate } from "@/lib/revalidate";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession, Session } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import { getTimeRangeCommendations } from "@/lib/api/teams";
 
 const sendMemberCommendation = async (
-  req: NextApiRequest, res: NextApiResponse, session: Session, sender: string
+  req: NextApiRequest, res: NextApiResponse, session: Session
 ) => {
   const recipientId = req.body.recipient as string;
   const msg = req.body.msg as string;
+  const sender = await emailToId(session.user?.email ?? "") ?? "";
 
   if (recipientId === sender) return res.redirect("/?success=false");
 
   // log the commendation
   const pCommendation = createCommendation(
-sender as string, recipientId, msg
+    sender as string, recipientId, msg
   );
   try {
     await pCommendation;
@@ -40,16 +41,16 @@ sender as string, recipientId, msg
   const pImage = (await getMemberImage(sender) == null) && updateMemberImageURL(session?.user?.image as string, sender);
   // send email to the recip
   const pEmail = sendBzEmail(
-session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg
+    session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg
   );
   // send text to the recip
   const pText = (recipient.phone != null) ? sendBzText(
     recipient.phone, session?.user?.name as string, msg
   ) : null;
-  
+
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
   const pTeamEmail = (teamLeadersEmails && teamLeadersEmails.length < 10) && sendBzEmail(
-session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true }
+    session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true }
   );
 
 
@@ -63,7 +64,7 @@ session?.user?.email as string, teamLeadersEmails, session?.user?.name as string
 };
 
 const sendTeamCommendation = async (
-  req: NextApiRequest, res: NextApiResponse, session: Session, sender: string
+  req: NextApiRequest, res: NextApiResponse, session: Session
 ) => {
   const teamId = req.body.recipient as string;
   const msg = req.body.msg as string;
@@ -76,7 +77,7 @@ const sendTeamCommendation = async (
 
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
   const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(
-session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true }
+    session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true }
   );
   try {
     await pTeamEmail;
@@ -129,11 +130,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       if (await idIsMember(req.body.recipient as string)) {
         sendMemberCommendation(
-          req, res, session, sender as string
+          req, res, session
         );
       } else {
         sendTeamCommendation(
-          req, res, session, sender
+          req, res, session
         );
       }
       break;

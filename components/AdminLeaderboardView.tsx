@@ -2,7 +2,7 @@ import { MembersWithCommendations } from "@/types/admin";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 
-function Leaderboard({ members }: { members: MembersWithCommendations }) {
+export default function AdminLeaderboardView({ members }: { members: MembersWithCommendations }) {
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
@@ -36,5 +36,3 @@ function Leaderboard({ members }: { members: MembersWithCommendations }) {
     </Box>
   );
 }
-
-export default Leaderboard;

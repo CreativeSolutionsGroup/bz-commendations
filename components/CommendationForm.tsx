@@ -1,16 +1,17 @@
 import bz from "@/assets/bz-logo.png";
+import { MemberWithTeams, TeamWithMembers } from "@/types/commendation";
+import { Person } from "@mui/icons-material";
 import SendIcon from "@mui/icons-material/Send";
 import { Autocomplete, Avatar, Button, ListSubheader, MenuItem, Paper, Popper, Stack, TextField, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { autocompleteClasses } from "@mui/material/Autocomplete";
+import { styled } from "@mui/material/styles";
 import { Box } from "@mui/system";
 import { Raleway } from "@next/font/google";
-import { Member, Team } from "@prisma/client";
-import Image from "next/image";
-import { createContext, forwardRef, HTMLAttributes, ReactNode, useContext, useEffect, useRef, useState } from "react";
-import { ListChildComponentProps, VariableSizeList } from "react-window";
-import { Person } from "@mui/icons-material";
+import { Team } from "@prisma/client";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { HTMLAttributes, ReactNode, createContext, forwardRef, useContext, useEffect, useRef, useState } from "react";
+import { ListChildComponentProps, VariableSizeList } from "react-window";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
@@ -138,14 +139,11 @@ const StyledPopper = styled(Popper)({
   }
 });
 
-type TeamListItem = Team & { members: Array<Member> };
-type MemberListItem = Member & { teams: Array<Team> };
-
-const isMemberListItem = (obj: any): obj is Array<MemberListItem> => {
+const isMemberListItem = (obj: any): obj is Array<MemberWithTeams> => {
   return obj[0].email !== undefined;
 };
 
-export default function CommendationForm({ recipients, teamTab }: { recipients: (MemberListItem | TeamListItem)[], teamTab?: boolean }) {
+export default function CommendationForm({ recipients, teamTab }: { recipients: (MemberWithTeams | TeamWithMembers)[], teamTab?: boolean }) {
   const [sending, setSending] = useState(false);
   const [itemData, setToItem] = useState("");
   const [_recipients, setRecipients] = useState(recipients);
@@ -155,7 +153,7 @@ export default function CommendationForm({ recipients, teamTab }: { recipients: 
   useEffect(() => {
     if (status !== "authenticated") return;
     if (isMemberListItem(recipients)) {
-      setRecipients(recipients.filter(member => (member as MemberListItem).email !== session?.user?.email));
+      setRecipients(recipients.filter(member => (member as MemberWithTeams).email !== session?.user?.email));
     }
   }, [status, recipients, session?.user?.email]);
 

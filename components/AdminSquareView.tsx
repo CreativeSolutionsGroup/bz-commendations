@@ -1,21 +1,10 @@
-import { Group, MoveToInbox, Send } from "@mui/icons-material";
-import { Box, Card, Chip, CircularProgress, Typography } from "@mui/material";
-import { Member, Team } from "@prisma/client";
-import Image from "next/image";
-import hash from "@/assets/bz-letters-hash.png";
 import bz from "@/assets/BZ-letters.png";
+import hash from "@/assets/bz-letters-hash.png";
+import { TeamsList } from "@/types/admin";
+import { Group, MoveToInbox, Send } from "@mui/icons-material";
+import { Box, Card, Chip, Typography } from "@mui/material";
+import Image from "next/image";
 import { ReactElement } from "react";
-
-type TeamsList = (Team & {
-  members: (Member & {
-    commendations: {
-      id: string;
-    }[];
-    sentCommendations: {
-      id: string;
-    }[];
-  })[];
-})[];
 
 function DataChip({ label, icon }: { label: string | null, icon: ReactElement }) {
   return (

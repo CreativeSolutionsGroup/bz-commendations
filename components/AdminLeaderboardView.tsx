@@ -1,21 +1,8 @@
+import { MembersWithCommendations } from "@/types/admin";
 import { Box, Paper, Typography } from "@mui/material";
-import { Member } from "@prisma/client";
 import Image from "next/image";
 
-export type MemberWithCommendations = {
-  sendMembers: (Member & {
-    sentCommendations: {
-      id: string;
-    }[];
-  })[];
-  recvMembers: (Member & {
-    commendations: {
-      id: string;
-    }[];
-  })[];
-}
-
-function Leaderboard({ members }: { members: MemberWithCommendations }) {
+function Leaderboard({ members }: { members: MembersWithCommendations }) {
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>

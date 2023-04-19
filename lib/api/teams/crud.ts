@@ -1,5 +1,5 @@
-import { Member, Team } from "@prisma/client";
-import { prisma } from "../db";
+import { TimeRangeCommendations } from "@/types/commendation";
+import { prisma } from "@/lib/api/db";
 
 export const getTeams = async () => {
   return await prisma.team.findMany({
@@ -27,36 +27,6 @@ export const idToEmail = async (memberId: string) => {
       id: memberId
     }
   }))?.email ?? "";
-};
-
-export type TimeRangeCommendations = {
-    teams: {
-        sentCommendations: number;
-        commendations: number;
-        id: string;
-        name: string;
-        imageURL: string | null;
-        members: (Member & {
-            commendations: {
-                id: string;
-            }[];
-            sentCommendations: {
-                id: string;
-            }[];
-        })[];
-    }[],
-    members: {
-        sendMembers: (Member & {
-            sentCommendations: {
-                id: string;
-            }[];
-        })[];
-        recvMembers: (Member & {
-            commendations: {
-                id: string;
-            }[];
-        })[];
-    }
 };
 
 export const getTimeRangeCommendations = async (dateRange: { createdAt: { gte: Date, lte: Date } }): Promise<TimeRangeCommendations> => {

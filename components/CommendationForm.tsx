@@ -12,132 +12,9 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { HTMLAttributes, ReactNode, createContext, forwardRef, useContext, useEffect, useRef, useState } from "react";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
+import VirtualizedAutocomplete from "./VirtualizedAutocomplete";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
-
-const LISTBOX_PADDING = 8;
-
-function renderRow(props: ListChildComponentProps) {
-  const { data, index, style } = props;
-  const dataSet = data[index];
-  const inlineStyle = {
-    ...style,
-    top: (style.top as number) + LISTBOX_PADDING,
-  };
-
-
-  if (dataSet.hasOwnProperty("group")) {
-    return (
-      <ListSubheader key={dataSet.key} component="div" style={{ ...inlineStyle, height: 36 }}>
-        {dataSet.group}
-      </ListSubheader>
-    );
-  }
-
-  const [optionProps, option] = dataSet;
-
-  return (
-    <MenuItem key={index} {...optionProps} {...props} sx={{ width: "100%" }}>
-      <Box display="flex" flexDirection="row" width="100%">
-        <Avatar>
-          {
-            option.imageURL ?
-              <Image fill src={option.imageURL} alt="" placeholder="blur" blurDataURL={bz.src} style={{ objectFit: "contain" }} /> :
-              <Person />}
-        </Avatar>
-        <Typography ml={1.5} mt={1}>{option.name}</Typography>
-        <Box flexGrow={1}></Box>
-        {
-          option.teams ?
-            <Typography mt={1.5} variant="caption" color="GrayText" align="right" maxWidth='10rem' overflow="hidden">
-              {option.teams.map((team: Team) => team.name).join(", ")}
-            </Typography> :
-            <></>
-        }
-      </Box>
-    </MenuItem>
-  );
-}
-
-const OuterElementContext = createContext({});
-
-const OuterElementType = forwardRef<HTMLDivElement>(function CommendationOuter(props, ref) {
-  const outerProps = useContext(OuterElementContext);
-  return <div ref={ref} {...props} {...outerProps} />;
-});
-
-function useResetCache(data: any) {
-  const ref = useRef<VariableSizeList>(null);
-  useEffect(() => {
-    if (ref.current != null) {
-      ref.current.resetAfterIndex(0, true);
-    }
-  }, [data]);
-  return ref;
-}
-
-const ListboxComponent = forwardRef<
-  HTMLDivElement,
-  HTMLAttributes<HTMLElement>
->(function ListboxComponent(props, ref) {
-  const { children, ...other } = props;
-  const itemData: ReactNode[] = [];
-  (children as (ReactNode & { children?: ReactNode[] })[]).forEach((item) => {
-    itemData.push(item);
-    itemData.push(...(item.children || []));
-  });
-
-  const itemCount = itemData.length;
-  const itemSize = 48;
-
-  const getChildSize = (child: ReactNode) => {
-    if (child?.hasOwnProperty("group")) {
-      return 48;
-    }
-
-    return itemSize;
-  };
-
-  const getHeight = () => {
-    if (itemCount > 8) {
-      return 8 * itemSize;
-    }
-    return itemData.map(getChildSize).reduce((a, b) => a + b, 0);
-  };
-
-  const gridRef = useResetCache(itemCount);
-
-  return (
-    <div ref={ref}>
-      <OuterElementContext.Provider value={other}>
-        <VariableSizeList
-          itemData={itemData}
-          height={getHeight() + 2 * LISTBOX_PADDING}
-          width="100%"
-          ref={gridRef}
-          outerElementType={OuterElementType}
-          innerElementType="ul"
-          itemSize={(index) => getChildSize(itemData[index])}
-          overscanCount={5}
-          itemCount={itemCount}
-        >
-          {renderRow}
-        </VariableSizeList>
-      </OuterElementContext.Provider>
-    </div>
-  );
-});
-
-const StyledPopper = styled(Popper)({
-  [`& .${autocompleteClasses.listbox}`]: {
-    boxSizing: "border-box"
-    ,
-    "& ul": {
-      padding: 0,
-      margin: 0
-    }
-  }
-});
 
 const isMemberListItem = (obj: any): obj is Array<MemberWithTeams> => {
   return obj[0].email !== undefined;
@@ -163,24 +40,7 @@ export default function CommendationForm({ recipients, teamTab }: { recipients: 
         <Stack spacing={1}>
           <Typography color="primary" className={raleway.className} fontSize={25} fontWeight={900}>Create {teamTab ? "Team" : ""} Commendation</Typography>
           <TextField sx={{ display: "none" }} hidden name="recipient" value={itemData} />
-          <Autocomplete
-            onChange={(_e, v) => setToItem(v?.id ?? "")}
-            id="virtualize-commendation"
-            sx={{ width: "100%" }}
-            disableListWrap
-            PopperComponent={StyledPopper}
-            ListboxComponent={ListboxComponent}
-            options={_recipients}
-            getOptionLabel={(recip) => recip.name}
-            groupBy={(option) => option.name[0].toUpperCase()}
-            renderInput={(params) => <TextField {...params} label="To *" />}
-            renderOption={(
-              props, option, state
-            ) =>
-              [props, option, state.index] as ReactNode
-            }
-            renderGroup={(params) => params as unknown as ReactNode}
-          />
+          <VirtualizedAutocomplete onChange={setToItem} options={_recipients}/>
           <TextField required label="Message" variant="filled" name="msg" minRows={8} multiline={true} />
           <Button disabled={sending} variant="contained" color="secondary" type="submit" endIcon={<SendIcon />} sx={{ fontSize: 18, textTransform: "uppercase", minWidth: "fit-content" }}>
             <Typography className={raleway.className} fontSize={18} fontWeight={900}>Send</Typography>

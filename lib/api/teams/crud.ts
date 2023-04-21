@@ -1,5 +1,6 @@
-import { TimeRangeCommendations } from "@/types/commendation";
+import { CommendationWithPeople, TimeRangeCommendations } from "@/types/commendation";
 import { prisma } from "@/lib/api/db";
+import { Commendation } from "@prisma/client";
 
 export const getTeams = async () => {
   return await prisma.team.findMany({
@@ -67,7 +68,7 @@ export const getTimeRangeCommendations = async (dateRange: { createdAt: { gte: D
 
   const sendMembers = await prisma.member.findMany({
     where: {
-      commendations: {
+      sentCommendations: {
         some: {}
       }
     },
@@ -78,7 +79,7 @@ export const getTimeRangeCommendations = async (dateRange: { createdAt: { gte: D
       },
     },
     orderBy: {
-      commendations: { _count: "desc" },
+      sentCommendations: { _count: "desc" },
     }
   });
 
@@ -94,3 +95,40 @@ export const getTimeRangeCommendations = async (dateRange: { createdAt: { gte: D
     }
   };
 };
+
+export const getTeamCommendations = async (id: string) => {
+  const team = await prisma.team.findFirst({
+    where: {
+      id
+    }, 
+    include: {
+      members: {
+        include: {
+          sentCommendations: {
+            include: {
+              sender: true,
+              recipient: true
+            }
+          },
+          commendations: {
+            include: {
+              sender: true,
+              recipient: true
+            }
+          }
+        }
+      }
+    }
+  })
+
+  if (team) {
+    return {
+      recvComms: team.members.reduce((prev, curr) => prev.concat(curr.commendations), [] as Array<CommendationWithPeople>).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
+      sentComms: team.members.reduce((prev, curr) => prev.concat(curr.sentCommendations), [] as Array<CommendationWithPeople>).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    }
+  }
+  return {
+    recvComms: [],
+    sentComms: []
+  }
+}

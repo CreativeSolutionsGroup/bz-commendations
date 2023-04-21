@@ -1,4 +1,4 @@
-import { Team, Member } from "@prisma/client";
+import { Team, Member, Commendation } from "@prisma/client";
 
 export type TeamWithMembers = Team & { members: Array<Member> };
 export type MemberWithTeams = Member & { teams: Array<Team> };
@@ -33,3 +33,8 @@ export type TimeRangeCommendations = {
         })[];
     }
 };
+
+export type CommendationWithPeople = (Commendation & {
+    sender: Member;
+    recipient: Member;
+});

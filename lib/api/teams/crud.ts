@@ -119,16 +119,16 @@ export const getTeamCommendations = async (id: string) => {
         }
       }
     }
-  })
+  });
 
   if (team) {
     return {
       recvComms: team.members.reduce((prev, curr) => prev.concat(curr.commendations), [] as Array<CommendationWithPeople>).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
       sentComms: team.members.reduce((prev, curr) => prev.concat(curr.sentCommendations), [] as Array<CommendationWithPeople>).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-    }
+    };
   }
   return {
     recvComms: [],
     sentComms: []
-  }
-}
+  };
+};

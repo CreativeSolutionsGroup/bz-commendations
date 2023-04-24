@@ -4,7 +4,7 @@ import { MemberWithTeams, TeamWithMembers } from "@/types/commendation";
 import { Autocomplete, TextField } from "@mui/material";
 import { ReactNode } from "react";
 
-export default function VirtualizedAutocomplete({ onChange, options }: { onChange: Function, options: Array<TeamWithMembers | MemberWithTeams> }) {
+export default function VirtualizedUserAutocomplete({ onChange, options }: { onChange: Function, options: Array<TeamWithMembers | MemberWithTeams> }) {
   return (
     <Autocomplete
       onChange={(_e, v) => onChange(v?.id ?? "")}

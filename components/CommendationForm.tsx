@@ -1,18 +1,10 @@
-import bz from "@/assets/bz-logo.png";
 import { MemberWithTeams, TeamWithMembers } from "@/types/commendation";
-import { Person } from "@mui/icons-material";
 import SendIcon from "@mui/icons-material/Send";
-import { Autocomplete, Avatar, Button, ListSubheader, MenuItem, Paper, Popper, Stack, TextField, Typography } from "@mui/material";
-import { autocompleteClasses } from "@mui/material/Autocomplete";
-import { styled } from "@mui/material/styles";
-import { Box } from "@mui/system";
+import { Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { Raleway } from "@next/font/google";
-import { Team } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { HTMLAttributes, ReactNode, createContext, forwardRef, useContext, useEffect, useRef, useState } from "react";
-import { ListChildComponentProps, VariableSizeList } from "react-window";
-import VirtualizedAutocomplete from "./VirtualizedAutocomplete";
+import { useEffect, useState } from "react";
+import VirtualizedUserAutocomplete from "./VirtualizedUserAutocomplete";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
@@ -40,7 +32,7 @@ export default function CommendationForm({ recipients, teamTab }: { recipients: 
         <Stack spacing={1}>
           <Typography color="primary" className={raleway.className} fontSize={25} fontWeight={900}>Create {teamTab ? "Team" : ""} Commendation</Typography>
           <TextField sx={{ display: "none" }} hidden name="recipient" value={itemData} />
-          <VirtualizedAutocomplete onChange={setToItem} options={_recipients}/>
+          <VirtualizedUserAutocomplete onChange={setToItem} options={_recipients}/>
           <TextField required label="Message" variant="filled" name="msg" minRows={8} multiline={true} />
           <Button disabled={sending} variant="contained" color="secondary" type="submit" endIcon={<SendIcon />} sx={{ fontSize: 18, textTransform: "uppercase", minWidth: "fit-content" }}>
             <Typography className={raleway.className} fontSize={18} fontWeight={900}>Send</Typography>

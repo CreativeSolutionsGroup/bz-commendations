@@ -1,7 +1,8 @@
 import AdminLeaderboardView from "@/components/AdminLeaderboardView";
 import AdminSquareView from "@/components/AdminSquareView";
-import { TimeRangeCommendations } from "@/lib/api/teams";
-import { EmojiEvents, GridView, Settings } from "@mui/icons-material";
+import AdminTeamView from "@/components/AdminTeamView";
+import { TimeRangeCommendations } from "@/types/commendation";
+import { EmojiEvents, GridView, Group, Settings } from "@mui/icons-material";
 import { Button, Card, IconButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
@@ -74,7 +75,13 @@ export default function Admin() {
               <MenuItem key={2} value={"leaderboard"}>
                 <Box display={"flex"} flexDirection={"row"}>
                   <EmojiEvents />
-                  <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
+                  <Typography ml={1} fontWeight={700}>Leaderboard View</Typography>
+                </Box>
+              </MenuItem>
+              <MenuItem key={3} value={"teams"}>
+                <Box display={"flex"} flexDirection={"row"}>
+                  <Group />
+                  <Typography ml={1} fontWeight={700}>Teams View</Typography>
                 </Box>
               </MenuItem>
             </Select>
@@ -123,8 +130,9 @@ export default function Admin() {
         </IconButton>
       </Box>
       {viewMode === "square" ?
-        <AdminSquareView teams={data.teams} /> :
-        <AdminLeaderboardView members={data.members} />
+        <AdminSquareView teams={data.teams} /> : viewMode === "leaderboard" ?
+          <AdminLeaderboardView members={data.members} /> :
+          <AdminTeamView teams={data.teams}/>
       }
       <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
         <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>

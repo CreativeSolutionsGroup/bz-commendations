@@ -2,7 +2,7 @@ import stinger from "@/assets/stinger.png";
 import { TeamsList } from "@/types/admin";
 import { CommendationWithPeople, MemberWithTeams } from "@/types/commendation";
 import { ArrowCircleRight } from "@mui/icons-material";
-import { Avatar, Box, FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Stack, Typography, useMediaQuery } from "@mui/material";
+import { Avatar, Box, FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Skeleton, Stack, Typography, useMediaQuery } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
 import { Member, Team } from "@prisma/client";
@@ -10,10 +10,28 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
+const loadingState = () => (
+  Array(6).fill(0).map((v, i) => (
+    <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
+      <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
+        <Skeleton variant="circular" width={40} height={40} />
+        <Stack ml={2}>
+          <Box display={"flex"}>
+            <Typography fontWeight={"bold"}><Skeleton width={50} /></Typography>
+            <ArrowCircleRight sx={{ marginLeft: 1 }} />
+            <Typography fontWeight="bold" marginLeft={1}><Skeleton width={50} /></Typography>
+          </Box>
+          <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}><Skeleton width={"200px"} /></Typography>
+        </Stack>
+      </Box>
+    </Paper>
+  ))
+);
+
+const sentCommendations = (commsSent?: Array<CommendationWithPeople>) => (
   <Box flexGrow={1}>
     <Typography textAlign={"center"} variant="h5" marginBottom={2}>Sent</Typography>
-    {commsSent?.map((comm, index: number) =>
+    {commsSent && commsSent.length !== 0 ? commsSent?.map((comm, index: number) =>
       <Paper key={index} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
         <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
           <Avatar>
@@ -28,14 +46,16 @@ const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
             <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
           </Stack>
         </Box>
-      </Paper>)}
+      </Paper>) :
+      loadingState()
+    }
   </Box>
 );
 
-const recvCommendations = (commsRecv: Array<CommendationWithPeople>) => (
+const recvCommendations = (commsRecv?: Array<CommendationWithPeople>) => (
   <Box flexGrow={1}>
     <Typography textAlign={"center"} variant="h5" marginBottom={2}>Received</Typography>
-    {commsRecv?.map((comm, index: number) =>
+    {commsRecv && commsRecv.length !== 0 ? commsRecv?.map((comm, index: number) =>
       <Paper key={index} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
         <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
           <Avatar>
@@ -50,7 +70,9 @@ const recvCommendations = (commsRecv: Array<CommendationWithPeople>) => (
             <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
           </Stack>
         </Box>
-      </Paper>)}
+      </Paper>) :
+      loadingState()
+    }
   </Box>
 );
 
@@ -128,6 +150,7 @@ export default function AdminTeamView({ teams }: { teams: TeamsList }) {
         {bigScreen ?
           <>
             {sentCommendations(commsSent ?? [])}
+            {/* {sentCommendations()} */}
             {recvCommendations(commsRecv ?? [])}
           </> :
           <>

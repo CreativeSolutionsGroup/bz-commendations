@@ -7,8 +7,10 @@ import { Button, Card, IconButton, Menu, MenuItem, Select, SelectChangeEvent } f
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { DatePicker } from "@mui/x-date-pickers";
+import { Raleway } from "@next/font/google";
 import dayjs from "dayjs";
 import { MouseEvent, useEffect, useState } from "react";
+import theme from "@/config/theme"
 
 export default function Admin() {
   const [viewMode, setViewMode] = useState("square");
@@ -49,10 +51,11 @@ export default function Admin() {
         <Typography
           sx={{
             textAlign: "center",
-            fontSize: 24,
-            fontWeight: "bold",
+            fontSize: 30,
+            fontWeight: 900,
             marginTop: 1,
             flexGrow: 1,
+            color: theme.palette.primary.main
           }}
         >
           Admin Dashboard
@@ -64,31 +67,31 @@ export default function Admin() {
         >
           <Box sx={{ display: "flex", alignItems: "center", marginRight: 2 }}>
             <Box flexGrow={1} />
-            <Typography mr={1}>Mode</Typography>
+            <Typography mr={1}>View</Typography>
             <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => { setViewMode(e.target.value); handleSettingsClose(); }} sx={{ marginRight: 1 }}>
               <MenuItem key={1} value={"square"}>
                 <Box display={"flex"} flexDirection={"row"}>
                   <GridView />
-                  <Typography ml={1} fontWeight="bold">Square View</Typography>
+                  <Typography ml={1} fontWeight="bold">Square</Typography>
                 </Box>
               </MenuItem>
               <MenuItem key={2} value={"leaderboard"}>
                 <Box display={"flex"} flexDirection={"row"}>
                   <EmojiEvents />
-                  <Typography ml={1} fontWeight={700}>Leaderboard View</Typography>
+                  <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
                 </Box>
               </MenuItem>
               <MenuItem key={3} value={"teams"}>
                 <Box display={"flex"} flexDirection={"row"}>
                   <Group />
-                  <Typography ml={1} fontWeight={700}>Teams View</Typography>
+                  <Typography ml={1} fontWeight={700}>Teams</Typography>
                 </Box>
               </MenuItem>
             </Select>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", marginRight: 2, marginTop: 1, marginLeft: 2 }}>
             <Box flexGrow={1} />
-            <Typography mr={1}>Start Date</Typography>
+            <Typography mr={1}>Start</Typography>
             <DatePicker
               value={firstDate}
               onChange={v => {
@@ -101,7 +104,7 @@ export default function Admin() {
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", marginRight: 2, marginTop: 1 }}>
             <Box flexGrow={1} />
-            <Typography mr={1}>End Date</Typography>
+            <Typography mr={1}>End</Typography>
             <DatePicker
               value={secondDate}
               onChange={v => {
@@ -122,8 +125,9 @@ export default function Admin() {
               setSecondDate(second);
               fetch(`/api/admin?second=${second}`, { method: "POST" });
               handleSettingsClose();
-            }}
-          >Reset Date Range</Button>
+            }}> 
+            <Typography color={theme.palette.primary.main} fontWeight="bold" textTransform="capitalize">Reset Date Range</Typography>
+          </Button>
         </Menu>
         <IconButton onClick={handleSettingsClick} sx={{ position: "absolute", right: 6, top: 70 }}>
           <Settings sx={{ marginY: "auto" }}></Settings>
@@ -136,7 +140,7 @@ export default function Admin() {
       }
       <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
         <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>
-          <Typography>Total commendations sent: {data.teams?.reduce((prev, curr) => prev + curr.sentCommendations, 0)}</Typography>
+          <Typography color={theme.palette.primary.main} fontWeight="bold">Commendation Count: {data.teams?.reduce((prev, curr) => prev + curr.sentCommendations, 0)}</Typography>
         </Card>
       </Box>
     </>

@@ -1,4 +1,5 @@
-import { Popper, styled } from "@mui/material";
+import { styled } from "@mui/system";
+import { Popper } from "@mui/material";
 import { autocompleteClasses } from "@mui/material/Autocomplete";
 
 const StyledPopper = styled(Popper)({

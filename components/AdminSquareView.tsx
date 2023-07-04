@@ -3,8 +3,11 @@ import hash from "@/assets/bz-letters-hash.png";
 import { TeamsList } from "@/types/admin";
 import { Group, MoveToInbox, Send } from "@mui/icons-material";
 import { Box, Card, Chip, Typography } from "@mui/material";
+import { Raleway } from "@next/font/google";
 import Image from "next/image";
 import { ReactElement } from "react";
+
+const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
 function DataChip({ label, icon }: { label: string | null, icon: ReactElement }) {
   return (
@@ -20,7 +23,7 @@ export default function AdminSquareView({ teams }: { teams: TeamsList }) {
           <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center">
             <Image fill placeholder="blur" blurDataURL={hash.src} src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain" }} />
           </Box>
-          <Typography textAlign={"center"} fontSize={20} mt={3}>{currentTeam.name}</Typography>
+          <Typography textAlign={"center"} fontSize={20} mt={3} className={raleway.className}>{currentTeam.name}</Typography>
           <Box display={"flex"} mt={2}>
             <DataChip label={currentTeam.members.length.toString()} icon={<Group />} />
             <DataChip label={currentTeam.members.reduce((prev, curr) => prev + curr.sentCommendations.length, 0).toString()} icon={<Send />} />

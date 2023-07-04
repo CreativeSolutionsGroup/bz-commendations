@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, IconButton, Typography, Stack, Menu, MenuItem, Box, Avatar } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Stack, Menu, MenuItem, Box, Avatar, Tooltip } from "@mui/material";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 
 import bravo from "@/assets/BZ-flag-red.png";
@@ -11,6 +11,7 @@ import { Raleway } from "@next/font/google";
 import { Analytics, Logout } from "@mui/icons-material";
 import { MouseEvent, useEffect, useState } from "react";
 import Skeleton from "@mui/material/Skeleton";
+import theme from "@/config/theme";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
@@ -32,7 +33,7 @@ export function Header() {
             <Box><Image width={35} height={20} alt="Zulu Flag" src={zulu.src}></Image></Box>
           </Stack>
           <Box ml={1.5} mt={0.6}><Image width={50} height={35} alt="BZ Logo" src={bz.src} /></Box>
-          <Typography className={raleway.className} ml={1.5} mt={0.6} fontSize={25} fontWeight={900} sx={{ display: { xs: "none", sm: "block" } }}>
+          <Typography className={raleway.className} ml={2} mt={0.6} fontSize={25} fontWeight={900} sx={{ display: { xs: "none", sm: "block" } }}>
             COMMENDATIONS
           </Typography>
         </Link>
@@ -41,12 +42,16 @@ export function Header() {
           {session?.isAdmin &&
             <IconButton>
               <Link href="/admin">
-                <Analytics color="secondary" />
+                <Tooltip title="Admin Dashboard">
+                  <Analytics color="secondary" />
+                </Tooltip>
               </Link>
             </IconButton>}
           <IconButton>
             <Link href={`/me/received/${session?.user?.email}`}>
-              <ChatBubbleIcon color="secondary" />
+              <Tooltip title="My Commendations">
+                <ChatBubbleIcon color="secondary" />
+              </Tooltip>
             </Link>
           </IconButton>
           <IconButton onClick={(e: MouseEvent<HTMLElement>) => { setAnchorElement(e.currentTarget); }}>
@@ -74,7 +79,7 @@ export function Header() {
               signOut();
               handleClose();
             }}>
-              Sign out
+              <Typography className={raleway.className}>SIGN OUT</Typography>
               <Logout sx={{ marginLeft: 1 }} />
             </MenuItem>
           </Menu>

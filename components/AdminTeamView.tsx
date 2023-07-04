@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 
 const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
   <Box flexGrow={1}>
-    <Typography textAlign={"center"} variant="h5" marginBottom={2}>Sent</Typography>
+    <Typography fontWeight={700} textAlign={"center"} fontSize={18} marginBottom={1}>Sent</Typography>
     {commsSent?.map((comm, index: number) =>
       <Paper key={index} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
         <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
@@ -34,7 +34,7 @@ const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
 
 const recvCommendations = (commsRecv: Array<CommendationWithPeople>) => (
   <Box flexGrow={1}>
-    <Typography textAlign={"center"} variant="h5" marginBottom={2}>Received</Typography>
+    <Typography fontWeight={700} textAlign={"center"} fontSize={18} marginBottom={1}>Received</Typography>
     {commsRecv?.map((comm, index: number) =>
       <Paper key={index} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
         <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
@@ -81,8 +81,7 @@ export default function AdminTeamView({ teams }: { teams: TeamsList }) {
 
   return (
     <Box>
-      <Box marginX={2} display={"flex"}>
-        <Box flexGrow={1} />
+      <Box marginX={2} display="flex" flexDirection="row" justifyContent="space-between">
         {!bigScreen ?
           <FormControl>
             <InputLabel id="type-select-label" sx={{ marginTop: 1 }}>Commendation Type</InputLabel>

@@ -6,7 +6,7 @@ export default function AdminLeaderboardView({ members }: { members: MembersWith
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
-        <Typography fontWeight={700} textAlign={"center"}>Sent</Typography>
+        <Typography fontWeight={700} textAlign={"center"} fontSize={18}>Sent</Typography>
         {
           members.sendMembers.map((currentPerson) => (
             <Paper key={currentPerson.id} sx={{ margin: 1, padding: 1, display: "flex" }} >
@@ -20,7 +20,7 @@ export default function AdminLeaderboardView({ members }: { members: MembersWith
         }
       </Box>
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
-        <Typography fontWeight={700} textAlign={"center"}>Received</Typography>
+        <Typography fontWeight={700} textAlign={"center"} fontSize={18}>Received</Typography>
         {
           members.recvMembers.map((currentPerson) => (
             <Paper key={currentPerson.id} sx={{ margin: 1, padding: 1, display: "flex" }} >

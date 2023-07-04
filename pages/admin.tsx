@@ -12,6 +12,8 @@ import dayjs from "dayjs";
 import { MouseEvent, useEffect, useState } from "react";
 import theme from "@/config/theme"
 
+const raleway = Raleway({ subsets: ["latin"], weight: "900" });
+
 export default function Admin() {
   const [viewMode, setViewMode] = useState("square");
   const [data, setData] = useState<TimeRangeCommendations>({} as TimeRangeCommendations);
@@ -55,7 +57,7 @@ export default function Admin() {
             fontWeight: 900,
             marginTop: 1,
             flexGrow: 1,
-            color: theme.palette.primary.main
+            className: raleway.className            
           }}
         >
           Admin Dashboard

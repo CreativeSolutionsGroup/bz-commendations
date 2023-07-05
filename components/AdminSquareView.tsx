@@ -12,9 +12,9 @@ function DataChip({ label, icon }: { label: ReactNode | null, icon: ReactElement
   );
 };
 
-function LoadingState({ key }: { key: number }) {
+function LoadingState() {
   return (
-    <Card key={key} sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
+    <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
       <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" paddingTop={3}>
         <Skeleton variant="rounded" width={"100%"} height={"100%"} />
       </Box>
@@ -33,7 +33,7 @@ export default function AdminSquareView({ teams }: { teams: TeamsList }) {
   return (<Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={10}>
     {
       !teams || teams.length === 0 ?
-        (Array(12).fill(0)).map((v, i) => <LoadingState key={i}/>) :
+        (Array(12).fill(0)).map((v, i) => <LoadingState key={i} />) :
         teams?.map((currentTeam, currentIndex) =>
           <Card key={currentIndex} sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
             <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center">

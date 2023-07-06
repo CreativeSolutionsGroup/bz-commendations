@@ -10,8 +10,6 @@ import { signOut, useSession } from "next-auth/react";
 import { Raleway } from "@next/font/google";
 import { Analytics, Logout } from "@mui/icons-material";
 import { MouseEvent, useEffect, useState } from "react";
-import Skeleton from "@mui/material/Skeleton";
-import theme from "@/config/theme";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 

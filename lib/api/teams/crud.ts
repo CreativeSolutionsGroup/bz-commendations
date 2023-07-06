@@ -1,6 +1,5 @@
 import { CommendationWithPeople, TimeRangeCommendations } from "@/types/commendation";
 import { prisma } from "@/lib/api/db";
-import { Commendation } from "@prisma/client";
 
 export const getTeams = async () => {
   return await prisma.team.findMany({

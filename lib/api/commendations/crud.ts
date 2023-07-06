@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/api/db";
-import { Member } from "@prisma/client";
 
 export const idToName = async (studentId: string) => {
   const student = await prisma.member.findFirst({ where: { id: studentId } });

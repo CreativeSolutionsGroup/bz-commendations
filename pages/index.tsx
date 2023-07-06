@@ -1,7 +1,6 @@
 import { InferGetStaticPropsType } from "next";
 import { readAllMembers } from "@/lib/api/commendations";
 import CommendationForm from "@/components/CommendationForm";
-import IndexAbsoluteElements from "@/components/IndexAbsoluteElements";
 
 export async function getStaticProps() {
   const members = await readAllMembers();

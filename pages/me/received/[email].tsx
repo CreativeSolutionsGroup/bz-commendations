@@ -1,6 +1,6 @@
 import { BottomBar } from "@/components/BottomBar";
 import { prisma } from "@/lib/api/db";
-import { Avatar, BottomNavigation, BottomNavigationAction, Box, Paper, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { Raleway } from "@next/font/google";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";

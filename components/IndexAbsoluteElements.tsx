@@ -1,4 +1,4 @@
-import { Snackbar, Alert, Fab, Link, Tooltip } from "@mui/material";
+import { Snackbar, Alert, Fab } from "@mui/material";
 import { useState, SyntheticEvent, useEffect } from "react";
 import GroupsIcon from "@mui/icons-material/Groups";
 import { useRouter } from "next/router";
@@ -10,10 +10,10 @@ interface ElementsProps {
 export default function IndexAbsoluteElements() {
   const router = useRouter();
   const [open, setOpen] = useState(router.query.success === "true");
-  const [disable, setDisable] = useState(false);
+  const [disable, setDisable] = useState(router.pathname === "/team");
 
   useEffect(() => setOpen(router.query.success === "true"), [router.query.success]);
-  useEffect(() => setDisable(router.pathname == "/team"));
+  useEffect(() => setDisable(router.pathname === "/team"), [router.pathname]);
 
   const handleClose = async (_?: SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {

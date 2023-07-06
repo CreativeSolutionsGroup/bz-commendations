@@ -10,7 +10,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { Raleway } from "@next/font/google";
 import dayjs from "dayjs";
 import { MouseEvent, useEffect, useState } from "react";
-import theme from "@/config/theme"
+import theme from "@/config/theme";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 

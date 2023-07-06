@@ -1,27 +1,26 @@
+import { withAuth } from "next-auth/middleware";
 
-import { withAuth } from "next-auth/middleware"
+export default withAuth({
+  callbacks: {
+    authorized: ({ req, token }) => {
+      const { pathname, searchParams } = req.nextUrl;
+      if (pathname === "/admin") {
+        return token?.isAdmin ?? false;
+      }
 
-export default withAuth(
-  {
-    callbacks: {
-      authorized: ({ req, token }) => {
-        const { pathname, searchParams } = req.nextUrl;
-        if (pathname === "/admin") {
-          return token?.isAdmin ?? false;
-        }
+      if (pathname.includes("/me")) {
+        const email = searchParams.get("email");
+        // fix for #107
+        if (email == null) return true;
+        return email === token?.email;
+      }
 
-        if (pathname.includes("/me")) {
-          const email = searchParams.get("email")
-          // fix for #107
-          if (email == null) return true;
-          return email === token?.email;
-        }
-
-        // otherwise, if you were allowed to login, you're good.
-        return !!token;
-      },
+      // otherwise, if you were allowed to login, you're good.
+      return !!token;
     },
-  }
-)
+  },
+});
 
-export const config = { matcher: ["/", "/teamCommendation", "/admin", "/me/(.*)"] }
+export const config = {
+  matcher: ["/", "/teamCommendation", "/admin", "/me/(.*)"],
+};

@@ -1,6 +1,14 @@
 import { prisma } from "@/lib/api/db";
 import { Member } from "@prisma/client";
 
+/**
+ * THIS FUNCTION DOES NOT APPEAR TO BE USED ANYWHERE WITHIN THE PROGRAM
+ * 
+ * This function returns the name of the student whose id is provided
+ * 
+ * @param studentId A string which represents the id associated with a student
+ * @returns The name associated with the provided id as a string or an empty string if the id is not found
+ */
 export const idToName = async (studentId: string) => {
   const student = await prisma.member.findFirst({ where: { id: studentId } });
 
@@ -13,6 +21,12 @@ export const idToName = async (studentId: string) => {
   return name as string;
 };
 
+
+/**
+ * This gets the id of the member whose email was provided
+ * @param sender An email address of the person you want the id for. This it is a string
+ * @returns The id of the member with the provided email address or nothing if no member is found
+ */
 export const emailToId = async (sender: string) => {
   const member = await prisma.member.findFirst({ where: { email: sender } });
 
@@ -25,6 +39,15 @@ export const emailToId = async (sender: string) => {
   return id as string;
 };
 
+
+/**
+ * This function creates a record of a commendation
+ * 
+ * @param sender The id of the member that sent the commendation
+ * @param recipient The id of the member who the commendation is being sent to 
+ * @param msg This is the message that the sender wrote
+ * @returns This function returns `Promise<Commendation>`
+ */
 export const createCommendation = async (
   sender: string, recipient: string, msg: string
 ) => {
@@ -45,10 +68,22 @@ export const createCommendation = async (
   });
 };
 
+
+/**
+ * This gets all of the Commendations that have been sent
+ * @returns A list of all Commendations in `Commendation[]` format
+ */
 export const readAllCommendations = async () => {
   return await prisma.commendation.findMany();
 };
 
+
+/**
+ * This function gets all of the members except the current user
+ * 
+ * @param currentUserEmail This is the email address of the current session user
+ * @returns A list of members and their teams in the form `(Member & { teams: Team[] })[]`
+ */
 export const readAllMembers = async (currentUserEmail = "") => {
   return await prisma.member.findMany({
     where: {
@@ -65,6 +100,14 @@ export const readAllMembers = async (currentUserEmail = "") => {
   });
 };
 
+
+/**
+ * This function updates the profile picture of a given user
+ * 
+ * @param image This is the url of the profile picture of the user
+ * @param id This is the id of the current user
+ * @returns This function returns `Promise<Member>`
+ */
 export const updateMemberImageURL = async (image: string, id: string) => {
   return await prisma.member.update({
     data: {
@@ -76,6 +119,13 @@ export const updateMemberImageURL = async (image: string, id: string) => {
   });
 };
 
+
+/**
+ * This function gets a list of the commendations sent to the user
+ * 
+ * @param email This is the email address of the current session user
+ * @returns A list of commendations in the form `{message: string; sender: {name: string; imageURL: string | null; }; }[]`
+ */
 export const readUserCommendations = async (email: string) => {
   const user = await prisma.member.findFirst({
     select: {
@@ -98,6 +148,13 @@ export const readUserCommendations = async (email: string) => {
   return user?.commendations;
 };
 
+
+/**
+ * This function gets a list of the commendations sent by the user
+ * 
+ * @param email This is the email address of the current session user
+ * @returns A list of commendations in the form `{message: string; recipient: {name: string; imageURL: string | null; }; }[]`
+ */
 export const readUserSentCommendations = async (email: string) => {
   const user = await prisma.member.findFirst({
     select: {
@@ -120,9 +177,11 @@ export const readUserSentCommendations = async (email: string) => {
   return user?.sentCommendations;
 };
 
+
 /**
  * The function name here is misleading.
  * This gets all of the team leaders for a given team.
+ * 
  * @param teams A list of the teams that you want to get the team leaders for. This is an id.
  * @returns A list of the team leaders in `Member[]` format.
  */
@@ -141,6 +200,13 @@ export const getMemberTeamLeaders = async (teams: string[]) => {
   return teamLeaders.map(l => l.member);
 };
 
+
+/**
+ * The function gets a Member and all of the Teams that member is on
+ * 
+ * @param id The id of a member as a string
+ * @returns An object in the form `(Member & {teams: Team[];})`
+ */
 export const getMemberWithTeams = async (id: string) => {
   return await prisma.member.findFirst({
     where: {
@@ -152,6 +218,13 @@ export const getMemberWithTeams = async (id: string) => {
   });
 };
 
+
+/**
+ * This function tests if a given id corresponds to any member 
+ * 
+ * @param id The id of a member as a string
+ * @returns A boolean indicating the result of the test
+ */
 export const idIsMember = async (id: string) => {
   return !!await prisma.member.count({
     where: {
@@ -160,6 +233,13 @@ export const idIsMember = async (id: string) => {
   });
 };
 
+
+/**
+ * This function gets the profile picture for a given member
+ * 
+ * @param id The id of a member as a string
+ * @returns A string that represents an image URL 
+ */
 export const getMemberImage = async (id: string) => {
   const image = await prisma.member.findFirst({
     select: {

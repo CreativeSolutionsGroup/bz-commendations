@@ -1,20 +1,17 @@
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
-import Head from "next/head";
+import { GetServerSidePropsContext, GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import CommendationForm from "../components/CommendationForm";
 import { getTeams } from "../lib/api/teams";
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export async function getStaticProps(context: GetStaticPropsContext) {
   const teams = await getTeams();
 
   return {
-    props: { teams }
+    props: { teams },
   };
 }
 
-export default function TeamCommendation({ teams }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  return (
-    <>
-      <CommendationForm recipients={teams} teamTab />
-    </>
-  );
+export default function TeamCommendation({
+  teams,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
+  return <CommendationForm recipients={teams} teamTab />;
 }

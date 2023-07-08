@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import CommendationForm from "../components/CommendationForm";
 import { getTeams } from "../lib/api/teams";
 

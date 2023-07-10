@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/api/db";
-import { Member } from "@prisma/client";
 
 /**
  * THIS FUNCTION DOES NOT APPEAR TO BE USED ANYWHERE WITHIN THE PROGRAM

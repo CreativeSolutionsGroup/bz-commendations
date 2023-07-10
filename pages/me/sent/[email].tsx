@@ -1,6 +1,6 @@
 import { BottomBar } from "@/components/BottomBar";
 import { prisma } from "@/lib/api/db";
-import { Avatar, BottomNavigation, BottomNavigationAction, Box, Paper, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { Raleway } from "@next/font/google";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
@@ -46,19 +46,21 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
   return (
     <>
       <main>
-        <Typography className={raleway.className} fontSize={30} fontWeight={900} mt={2} align="center" color={grey[500]}>SENT COMMENDATIONS</Typography>
-        {comms.map((comm, i) =>
-          <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
-            <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
-              <Avatar>
-                <Image fill src={comm.recipient.imageURL ?? stinger.src} alt={comm.recipient.name} />
-              </Avatar>
-              <Stack ml={2}>
-                <Typography fontWeight="bold">{comm.recipient.name}</Typography>
-                <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
-              </Stack>
-            </Box>
-          </Paper>)}
+        <Box flexGrow={1} p={1}>
+          <Typography className={raleway.className} fontSize={30} fontWeight={900} m={2} mb={1.25} align="center">Sent Commendations</Typography>
+          {comms.map((comm, i) =>
+            <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
+              <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
+                <Avatar>
+                  <Image fill src={comm.recipient.imageURL ?? stinger.src} alt={comm.recipient.name} />
+                </Avatar>
+                <Stack ml={2}>
+                  <Typography fontWeight="bold">{comm.recipient.name}</Typography>
+                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+                </Stack>
+              </Box>
+            </Paper>)}
+          </Box>
         <BottomBar page="/sent" />
       </main>
     </>

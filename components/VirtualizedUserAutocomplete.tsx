@@ -1,7 +1,7 @@
 import ListboxComponent from "@/components/ListboxComponent";
 import StyledPopper from "@/components/StyledPopper";
 import { MemberWithTeams, TeamWithMembers } from "@/types/commendation";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Popper, TextField } from "@mui/material";
 import { ReactNode } from "react";
 
 export default function VirtualizedUserAutocomplete({ onChange, options }: { onChange: Function, options: Array<TeamWithMembers | MemberWithTeams> }) {
@@ -11,7 +11,7 @@ export default function VirtualizedUserAutocomplete({ onChange, options }: { onC
       id="virtualize-commendation"
       sx={{ width: "100%" }}
       disableListWrap
-      PopperComponent={StyledPopper}
+      PopperComponent={Popper}
       ListboxComponent={ListboxComponent}
       options={options}
       getOptionLabel={(recip) => recip.name}

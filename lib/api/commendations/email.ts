@@ -11,7 +11,7 @@ export const sendBzEmail = async (
   { isTeam } = { isTeam: false }
 ) => {
   const params: SendEmailCommandInput = {
-    Source: "test@bz-cedarville.com",
+    Source: "bot@bz-cedarville.com",
     Destination: {
       ToAddresses: recipientEmails
     },

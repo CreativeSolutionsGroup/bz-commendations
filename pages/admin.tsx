@@ -93,7 +93,7 @@ export default function Admin() {
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", marginRight: 2, marginTop: 1, marginLeft: 2 }}>
             <Box flexGrow={1} />
-            <Typography mr={1}>Start</Typography>
+            <Typography mr={1}>Star</Typography>
             <DatePicker
               value={firstDate}
               onChange={v => {

@@ -10,16 +10,23 @@ interface ElementsProps {
 export default function IndexAbsoluteElements() {
   const router = useRouter();
   const [open, setOpen] = useState(router.query.success === "true");
-  const [disable, setDisable] = useState(router.pathname === "/team");
+  const [link, setLink] = useState("/team");
 
   useEffect(() => setOpen(router.query.success === "true"), [router.query.success]);
-  useEffect(() => setDisable(router.pathname === "/team"), [router.pathname]);
 
   const handleClose = async (_?: SyntheticEvent | Event, reason?: string) => {
     if (reason === "clickaway") {
       return;
     }
     setOpen(false);
+  };
+
+  const handleClick = async () => {
+    if (router.pathname === "/team") {
+      setLink("/");
+      return;
+    }
+    setLink("/team");
   };
 
   return (
@@ -29,7 +36,7 @@ export default function IndexAbsoluteElements() {
           Successfully sent!
         </Alert>
       </Snackbar>
-      <Fab color="secondary" aria-label="teams" sx={{ position: "fixed", bottom: 16, right: 16 }} href="/team" disabled={disable}>
+      <Fab color="secondary" aria-label="teams" sx={{ position: "fixed", bottom: 16, right: 16 }} href={link} onClick={handleClick}>
         <GroupsIcon />
       </Fab>
     </>

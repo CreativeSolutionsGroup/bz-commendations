@@ -1,5 +1,5 @@
 import { createCommendation, emailToId, getMemberImage, getMemberTeamLeaders, getMemberWithTeams, idIsMember, sendBzEmail, sendBzText, updateMemberImageURL } from "@/lib/api/commendations";
-import { getTimeRangeCommendations } from "@/lib/api/teams";
+import { getTeam, getTimeRangeCommendations } from "@/lib/api/teams";
 import { revalidate } from "@/lib/revalidate";
 import { NextApiRequest, NextApiResponse } from "next";
 import { Session, getServerSession } from "next-auth";
@@ -38,7 +38,7 @@ const sendMemberCommendation = async (
   const pImage = (await getMemberImage(sender) == null) && updateMemberImageURL(session?.user?.image as string, sender);
   // send email to the recip
   const pEmail = sendBzEmail(
-    session?.user?.email as string, [recipientEmail], session?.user?.name as string, msg
+    session?.user?.email as string, [recipientEmail], session?.user?.name as string, "you", msg
   );
   // send text to the recip
   const pText = (recipient.phone != null) ? sendBzText(
@@ -47,7 +47,7 @@ const sendMemberCommendation = async (
 
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
   const pTeamEmail = (teamLeadersEmails && teamLeadersEmails.length < 10) && sendBzEmail(
-    session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true }
+    session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, recipient.name, msg, { isTeam: true }
   );
 
 
@@ -68,13 +68,14 @@ const sendTeamCommendation = async (
 
   const teamLeaders = await getMemberTeamLeaders([teamId]);
   const teamLeadersEmails = teamLeaders.map(t => t.email);
+  const team = await getTeam(teamId);
 
   // log the commendation (except don't because we don't have a recipient)
   // const pCommendation = createCommendation(sender as string, await emailToId(teamLeadersEmails[0]) ?? "", msg);
 
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
   const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(
-    session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, msg, { isTeam: true }
+    session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, team?.name as string, msg, { isTeam: true }
   );
   try {
     await pTeamEmail;

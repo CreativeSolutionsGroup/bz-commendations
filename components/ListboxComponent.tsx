@@ -1,8 +1,22 @@
 import bz from "@/assets/bz-logo.png";
 import { Person } from "@mui/icons-material";
-import { Avatar, Box, ListSubheader, MenuItem, Typography } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  ListSubheader,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import { Team } from "@prisma/client";
-import { HTMLAttributes, ReactNode, createContext, forwardRef, useContext, useEffect, useRef } from "react";
+import {
+  HTMLAttributes,
+  ReactNode,
+  createContext,
+  forwardRef,
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import { ListChildComponentProps, VariableSizeList } from "react-window";
 import Image from "next/image";
 
@@ -26,10 +40,13 @@ function renderRow(props: ListChildComponentProps) {
     top: (style.top as number) + LISTBOX_PADDING,
   };
 
-
   if (dataSet.hasOwnProperty("group")) {
     return (
-      <ListSubheader key={dataSet.key} component="div" style={{ ...inlineStyle, height: 36 }}>
+      <ListSubheader
+        key={dataSet.key}
+        component="div"
+        style={{ ...inlineStyle, height: 36 }}
+      >
         {dataSet.group}
       </ListSubheader>
     );
@@ -41,20 +58,37 @@ function renderRow(props: ListChildComponentProps) {
     <MenuItem key={index} {...optionProps} {...props} sx={{ width: "100%" }}>
       <Box display="flex" flexDirection="row" width="100%">
         <Avatar>
-          {
-            option.imageURL ?
-              <Image fill src={option.imageURL} alt="" placeholder="blur" blurDataURL={bz.src} style={{ objectFit: "contain" }} /> :
-              <Person />}
+          {option.imageURL ? (
+            <Image
+              fill
+              src={option.imageURL}
+              alt=""
+              placeholder="blur"
+              blurDataURL={bz.src}
+              style={{ objectFit: "contain" }}
+            />
+          ) : (
+            <Person />
+          )}
         </Avatar>
-        <Typography ml={1.5} mt={1}>{option.name}</Typography>
+        <Typography ml={1.5} mt={1}>
+          {option.name}
+        </Typography>
         <Box flexGrow={1}></Box>
-        {
-          option.teams ?
-            <Typography mt={1.5} variant="caption" color="GrayText" align="right" maxWidth='10rem' overflow="hidden">
-              {option.teams.map((team: Team) => team.name).join(", ")}
-            </Typography> :
-            <></>
-        }
+        {option.teams ? (
+          <Typography
+            mt={1.5}
+            variant="caption"
+            color="GrayText"
+            align="right"
+            maxWidth="10rem"
+            overflow="hidden"
+          >
+            {option.teams.map((team: Team) => team.name).join(", ")}
+          </Typography>
+        ) : (
+          <></>
+        )}
       </Box>
     </MenuItem>
   );
@@ -62,14 +96,17 @@ function renderRow(props: ListChildComponentProps) {
 
 const OuterElementContext = createContext({});
 
-const OuterElementType = forwardRef<HTMLDivElement>(function CommendationOuter(props, ref) {
+const OuterElementType = forwardRef<HTMLDivElement>
+(function CommendationOuter(props, ref) {
   const outerProps = useContext(OuterElementContext);
-  return <div ref={ref} {...props} {...outerProps} />;
+  return (
+    <div ref={ref} {...props} {...outerProps} style={{ overflowX: "clip" }} />
+  );
 });
 
 const ListboxComponent = forwardRef<
-    HTMLDivElement,
-    HTMLAttributes<HTMLElement>
+  HTMLDivElement,
+  HTMLAttributes<HTMLElement>
 >(function ListboxComponent(props, ref) {
   const { children, ...other } = props;
   const itemData: ReactNode[] = [];

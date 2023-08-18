@@ -67,6 +67,33 @@ export const createCommendation = async (
   });
 };
 
+/**
+ * This function creates a record of a team commendation
+ * 
+ * @param sender The id of the member that sent the commendation
+ * @param recipient The id of the team who the commendation is being sent to 
+ * @param msg This is the message that the sender wrote
+ * @returns This function returns `Promise<TeamCommendation>`
+ */
+export const createTeamCommendation = async (
+  sender: string, recipient: string, msg: string
+) => {
+  return await prisma.teamCommendation.create({
+    data: {
+      sender: {
+        connect: {
+          id: sender
+        }
+      },
+      recipient: {
+        connect: {
+          id: recipient
+        }
+      },
+      message: msg
+    }
+  });
+};
 
 /**
  * This gets all of the Commendations that have been sent
@@ -136,7 +163,8 @@ export const readUserCommendations = async (email: string) => {
               imageURL: true
             }
           },
-          message: true
+          message: true,
+          createdAt: true
         }
       }
     },
@@ -147,6 +175,38 @@ export const readUserCommendations = async (email: string) => {
   return user?.commendations;
 };
 
+/**
+ * This function gets a list of the commendations sent to the team
+ * 
+ * @param email This is the email address of the current session user
+ * @returns A list of team commendations in the form `{message: string; sender: {name: string; imageURL: string | null; }; }[]`
+ */
+export const readTeamCommendations = async (email: string) => {
+  const teams = await prisma.team.findMany({
+    select: {
+      teamCommendations: {
+        select: {
+          sender: {
+            select: {
+              name: true,
+              imageURL: true
+            }
+          },
+          message: true,
+          createdAt: true
+        }
+      }
+    },
+    where: {
+      members: {
+        some: {
+          email 
+        }
+      }
+    }
+  });
+  return teams.flatMap(l => l.teamCommendations);
+};
 
 /**
  * This function gets a list of the commendations sent by the user
@@ -165,7 +225,8 @@ export const readUserSentCommendations = async (email: string) => {
               imageURL: true
             }
           },
-          message: true
+          message: true,
+          createdAt: true
         }
       }
     },
@@ -176,6 +237,34 @@ export const readUserSentCommendations = async (email: string) => {
   return user?.sentCommendations;
 };
 
+/**
+ * This function gets a list of the commendations sent by the user
+ * 
+ * @param email This is the email address of the current session user
+ * @returns A list of team commendations in the form `{message: string; recipient: {name: string; imageURL: string | null; }; }[]`
+ */
+export const readTeamSentCommendations = async (email: string) => {
+  const user = await prisma.member.findFirst({
+    select: {
+      sentTeamCommendations: {
+        select: {
+          recipient: {
+            select: {
+              name: true,
+              imageURL: true
+            }
+          },
+          message: true,
+          createdAt: true
+        }
+      }
+    },
+    where: {
+      email
+    }
+  });
+  return user?.sentTeamCommendations;
+};
 
 /**
  * The function name here is misleading.

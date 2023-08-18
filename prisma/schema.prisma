@@ -17,25 +17,37 @@ model Commendation {
   sender      Member   @relation("sender", fields: [senderId], references: [id])
 }
 
+model TeamCommendation {
+  id        String   @id @default(uuid())
+  message   String
+  teamId    String
+  senderId  String
+  createdAt DateTime @default(now())
+  recipient Team     @relation("recipient", fields: [teamId], references: [id])
+  sender    Member   @relation("sender", fields: [senderId], references: [id])
+}
+
 model Member {
-  id                String         @id @default(uuid())
-  name              String
-  email             String         @unique
-  phone             String?
-  imageURL          String?
-  commendations     Commendation[] @relation("recipient")
-  sentCommendations Commendation[] @relation("sender")
-  leadsTeams        TeamLeaders[]
-  roles             Role[]         @relation("MemberToRole")
-  teams             Team[]         @relation("MemberToTeam")
+  id                    String             @id @default(uuid())
+  name                  String
+  email                 String             @unique
+  phone                 String?
+  imageURL              String?
+  commendations         Commendation[]     @relation("recipient")
+  sentCommendations     Commendation[]     @relation("sender")
+  sentTeamCommendations TeamCommendation[] @relation("sender")
+  leadsTeams            TeamLeaders[]
+  roles                 Role[]             @relation("MemberToRole")
+  teams                 Team[]             @relation("MemberToTeam")
 }
 
 model Team {
-  id          String        @id @default(uuid())
-  name        String
-  imageURL    String?
-  teamLeaders TeamLeaders[]
-  members     Member[]      @relation("MemberToTeam")
+  id                String             @id @default(uuid())
+  name              String
+  imageURL          String?
+  teamLeaders       TeamLeaders[]
+  members           Member[]           @relation("MemberToTeam")
+  teamCommendations TeamCommendation[] @relation("recipient")
 }
 
 model Role {

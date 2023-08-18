@@ -6,7 +6,7 @@ import { Raleway } from "@next/font/google";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { readUserCommendations } from "../../../lib/api/commendations";
+import { readTeamCommendations, readUserCommendations } from "../../../lib/api/commendations";
 import stinger from "../../../assets/stinger.png";
 
 export async function getStaticPaths() {
@@ -24,12 +24,15 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   if (!params) throw new Error("No path parameters found");
-  const comms = await readUserCommendations(params?.email as string ?? "");
+  const userComms = await readUserCommendations(params?.email as string ?? "") ?? [];
+  const teamComms = await readTeamCommendations(params?.email as string ?? "") ?? [];
 
-  if (!comms) return { notFound: true, revalidate: 10 };
+  if (userComms.length === 0 && teamComms.length === 0) return { notFound: true, revalidate: 10 };
+
+  const comms = [...userComms, ...teamComms].sort((a, b) => a.createdAt.getMilliseconds() - b.createdAt.getMilliseconds());
 
   return {
-    props: { comms },
+    props: { comms: comms.map(({ createdAt, ...rest }) => ({ ...rest })) },
     revalidate: 60
   };
 }

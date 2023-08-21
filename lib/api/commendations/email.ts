@@ -7,6 +7,7 @@ export const sendBzEmail = async (
   senderEmail: string,
   recipientEmails: string[],
   senderName: string,
+  recipientName: string,
   message: string,
   { isTeam } = { isTeam: false }
 ) => {
@@ -17,7 +18,7 @@ export const sendBzEmail = async (
     },
     Message: {
       Subject: {
-        Data: `[bz_commendations] ${senderName} sent you a BZ Commendation`
+        Data: `[bz_commendations] ${senderName} sent ${recipientName} a BZ Commendation`
       },
       Body: {
         Html: {

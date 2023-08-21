@@ -131,3 +131,13 @@ export const getTeamCommendations = async (id: string) => {
     sentComms: []
   };
 };
+
+export const getTeam = async (id: string) => {
+  const team = await prisma.team.findFirst({
+    where: {
+      id
+    }
+  });
+  
+  return team;
+};

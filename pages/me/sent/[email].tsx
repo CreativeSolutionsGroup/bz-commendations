@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { readTeamSentCommendations, readUserSentCommendations } from "../../../lib/api/commendations";
 import stinger from "../../../assets/stinger.png";
+import { NotFound } from "@/components/NotFound";
 
 export async function getStaticPaths() {
   const users = await prisma.member.findMany();
@@ -27,7 +28,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   const userComms = await readUserSentCommendations(params?.email as string ?? "") ?? [];
   const teamComms = await readTeamSentCommendations(params?.email as string ?? "") ?? [];
 
-  if (userComms.length === 0 && teamComms.length === 0) return { notFound: true, revalidate: 10 };
+  if (userComms.length === 0 && teamComms.length === 0) return ( <NotFound page="sent" /> );
 
   const comms = [...userComms, ...teamComms].sort((a, b) => a.createdAt.getMilliseconds() - b.createdAt.getMilliseconds());
 

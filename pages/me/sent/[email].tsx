@@ -51,7 +51,7 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
         <Box flexGrow={1} p={1}>
           <Typography className={raleway.className} fontSize={30} fontWeight={900} m={2} mb={1.25} align="center">Sent Commendations</Typography>
           {comms.length === 0
-            ? <NotFound page={"sent"} />
+            ? <NotFound page="sent" />
             : <>{comms.map((comm, i) =>
               <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
                 <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">

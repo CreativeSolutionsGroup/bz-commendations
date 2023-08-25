@@ -50,13 +50,13 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
           <Typography className={raleway.className} fontSize={30} fontWeight={900} mt={2} mb={1.25} align="center">Received Commendations</Typography>
           {comms.map((comm, i) =>
             <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
-              <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
+              <Box sx={{ display: "flex", flexDirection: "row"}} minHeight="6.5rem">
                 <Avatar>
                   <Image fill src={comm.sender.imageURL ?? stinger.src} alt={comm.sender.name} />
                 </Avatar>
                 <Stack ml={2}>
                   <Typography fontWeight="bold">{comm.sender.name}</Typography>
-                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "normal" }}>{comm.message}</Typography>
                 </Stack>
               </Box>
             </Paper>)}

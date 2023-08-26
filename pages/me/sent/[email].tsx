@@ -56,7 +56,7 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
                 </Avatar>
                 <Stack ml={2}>
                   <Typography fontWeight="bold">{comm.recipient.name}</Typography>
-                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "normal" }}>{comm.message}</Typography>
                 </Stack>
               </Box>
             </Paper>)}

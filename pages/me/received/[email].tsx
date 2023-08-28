@@ -6,8 +6,9 @@ import { Raleway } from "@next/font/google";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { readUserCommendations } from "../../../lib/api/commendations";
+import { readTeamCommendations, readUserCommendations } from "../../../lib/api/commendations";
 import stinger from "../../../assets/stinger.png";
+import { NotFound } from "@/components/NotFound";
 
 export async function getStaticPaths() {
   const users = await prisma.member.findMany();
@@ -24,12 +25,13 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   if (!params) throw new Error("No path parameters found");
-  const comms = await readUserCommendations(params?.email as string ?? "");
+  const userComms = await readUserCommendations(params?.email as string ?? "") ?? [];
+  const teamComms = await readTeamCommendations(params?.email as string ?? "") ?? [];
 
-  if (!comms) return { notFound: true, revalidate: 10 };
+  const comms = [...userComms, ...teamComms].sort((a, b) => a.createdAt.getMilliseconds() - b.createdAt.getMilliseconds());
 
   return {
-    props: { comms },
+    props: { comms: comms.map(({ createdAt, ...rest }) => ({ ...rest })) },
     revalidate: 60
   };
 }
@@ -48,18 +50,23 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
       <main>
         <Box flexGrow={1} p={1}>
           <Typography className={raleway.className} fontSize={30} fontWeight={900} mt={2} mb={1.25} align="center">Received Commendations</Typography>
-          {comms.map((comm, i) =>
-            <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
-              <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
-                <Avatar>
-                  <Image fill src={comm.sender.imageURL ?? stinger.src} alt={comm.sender.name} />
-                </Avatar>
-                <Stack ml={2}>
-                  <Typography fontWeight="bold">{comm.sender.name}</Typography>
-                  <Typography fontSize="0.9rem" sx={{ wordWrap: "normal", wordBreak: "break-word" }}>{comm.message}</Typography>
-                </Stack>
-              </Box>
-            </Paper>)}
+          {comms.length === 0
+            ? <NotFound page="received" />
+            : <>
+              {comms.map((comm, i) =>
+                <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
+                  <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
+                    <Avatar>
+                      <Image fill src={comm.sender.imageURL ?? stinger.src} alt={comm.sender.name} />
+                    </Avatar>
+                    <Stack ml={2}>
+                      <Typography fontWeight="bold">{comm.sender.name}</Typography>
+                      <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+                    </Stack>
+                  </Box>
+                </Paper>)}
+            </>
+          }
         </Box>
         <BottomBar page="/received" />
       </main>

@@ -136,7 +136,8 @@ export const readUserCommendations = async (email: string) => {
               imageURL: true
             }
           },
-          message: true
+          message: true,
+          createdAt: true
         }
       }
     },
@@ -144,7 +145,45 @@ export const readUserCommendations = async (email: string) => {
       email
     }
   });
-  return user?.commendations;
+
+  // Encode dates into JSON-friendly strings
+  let formattedComms: {
+    commendations: {
+      sender: {
+          name: string;
+          imageURL: string | null;
+      };
+      message: string;
+      createdAtString: string;
+  }[];
+  } = { commendations: []};
+  user?.commendations.forEach((comm) => {
+    formattedComms.commendations.push({
+      sender: {
+        name: comm.sender.name,
+        imageURL: comm.sender.imageURL
+      },
+      message: comm.message,
+      createdAtString: comm.createdAt.toISOString()
+    });
+  });
+
+  // Sort commendations by most recent
+  formattedComms.commendations.sort((comm1, comm2) => {
+    if (comm1.createdAtString < comm2.createdAtString) {
+      return -1;
+    } else if (comm1.createdAtString < comm2.createdAtString) {
+      return 1;
+    }
+    return 0;
+  });
+
+  // const formattedComms = user?.commendations.map((comm, index) => {
+  //   comm.createdAt = new Date();    //comm.createdAt.toISOString();
+  // });
+
+  //return user?.commendations;
+  return formattedComms.commendations;
 };
 
 
@@ -165,7 +204,8 @@ export const readUserSentCommendations = async (email: string) => {
               imageURL: true
             }
           },
-          message: true
+          message: true,
+          createdAt: true
         }
       }
     },

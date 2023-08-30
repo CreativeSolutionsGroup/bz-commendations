@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { readUserSentCommendations } from "../../../lib/api/commendations";
 import stinger from "../../../assets/stinger.png";
+import { useEffect, useState } from "react";
 
 export async function getStaticPaths() {
   const users = await prisma.member.findMany();
@@ -24,28 +25,34 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   if (!params) throw new Error("No path parameters found");
-  const temp = await readUserSentCommendations(params?.email as string ?? "");
+  const comms = await readUserSentCommendations(params?.email as string ?? "");
 
-  if (!temp) return { notFound: true, revalidate: 10 };
+  if (!comms) return { notFound: true, revalidate: 10 };
 
-  let comms = JSON.parse(JSON.stringify(temp));
-  comms.sort((comm1, comm2) => {
-    if (comm1.createdAt < comm2.createdAt) {
-      return -1;
-    } else if (comm1.createdAt > comm2.createdAt) {
-      return 1;
-    }
-    return 0;
+  // Sort commendations by most recent creation date
+  comms?.sort((comm1, comm2) => {
+    return comm2.createdAt.getTime() - comm1.createdAt.getTime();
   });
+
+  // Clean up error caused by "createdAt" property
+  // https://stackoverflow.com/a/72837265
+  const uncleanComms: typeof comms = JSON.parse(JSON.stringify(comms));
+  
   return {
-    props: { comms },
+    props: { uncleanComms },
     revalidate: 60
   };
 }
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
-export default function MyCommendations({ comms }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function MyCommendations({ uncleanComms }: InferGetStaticPropsType<typeof getStaticProps>) {
+  // Cleanse the lepers
+  const [comms, updateComms] = useState<typeof uncleanComms>(uncleanComms.map((comm) => {
+    comm.createdAt = new Date(comm.createdAt);
+    return comm;
+  }));
+  
   const router = useRouter();
 
   if (router.isFallback) {
@@ -66,7 +73,7 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
                 <Stack ml={2}>
                   <Typography fontWeight="bold">{comm.recipient.name}</Typography>
                   <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
-                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{new Date(comm.createdAt).getMonth() + 1}{"/"}{new Date(comm.createdAt).getDate()}{"/"}{new Date(comm.createdAt).getFullYear()}</Typography> {/* getDate()*/}
+                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.createdAt.getMonth() + 1}{"/"}{new Date(comm.createdAt).getDate()}{"/"}{new Date(comm.createdAt).getFullYear()}</Typography> {/* getDate()*/}
                 </Stack>
               </Box>
             </Paper>)}

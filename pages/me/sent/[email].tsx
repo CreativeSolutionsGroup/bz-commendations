@@ -32,7 +32,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   comms.sort((comm1, comm2) => {
     if (comm1.createdAt < comm2.createdAt) {
       return -1;
-    } else if (comm1.createdAt < comm2.createdAt) {
+    } else if (comm1.createdAt > comm2.createdAt) {
       return 1;
     }
     return 0;

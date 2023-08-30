@@ -24,9 +24,19 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   if (!params) throw new Error("No path parameters found");
-  const comms = await readUserCommendations(params?.email as string ?? "");
+  const temp = await readUserCommendations(params?.email as string ?? "");
 
-  if (!comms) return { notFound: true, revalidate: 10 };
+  if (!temp) return { notFound: true, revalidate: 10 };
+
+  let comms = JSON.parse(JSON.stringify(temp));
+  comms.sort((comm1, comm2) => {
+    if (comm1.createdAt < comm2.createdAt) {
+      return 1;
+    } else if (comm1.createdAt > comm2.createdAt) {
+      return -1;
+    }
+    return 0;
+  });
 
   return {
     props: { comms },
@@ -57,6 +67,7 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
                 <Stack ml={2}>
                   <Typography fontWeight="bold">{comm.sender.name}</Typography>
                   <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{new Date(comm.createdAt).getMonth() + 1}{"/"}{new Date(comm.createdAt).getDate()}{"/"}{new Date(comm.createdAt).getFullYear()}</Typography> {/* getDate()*/}
                 </Stack>
               </Box>
             </Paper>)}

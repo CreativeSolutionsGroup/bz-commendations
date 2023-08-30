@@ -73,7 +73,11 @@ export default function MyCommendations({ uncleanComms }: InferGetStaticPropsTyp
                 <Stack ml={2}>
                   <Typography fontWeight="bold">{comm.sender.name}</Typography>
                   <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
-                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{new Date(comm.createdAt).getMonth() + 1}{"/"}{new Date(comm.createdAt).getDate()}{"/"}{new Date(comm.createdAt).getFullYear()}</Typography> {/* getDate()*/}
+                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>
+                    {comm.createdAt.getMonth() + 1}{"/"}
+                    {comm.createdAt.getDate()}{"/"}
+                    {comm.createdAt.getFullYear()}
+                  </Typography>
                 </Stack>
               </Box>
             </Paper>)}

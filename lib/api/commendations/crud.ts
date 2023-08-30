@@ -145,7 +145,6 @@ export const readUserCommendations = async (email: string) => {
       email
     }
   });
-
   return user?.commendations;
 };
 

@@ -14,6 +14,10 @@ import theme from "@/config/theme";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
+export function getServerSideProps() {
+  return { props: {} }
+}
+
 export default function Admin() {
   const [viewMode, setViewMode] = useState("square");
   const [data, setData] = useState<TimeRangeCommendations>({} as TimeRangeCommendations);

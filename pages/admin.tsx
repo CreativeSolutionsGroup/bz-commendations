@@ -14,7 +14,7 @@ import theme from "@/config/theme";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
-export function getServerSideProps() {
+export async function getServerSideProps() {
   return { props: {} };
 }
 

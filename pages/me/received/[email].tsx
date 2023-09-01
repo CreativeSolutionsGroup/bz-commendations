@@ -48,10 +48,10 @@ const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
 export default function MyCommendations({ uncleanComms }: InferGetStaticPropsType<typeof getStaticProps>) {
   // Cleanse the lepers
-  const [comms, updateComms] = useState<typeof uncleanComms>(uncleanComms.map((comm) => {
+  const comms: typeof uncleanComms = uncleanComms.map((comm) => {
     comm.createdAt = new Date(comm.createdAt);
     return comm;
-  }));
+  });
   
   const router = useRouter();
 

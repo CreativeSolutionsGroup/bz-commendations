@@ -28,19 +28,15 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   const userComms = await readUserSentCommendations(params?.email as string ?? "") ?? [];
   const teamComms = await readTeamSentCommendations(params?.email as string ?? "") ?? [];
 
-  const comms = [...userComms, ...teamComms].sort((a, b) => a.createdAt.getMilliseconds() - b.createdAt.getMilliseconds());
-
-  // Sort commendations by most recent creation date
-  comms?.sort((comm1, comm2) => {
-    return comm2.createdAt.getTime() - comm1.createdAt.getTime();
-  });
+  // Combine commendations and sort by most recent creation date
+  const comms = [...userComms, ...teamComms].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
   // Clean up error caused by "createdAt" property
   // https://stackoverflow.com/a/72837265
   const uncleanComms: typeof comms = JSON.parse(JSON.stringify(comms));
   
   return {
-    props: { uncleanComms: comms.map(({ createdAt, ...rest }) => ({ ...rest })) },
+    props: { uncleanComms },
     revalidate: 60
   };
 }

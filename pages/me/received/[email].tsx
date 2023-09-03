@@ -6,9 +6,9 @@ import { Raleway } from "@next/font/google";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { readUserCommendations } from "../../../lib/api/commendations";
+import { readTeamCommendations, readUserCommendations } from "../../../lib/api/commendations";
 import stinger from "../../../assets/stinger.png";
-import { useState } from "react";
+import { NotFound } from "@/components/NotFound";
 
 export async function getStaticPaths() {
   const users = await prisma.member.findMany();
@@ -25,21 +25,19 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   if (!params) throw new Error("No path parameters found");
-  const comms = await readUserCommendations(params?.email as string ?? "");
+  const userComms = await readUserCommendations(params?.email as string ?? "") ?? [];
+  const teamComms = await readTeamCommendations(params?.email as string ?? "") ?? [];
 
-  if (!comms) return { notFound: true, revalidate: 10 };
-
-  // Sort commendations by most recent creation date
-  comms?.sort((comm1, comm2) => {
-    return comm2.createdAt.getTime() - comm1.createdAt.getTime();
-  });
+  // Combine commendations and sort by most recent creation date
+  const comms = [...userComms, ...teamComms].sort((a, b) => b.createdAt.getTime() - .createdAt.getTime());
 
   // Clean up error caused by "createdAt" property
   // https://stackoverflow.com/a/72837265
   const uncleanComms: typeof comms = JSON.parse(JSON.stringify(comms));
 
   return {
-    props: { uncleanComms },
+    props: { uncleanComms: comms.map(({ createdAt, ...rest }) => ({ ...rest })) },
+    //props: { comms: comms.map(({ createdAt, ...rest }) => ({ ...rest })) },
     revalidate: 60
   };
 }
@@ -64,23 +62,28 @@ export default function MyCommendations({ uncleanComms }: InferGetStaticPropsTyp
       <main>
         <Box flexGrow={1} p={1}>
           <Typography className={raleway.className} fontSize={30} fontWeight={900} mt={2} mb={1.25} align="center">Received Commendations</Typography>
-          {comms.map((comm, i) =>
-            <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
-              <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
-                <Avatar>
-                  <Image fill src={comm.sender.imageURL ?? stinger.src} alt={comm.sender.name} />
-                </Avatar>
-                <Stack ml={2}>
-                  <Typography fontWeight="bold">{comm.sender.name}</Typography>
-                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
-                  <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>
-                    {comm.createdAt.getMonth() + 1}{"/"}
-                    {comm.createdAt.getDate()}{"/"}
-                    {comm.createdAt.getFullYear()}
+          {comms.length === 0
+            ? <NotFound page="received" />
+            : <>
+              {comms.map((comm, i) =>
+                <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
+                  <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
+                    <Avatar>
+                      <Image fill src={comm.sender.imageURL ?? stinger.src} alt={comm.sender.name} />
+                    </Avatar>
+                    <Stack ml={2}>
+                      <Typography fontWeight="bold">{comm.sender.name}</Typography>
+                      <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+                      <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>
+                        {comm.createdAt.getMonth() + 1}{"/"}
+                        {comm.createdAt.getDate()}{"/"}
+                        {comm.createdAt.getFullYear()}
                   </Typography>
-                </Stack>
-              </Box>
-            </Paper>)}
+                    </Stack>
+                  </Box>
+                </Paper>)}
+            </>
+          }
         </Box>
         <BottomBar page="/received" />
       </main>

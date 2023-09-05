@@ -43,13 +43,9 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
-export default function MyCommendations({ uncleanComms }: InferGetStaticPropsType<typeof getStaticProps>) {
-  // Cleanse the lepers
-  const comms: typeof uncleanComms = uncleanComms.map((comm) => {
-    comm.createdAt = new Date(comm.createdAt);
-    return comm;
-  });
-  
+export default function MyCommendations({ uncleanComms = [] }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const comms = uncleanComms.map((comm) => ({ ...comm, createdAt: new Date(comm.createdAt) }));
+
   const router = useRouter();
 
   if (router.isFallback) {

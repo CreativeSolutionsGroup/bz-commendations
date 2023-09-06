@@ -28,17 +28,28 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   const userComms = await readUserSentCommendations(params?.email as string ?? "") ?? [];
   const teamComms = await readTeamSentCommendations(params?.email as string ?? "") ?? [];
 
-  const comms = [...userComms, ...teamComms].sort((a, b) => a.createdAt.getMilliseconds() - b.createdAt.getMilliseconds());
+  // Combine commendations and sort by most recent creation date
+  const comms = [...userComms, ...teamComms].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
+  // Clean up error caused by "createdAt" property
+  // https://stackoverflow.com/a/72837265
+  const uncleanComms: typeof comms = JSON.parse(JSON.stringify(comms));
+  
   return {
-    props: { comms: comms.map(({ createdAt, ...rest }) => ({ ...rest })) },
+    props: { uncleanComms },
     revalidate: 60
   };
 }
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
-export default function MyCommendations({ comms }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function MyCommendations({ uncleanComms }: InferGetStaticPropsType<typeof getStaticProps>) {
+  // Cleanse the lepers
+  const comms: typeof uncleanComms = uncleanComms.map((comm) => {
+    comm.createdAt = new Date(comm.createdAt);
+    return comm;
+  });
+  
   const router = useRouter();
 
   if (router.isFallback) {
@@ -61,6 +72,11 @@ export default function MyCommendations({ comms }: InferGetStaticPropsType<typeo
                   <Stack ml={2}>
                     <Typography fontWeight="bold">{comm.recipient.name}</Typography>
                     <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+                    <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>
+                      {comm.createdAt.getMonth() + 1}{"/"}
+                      {comm.createdAt.getDate()}{"/"}
+                      {comm.createdAt.getFullYear()}
+                    </Typography>
                   </Stack>
                 </Box>
               </Paper>)}</>

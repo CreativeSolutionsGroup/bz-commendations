@@ -23,8 +23,8 @@ model TeamCommendation {
   teamId    String
   senderId  String
   createdAt DateTime @default(now())
-  recipient Team     @relation("recipient", fields: [teamId], references: [id])
   sender    Member   @relation("sender", fields: [senderId], references: [id])
+  recipient Team     @relation("recipient", fields: [teamId], references: [id])
 }
 
 model Member {
@@ -45,9 +45,9 @@ model Team {
   id                String             @id @default(uuid())
   name              String
   imageURL          String?
+  teamCommendations TeamCommendation[] @relation("recipient")
   teamLeaders       TeamLeaders[]
   members           Member[]           @relation("MemberToTeam")
-  teamCommendations TeamCommendation[] @relation("recipient")
 }
 
 model Role {

@@ -69,7 +69,7 @@ export default function MyCommendations({ uncleanComms = [] }: InferGetStaticPro
                     <Stack ml={2} width="100%">
                       <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%"}}>
                         <Typography fontWeight="bold">{comm.sender.name}</Typography>
-                        <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>
+                        <Typography fontSize="0.85rem" sx={{ wordWrap: "break-word", wordBreak: "break-all", mt: 0.5 }}>
                           {comm.createdAt.getMonth() + 1}{"/"}
                           {comm.createdAt.getDate()}{"/"}
                           {comm.createdAt.getFullYear()}

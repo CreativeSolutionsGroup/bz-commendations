@@ -11,8 +11,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
-  <Box flexGrow={1}>
-    <Typography fontWeight={700} textAlign={"center"} fontSize={18} marginBottom={1}>Sent</Typography>
+  <Box flexGrow={1} px={1}>
+    <Typography fontWeight={700} textAlign={"center"} fontSize={18} mb={1}>Sent</Typography>
     {commsSent?.map((comm, index: number) =>
       <Paper key={index} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
         <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
@@ -22,10 +22,10 @@ const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
           <Stack ml={2}>
             <Box display={"flex"}>
               <Typography fontWeight={"bold"}>{comm.sender.name}</Typography>
-              <ArrowCircleRight sx={{ marginLeft: 1 }} />
-              <Typography fontWeight="bold" marginLeft={1}>{comm.recipient.name}</Typography>
+              <ArrowCircleRight sx={{ ml: 1 }} />
+              <Typography fontWeight="bold" ml={1}>{comm.recipient.name}</Typography>
             </Box>
-            <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+            <Typography fontSize="0.9rem" sx={{ wordWrap: "normal", wordBreak: "break-word" }}>{comm.message}</Typography>
           </Stack>
         </Box>
       </Paper>)}
@@ -33,8 +33,8 @@ const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
 );
 
 const recvCommendations = (commsRecv: Array<CommendationWithPeople>) => (
-  <Box flexGrow={1}>
-    <Typography fontWeight={700} textAlign={"center"} fontSize={18} marginBottom={1}>Received</Typography>
+  <Box flexGrow={1} px={1}>
+    <Typography fontWeight={700} textAlign={"center"} fontSize={18} mb={1}>Received</Typography>
     {commsRecv?.map((comm, index: number) =>
       <Paper key={index} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
         <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
@@ -44,10 +44,10 @@ const recvCommendations = (commsRecv: Array<CommendationWithPeople>) => (
           <Stack ml={2}>
             <Box display={"flex"}>
               <Typography fontWeight={"bold"}>{comm.sender.name}</Typography>
-              <ArrowCircleRight sx={{ marginLeft: 1 }} />
-              <Typography fontWeight="bold" marginLeft={1}>{comm.recipient.name}</Typography>
+              <ArrowCircleRight sx={{ ml: 1 }} />
+              <Typography fontWeight="bold" ml={1}>{comm.recipient.name}</Typography>
             </Box>
-            <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+            <Typography fontSize="0.9rem" sx={{ wordWrap: "normal", wordBreak: "break-word" }}>{comm.message}</Typography>
           </Stack>
         </Box>
       </Paper>)}
@@ -81,17 +81,17 @@ export default function AdminTeamView({ teams }: { teams: TeamsList }) {
 
   return (
     <Box>
-      <Box marginX={2} display="flex" flexDirection="row" justifyContent="space-between">
+      <Box mx={2} display="flex" flexDirection="row" justifyContent="space-between">
         {!bigScreen ?
           <FormControl>
-            <InputLabel id="type-select-label" sx={{ marginTop: 1 }}>Commendation Type</InputLabel>
+            <InputLabel id="type-select-label" sx={{ mt: 1 }}>Commendation Type</InputLabel>
             <Select
               label="Commendation Type"
               labelId="type-select-label"
               name="commType"
               value={sentSelected}
               onChange={e => setSentSelected(e.target.value === "true")}
-              sx={{ minWidth: "150px", height: "56px", marginTop: 1, marginRight: 1 }}
+              sx={{ minWidth: "150px", height: "56px", mt: 1, mr: 1 }}
             >
               <MenuItem key={0} value={"true"} sx={{ fontWeight: 700 }} >Sent</MenuItem>
               <MenuItem key={1} value={"false"} sx={{ fontWeight: 700 }} >Received</MenuItem>
@@ -101,21 +101,21 @@ export default function AdminTeamView({ teams }: { teams: TeamsList }) {
           <></>
         }
         <FormControl>
-          <InputLabel id="team-select-label" sx={{ marginTop: 1 }}>Team</InputLabel>
+          <InputLabel id="team-select-label" sx={{ mt: 1 }}>Team</InputLabel>
           <Select
             label="Team"
             labelId="team-select-label"
             name="team"
             value={teamSelected}
             onChange={(e: SelectChangeEvent) => setTeamSelected(e.target.value)}
-            sx={{ minWidth: "100px", marginTop: 1 }}
+            sx={{ minWidth: "100px", mt: 1 }}
           >
             {
               exec.teams?.map((currentTeam: Team, index: number) => (
                 <MenuItem key={index} value={currentTeam.id}>
                   <Box display={"flex"}>
                     <Image src={currentTeam.imageURL ?? "https://via.placeholder.com/25?text="} alt={"Team image"} width={25} height={25} style={{ objectFit: "contain" }} />
-                    <Typography marginY={"auto"} fontWeight={700} marginLeft={2}>{currentTeam.name}</Typography>
+                    <Typography my={"auto"} fontWeight={700} ml={2}>{currentTeam.name}</Typography>
                   </Box>
                 </MenuItem>
               ))
@@ -123,7 +123,7 @@ export default function AdminTeamView({ teams }: { teams: TeamsList }) {
           </Select>
         </FormControl>
       </Box>
-      <Box display={"flex"} paddingX={1}>
+      <Box display={"flex"} px={1}>
         {bigScreen ?
           <>
             {sentCommendations(commsSent ?? [])}

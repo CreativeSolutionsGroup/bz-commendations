@@ -75,7 +75,7 @@ export default function MyCommendations({ uncleanComms = [] }: InferGetStaticPro
                       </Typography>
                     </Box>
 
-                    <Typography fontSize="0.9rem" sx={{ wordWrap: "break-word", wordBreak: "break-all" }}>{comm.message}</Typography>
+                    <Typography fontSize="0.9rem" sx={{ wordWrap: "normal", wordBreak: "break-word" }}>{comm.message}</Typography>
                   </Stack>
                 </Box>
               </Paper>)}

@@ -136,9 +136,10 @@ export default function Admin() {
         </IconButton>
       </Box>
       {viewMode === "square" ?
-        <AdminSquareView teams={data.teams} /> : viewMode === "leaderboard" ?
-          <AdminLeaderboardView members={data.members} /> :
-          <AdminTeamView teams={data.teams}/>
+        <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
+          <AdminLeaderboardView membersOrTeams={data.members} isMembers={true} /> : viewMode === "teamLeaderboard" ?
+            <AdminLeaderboardView membersOrTeams={data.teams} isMembers={false} /> :
+            <AdminTeamView teams={data.teams}/>
       }
       <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
         <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>

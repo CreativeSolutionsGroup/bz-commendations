@@ -83,7 +83,13 @@ export default function Admin() {
                   <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
                 </Box>
               </MenuItem>
-              <MenuItem key={3} value={"teams"}>
+              <MenuItem key={3} value={"teamLeaderboard"}>
+                <Box display={"flex"} flexDirection={"row"}>
+                  <EmojiEvents />
+                  <Typography ml={1} fontWeight={700}>Team Leaderboard</Typography>
+                </Box>
+              </MenuItem>
+              <MenuItem key={4} value={"teams"}>
                 <Box display={"flex"} flexDirection={"row"}>
                   <Group />
                   <Typography ml={1} fontWeight={700}>Teams</Typography>
@@ -136,9 +142,9 @@ export default function Admin() {
         </IconButton>
       </Box>
       {viewMode === "square" ?
-        <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
-          <AdminLeaderboardView membersOrTeams={data.members} isMembers={true} /> : viewMode === "teamLeaderboard" ?
-            <AdminLeaderboardView membersOrTeams={data.teams} isMembers={false} /> :
+        <AdminSquareView teams={data.teams} /> : viewMode === "leaderboard" ?
+          <AdminLeaderboardView membersOrTeams={data.members} /> : viewMode === "teamLeaderboard" ?
+            <AdminLeaderboardView membersOrTeams={data.teams} /> :
             <AdminTeamView teams={data.teams}/>
       }
       <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>

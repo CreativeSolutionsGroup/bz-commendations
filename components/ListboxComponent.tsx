@@ -1,4 +1,4 @@
-import bz from "@/assets/bz-logo.png";
+import bz from "@/public/bz-logo.webp";
 import { Person } from "@mui/icons-material";
 import {
   Avatar,

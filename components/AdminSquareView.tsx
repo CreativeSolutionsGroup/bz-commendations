@@ -1,5 +1,5 @@
-import bz from "@/assets/BZ-letters.png";
-import hash from "@/assets/bz-letters-hash.png";
+import bz from "@/public/BZ-letters.webp";
+import hash from "@/public/bz-letters-hash.png";
 import { TeamsList } from "@/types/admin";
 import { Group, MoveToInbox, Send } from "@mui/icons-material";
 import { Box, Card, Chip, Typography } from "@mui/material";

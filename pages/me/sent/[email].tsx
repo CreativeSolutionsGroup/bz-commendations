@@ -7,7 +7,7 @@ import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { readTeamSentCommendations, readUserSentCommendations } from "../../../lib/api/commendations";
-import stinger from "../../../assets/stinger.png";
+import stinger from "@/public/stinger.webp";
 import { NotFound } from "@/components/NotFound";
 
 export async function getStaticPaths() {

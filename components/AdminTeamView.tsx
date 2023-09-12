@@ -1,4 +1,4 @@
-import stinger from "@/assets/stinger.png";
+import stinger from "@/public/stinger.webp";
 import { TeamsList } from "@/types/admin";
 import { CommendationWithPeople, MemberWithTeams } from "@/types/commendation";
 import { ArrowCircleRight } from "@mui/icons-material";

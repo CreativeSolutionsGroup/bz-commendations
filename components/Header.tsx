@@ -1,9 +1,9 @@
 import { AppBar, Toolbar, IconButton, Typography, Stack, Menu, MenuItem, Box, Avatar, Tooltip } from "@mui/material";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 
-import bravo from "@/assets/BZ-flag-red.png";
-import zulu from "@/assets/BZ-flag.png";
-import bz from "@/assets/BZ-letters-solid.png";
+import bravo from "@/public/BZ-flag-red.png";
+import zulu from "@/public/BZ-flag.webp";
+import bz from "@/public/BZ-letters-solid.webp";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";

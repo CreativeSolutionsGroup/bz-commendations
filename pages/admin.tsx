@@ -67,7 +67,7 @@ export default function Admin() {
           open={settingsOpen}
           onClose={handleSettingsClose}
         >
-          <Box sx={{ display: "flex", alignItems: "center", marginRight: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", mr: 2, pl: 2 }}>
             <Box flexGrow={1} />
             <Typography mr={1}>View</Typography>
             <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => { setViewMode(e.target.value); handleSettingsClose(); }} sx={{ marginRight: 1 }}>

@@ -32,7 +32,6 @@ export default function AdminLeaderboardView({ membersOrTeams }: { membersOrTeam
   //Else, it is a team
   else{
     membersOrTeams.forEach((team) =>{
-
       //Set the send info
       sentInfo.push({
         id: team.id,
@@ -48,7 +47,6 @@ export default function AdminLeaderboardView({ membersOrTeams }: { membersOrTeam
         imageURL: team.imageURL,
         numCommendations: team.members.reduce((prev, curr) => prev + curr.commendations.length, 0)
       });
-
     });
 
     sentInfo.sort((a, b) =>  b.numCommendations - a.numCommendations);

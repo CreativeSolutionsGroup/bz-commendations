@@ -54,7 +54,12 @@ const stgOptions: AuthOptions = {
         }
       }
     })
-  ]
+  ],
+  callbacks: {
+    async jwt({token, user}) {
+      return {...token, ...user};
+    }
+  }
 };
 
 const defaultOptions: AuthOptions = {

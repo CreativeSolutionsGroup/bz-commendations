@@ -33,28 +33,28 @@ declare module "next-auth/jwt" {
 
 export const authOptions: AuthOptions = {
   providers: (process.env.BUILD_ENV === "stg"
-  ? [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        username: { label: "Username", type: "text", placeholder: "Username"}
-      },
-      async authorize(credentials, req) {
-        const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
-        if (user) {
-          return user
-        } else {
-          return null
+    ? [
+      CredentialsProvider({
+        name: "Credentials",
+        credentials: {
+          username: { label: "Username", type: "text", placeholder: "Username" }
+        },
+        async authorize(credentials, req) {
+          const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
+          if (user) {
+            return user;
+          } else {
+            return null;
+          }
         }
-      }
-    })
-  ]
-  : [
-    GoogleProvider({
-      clientId: process.env["GOOGLE_CLIENT_ID"],
-      clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
-    })
-  ]),
+      })
+    ]
+    : [
+      GoogleProvider({
+        clientId: process.env["GOOGLE_CLIENT_ID"],
+        clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
+      })
+    ]),
   callbacks: {
     async signIn({ user: { email } }) {
       return !!await prisma.member.count({

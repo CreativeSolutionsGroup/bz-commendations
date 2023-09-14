@@ -1,4 +1,5 @@
-import AdminLeaderboardView from "@/components/AdminLeaderboardView";
+import AdminMemberLeaderboardView from "@/components/AdminMemberLeaderboardView";
+import AdminTeamLeaderboardView from "@/components/AdminTeamLeaderboardView";
 import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
 import { TimeRangeCommendations } from "@/types/commendation";
@@ -77,10 +78,10 @@ export default function Admin() {
                   <Typography ml={1} fontWeight="bold">Square</Typography>
                 </Box>
               </MenuItem>
-              <MenuItem key={2} value={"leaderboard"}>
+              <MenuItem key={2} value={"memberLeaderboard"}>
                 <Box display={"flex"} flexDirection={"row"}>
                   <EmojiEvents />
-                  <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
+                  <Typography ml={1} fontWeight={700}>Member Leaderboard</Typography>
                 </Box>
               </MenuItem>
               <MenuItem key={3} value={"teamLeaderboard"}>
@@ -142,9 +143,9 @@ export default function Admin() {
         </IconButton>
       </Box>
       {viewMode === "square" ?
-        <AdminSquareView teams={data.teams} /> : viewMode === "leaderboard" ?
-          <AdminLeaderboardView membersOrTeams={data.members} /> : viewMode === "teamLeaderboard" ?
-            <AdminLeaderboardView membersOrTeams={data.teams} /> :
+        <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
+          <AdminMemberLeaderboardView members={data.members} /> : viewMode === "teamLeaderboard" ?
+            <AdminTeamLeaderboardView teams={data.teams} /> :
             <AdminTeamView teams={data.teams}/>
       }
       <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>

@@ -1,4 +1,5 @@
-import AdminLeaderboardView from "@/components/AdminLeaderboardView";
+import AdminMemberLeaderboardView from "@/components/AdminMemberLeaderboardView";
+import AdminTeamLeaderboardView from "@/components/AdminTeamLeaderboardView";
 import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
 import { TimeRangeCommendations } from "@/types/commendation";
@@ -67,7 +68,7 @@ export default function Admin() {
           open={settingsOpen}
           onClose={handleSettingsClose}
         >
-          <Box sx={{ display: "flex", alignItems: "center", marginRight: 2 }}>
+          <Box sx={{ display: "flex", alignItems: "center", mr: 2, pl: 2 }}>
             <Box flexGrow={1} />
             <Typography mr={1}>View</Typography>
             <Select label="View" name="view" value={viewMode} onChange={(e: SelectChangeEvent) => { setViewMode(e.target.value); handleSettingsClose(); }} sx={{ marginRight: 1 }}>
@@ -77,13 +78,19 @@ export default function Admin() {
                   <Typography ml={1} fontWeight="bold">Square</Typography>
                 </Box>
               </MenuItem>
-              <MenuItem key={2} value={"leaderboard"}>
+              <MenuItem key={2} value={"memberLeaderboard"}>
                 <Box display={"flex"} flexDirection={"row"}>
                   <EmojiEvents />
-                  <Typography ml={1} fontWeight={700}>Leaderboard</Typography>
+                  <Typography ml={1} fontWeight={700}>Member Leaderboard</Typography>
                 </Box>
               </MenuItem>
-              <MenuItem key={3} value={"teams"}>
+              <MenuItem key={3} value={"teamLeaderboard"}>
+                <Box display={"flex"} flexDirection={"row"}>
+                  <EmojiEvents />
+                  <Typography ml={1} fontWeight={700}>Team Leaderboard</Typography>
+                </Box>
+              </MenuItem>
+              <MenuItem key={4} value={"teams"}>
                 <Box display={"flex"} flexDirection={"row"}>
                   <Group />
                   <Typography ml={1} fontWeight={700}>Teams</Typography>
@@ -136,9 +143,10 @@ export default function Admin() {
         </IconButton>
       </Box>
       {viewMode === "square" ?
-        <AdminSquareView teams={data.teams} /> : viewMode === "leaderboard" ?
-          <AdminLeaderboardView members={data.members} /> :
-          <AdminTeamView teams={data.teams}/>
+        <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
+          <AdminMemberLeaderboardView members={data.members} /> : viewMode === "teamLeaderboard" ?
+            <AdminTeamLeaderboardView teams={data.teams} /> :
+            <AdminTeamView teams={data.teams}/>
       }
       <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
         <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>

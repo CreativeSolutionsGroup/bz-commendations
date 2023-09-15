@@ -23,3 +23,10 @@ export type TeamsList = (Team & {
       }[];
     })[];
   })[];
+
+export type CommendationStatInfo = {
+  id: string;
+  name: string;
+  imageURL: string | null;
+  numCommendations: number;
+};

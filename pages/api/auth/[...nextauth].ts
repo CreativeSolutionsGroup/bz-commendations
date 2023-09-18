@@ -45,7 +45,7 @@ const stgOptions: AuthOptions = {
           where: {
             email: credentials.email
           }
-        })
+        });
         if (user) {
           return user;
         } else {

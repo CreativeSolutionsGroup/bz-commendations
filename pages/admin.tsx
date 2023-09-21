@@ -2,6 +2,7 @@ import AdminMemberLeaderboardView from "@/components/AdminMemberLeaderboardView"
 import AdminTeamLeaderboardView from "@/components/AdminTeamLeaderboardView";
 import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
+import AdminOverview from "@/components/AdminOverview";
 import { TimeRangeCommendations } from "@/types/commendation";
 import { EmojiEvents, GridView, Group, Settings } from "@mui/icons-material";
 import { Button, Card, IconButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
@@ -16,7 +17,7 @@ import theme from "@/config/theme";
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
 export default function Admin() {
-  const [viewMode, setViewMode] = useState("square");
+  const [viewMode, setViewMode] = useState("overview");
   const [data, setData] = useState<TimeRangeCommendations>({} as TimeRangeCommendations);
   const [firstDate, setFirstDate] = useState<dayjs.Dayjs | null>(dayjs().set("date", 1).set("hours", 1));
   const [secondDate, setSecondDate] = useState<dayjs.Dayjs | null>(dayjs());
@@ -47,7 +48,7 @@ export default function Admin() {
     const b = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
     return b ? b.pop() : "";
   }
-
+  
   return (
     <>
       <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
@@ -142,11 +143,12 @@ export default function Admin() {
           <Settings sx={{ marginY: "auto" }}></Settings>
         </IconButton>
       </Box>
-      {viewMode === "square" ?
-        <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
-          <AdminMemberLeaderboardView members={data.members} /> : viewMode === "teamLeaderboard" ?
-            <AdminTeamLeaderboardView teams={data.teams} /> :
-            <AdminTeamView teams={data.teams}/>
+      {viewMode === "overview" ?
+        <AdminOverview members={data.members} teams={data.teams} /> : viewMode === "square" ?
+          <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
+            <AdminMemberLeaderboardView members={data.members} /> : viewMode === "teamLeaderboard" ?
+              <AdminTeamLeaderboardView teams={data.teams} /> :
+              <AdminTeamView teams={data.teams}/>
       }
       <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
         <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>

@@ -2,7 +2,6 @@ import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "@/lib/api/db";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { env } from "process";
 
 declare global {
   namespace NodeJS {
@@ -31,32 +30,46 @@ declare module "next-auth/jwt" {
   }
 }
 
-export const authOptions: AuthOptions = {
-  providers: (process.env.BUILD_ENV === "stg"
-    ? [
-      CredentialsProvider({
-        name: "Credentials",
-        credentials: {
-          username: { label: "Username", type: "text", placeholder: "Username" }
-        },
-        async authorize(credentials, req) {
-          const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
-          if (user) {
-            return user;
-          } else {
-            return null;
-          }
+const stgOptions: AuthOptions = {
+  providers: [
+    CredentialsProvider({
+      name: "Email",
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "Email" }
+      },
+      async authorize(credentials) {
+        if (!credentials) {
+          return null;
         }
-      })
-    ]
-    : [
-      GoogleProvider({
-        clientId: process.env["GOOGLE_CLIENT_ID"],
-        clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
-      })
-    ]),
+        const user = await prisma.member.findFirst({
+          where: {
+            email: credentials.email
+          }
+        });
+        if (user) {
+          return user;
+        } else {
+          return null;
+        }
+      }
+    })
+  ],
   callbacks: {
-    async signIn({ user: { email } }) {
+    async jwt({token, user}) {
+      return {...token, ...user};
+    }
+  }
+};
+
+const defaultOptions: AuthOptions = {
+  providers: [
+    GoogleProvider({
+      clientId: process.env["GOOGLE_CLIENT_ID"],
+      clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
+    })
+  ],
+  callbacks: {
+    async signIn({ user: { email }, credentials }) {
       return !!await prisma.member.count({
         where: { email: email ?? "" }
       });
@@ -82,8 +95,10 @@ export const authOptions: AuthOptions = {
       session.isAdmin = token.isAdmin;
 
       return session;
-    },
-  },
+    }
+  }
 };
+
+export const authOptions: AuthOptions = process.env.BUILD_ENV === "stg" ? stgOptions : defaultOptions;
 
 export default NextAuth(authOptions);

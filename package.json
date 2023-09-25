@@ -7,7 +7,7 @@
     "build": "doppler run -- next build",
     "start": "doppler run -- next start",
     "generate": "doppler run -- prisma generate",
-    "studio": "doppler run -- prisma prisma studio",
+    "studio": "doppler run -- prisma studio",
     "lint": "next lint"
   },
   "dependencies": {

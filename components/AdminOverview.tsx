@@ -41,7 +41,6 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
   const topTeam = sentInfo[0];
   const topMember = members.sendMembers[0];
 
-// 
   return (
     <Box display="flex" flexDirection="row" height="100%" width="100%">
       <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 525, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
@@ -51,7 +50,6 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
         </Typography>
       </Card>
 
-        
       <Box display="flex" flexDirection="column" >
         <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
           <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>

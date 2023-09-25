@@ -10,18 +10,18 @@ import bz from "@/assets/BZ-letters.png";
 import hash from "@/assets/bz-letters-hash.png";
 import Image from "next/image";
 import { ReactElement } from "react";
+import { Raleway } from "@next/font/google";
 
+const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
-/*function DataChip({ label, icon }: { label: string | null, icon: ReactElement }) {
-    return (
-      <Chip icon={icon} label={label} sx={{ padding: 0.3, flex: 1, mx: 1 }} />
-    );
-  };*/
+function DataChip({ label, icon }: { label: string | null, icon: ReactElement }) {
+  return (
+    <Chip icon={icon} label={label} sx={{ padding: 0.3, flex: 1, mx: 1 }} />
+  );
+};
 
 export default function AdminOverview({ members, teams }: { members: MembersWithCommendations, teams: TeamsList }) {
 
-    //console.log(members.sendMembers[0]);
-    //console.log(teams[0]);
   // Sum member commendations per team
   const sentInfo: CommendationStatInfo[] = teams.map(team => {
     return ({
@@ -41,24 +41,38 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
   const topTeam = sentInfo[0];
   const topMember = members.sendMembers[0];
 
-
+// 
   return (
-    <></>
-    /*<Box display="flex" flexDirection="row" >
-        
+    <Box display="flex" flexDirection="row" height="100%" width="100%">
+      <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 525, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
+        <Typography textAlign={"center"} fontSize={50} className={raleway.className}>Total Commendation Count:</Typography>
+        <Typography textAlign={"center"} fontSize={200} fontWeight={900}>
+          {members.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}
+        </Typography>
+      </Card>
 
         
-        <Box display="flex" flexDirection="column" >
-            <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 300, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
-                <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center">
-                    <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeam.imageURL ?? bz.src} alt={topTeam.name + " Logo"} style={{ objectFit: "contain" }} />
-                </Box>
-                <Typography textAlign={"center"} fontSize={20} mt={3}>{topTeam.name}</Typography>
-                <Box display={"flex"} mt={2}>
-                    <DataChip label={topTeam.numCommendations.toString()} icon={<Send />} />
-                </Box>
-            </Card>
-        </Box>
-    </Box>*/
+      <Box display="flex" flexDirection="column" >
+        <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
+          <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
+            <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeam.imageURL ?? bz.src} alt={topTeam.name + " Logo"} style={{ objectFit: "contain" }} />
+          </Box>
+          <Box display={"flex"} mt={2} flexDirection="row">
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeam.name}</Typography>
+            <DataChip label={topTeam.numCommendations.toString()} icon={<Send />} />
+          </Box>
+        </Card>
+
+        <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
+          <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
+            <Image fill placeholder="blur" blurDataURL={hash.src} src={topMember.imageURL ?? bz.src} alt={topMember.name + " image"} style={{ objectFit: "contain" }} />
+          </Box>
+          <Box display={"flex"} mt={2} flexDirection="row">
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topMember.name}</Typography>
+            <DataChip label={topMember.sentCommendations.length.toString()} icon={<Send />} />
+          </Box>
+        </Card>
+      </Box>
+    </Box>
   );
 }

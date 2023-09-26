@@ -71,6 +71,7 @@ const stgOptions: AuthOptions = {
     }
   }
 };
+// TODO: Remove this comment after testing stg environment
 
 const defaultOptions: AuthOptions = {
   providers: [

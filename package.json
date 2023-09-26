@@ -6,7 +6,6 @@
     "dev": "doppler run -- next dev",
     "build": "doppler run -- next build",
     "start": "doppler run -- next start",
-    "generate": "doppler run -- prisma generate",
     "studio": "doppler run -- prisma studio",
     "lint": "next lint"
   },

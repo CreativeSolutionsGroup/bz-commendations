@@ -145,22 +145,17 @@ export default function Admin() {
           Admin Dashboard
           </Typography>
         </Box>
-      </Box>
-      {data.teams == null ? <CircularProgress /> : 
-        <>
-          {viewMode === "overview" ?
-            <AdminOverview members={data.members} teams={data.teams} /> : viewMode === "square" ?
-              <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
-                <AdminMemberLeaderboardView members={data.members} /> : viewMode === "teamLeaderboard" ?
-                  <AdminTeamLeaderboardView teams={data.teams} /> :
-                  <AdminTeamView teams={data.teams}/>
-          }
-        </>
-      } 
-      <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
-        <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>
-          <Typography color={theme.palette.primary.main} fontWeight="bold">Commendation Count: {data.members?.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}</Typography>
-        </Card>
+        {data.teams == null ? <CircularProgress /> : 
+          <>
+            {viewMode === "overview" ?
+              <AdminOverview members={data.members} teams={data.teams} /> : viewMode === "square" ?
+                <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
+                  <AdminMemberLeaderboardView members={data.members} /> : viewMode === "teamLeaderboard" ?
+                    <AdminTeamLeaderboardView teams={data.teams} /> :
+                    <AdminTeamView teams={data.teams}/>
+            }
+          </>
+        } 
       </Box>
     </Box>
   );

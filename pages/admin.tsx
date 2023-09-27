@@ -2,9 +2,10 @@ import AdminMemberLeaderboardView from "@/components/AdminMemberLeaderboardView"
 import AdminTeamLeaderboardView from "@/components/AdminTeamLeaderboardView";
 import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
+import AdminOverview from "@/components/AdminOverview";
 import { TimeRangeCommendations } from "@/types/commendation";
 import { EmojiEvents, GridView, Group, Settings } from "@mui/icons-material";
-import { Button, Card, IconButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Button, Card, CircularProgress, IconButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -16,7 +17,7 @@ import theme from "@/config/theme";
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
 export default function Admin() {
-  const [viewMode, setViewMode] = useState("square");
+  const [viewMode, setViewMode] = useState("overview");
   const [data, setData] = useState<TimeRangeCommendations>({} as TimeRangeCommendations);
   const [firstDate, setFirstDate] = useState<dayjs.Dayjs | null>(dayjs().set("date", 1).set("hours", 1));
   const [secondDate, setSecondDate] = useState<dayjs.Dayjs | null>(dayjs());
@@ -142,12 +143,17 @@ export default function Admin() {
           <Settings sx={{ marginY: "auto" }}></Settings>
         </IconButton>
       </Box>
-      {viewMode === "square" ?
-        <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
-          <AdminMemberLeaderboardView members={data.members} /> : viewMode === "teamLeaderboard" ?
-            <AdminTeamLeaderboardView teams={data.teams} /> :
-            <AdminTeamView teams={data.teams}/>
-      }
+      {data.teams == null ? <CircularProgress /> : 
+        <>
+          {viewMode === "overview" ?
+            <AdminOverview members={data.members} teams={data.teams} /> : viewMode === "square" ?
+              <AdminSquareView teams={data.teams} /> : viewMode === "memberLeaderboard" ?
+                <AdminMemberLeaderboardView members={data.members} /> : viewMode === "teamLeaderboard" ?
+                  <AdminTeamLeaderboardView teams={data.teams} /> :
+                  <AdminTeamView teams={data.teams}/>
+          }
+        </>
+      } 
       <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
         <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>
           <Typography color={theme.palette.primary.main} fontWeight="bold">Commendation Count: {data.members?.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}</Typography>

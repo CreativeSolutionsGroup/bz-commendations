@@ -5,7 +5,7 @@ import AdminTeamView from "@/components/AdminTeamView";
 import AdminOverview from "@/components/AdminOverview";
 import { TimeRangeCommendations } from "@/types/commendation";
 import { EmojiEvents, GridView, Group, Settings } from "@mui/icons-material";
-import { Button, Card, Divider, Drawer, IconButton, List, ListItem, ListItemButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { Button, Card, CircularProgress, Divider, Drawer, IconButton, List, ListItem, ListItemButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -144,8 +144,8 @@ export default function Admin() {
           >
           Admin Dashboard
           </Typography>
-        
         </Box>
+      </Box>
       {data.teams == null ? <CircularProgress /> : 
         <>
           {viewMode === "overview" ?

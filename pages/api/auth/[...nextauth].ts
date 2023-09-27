@@ -55,8 +55,19 @@ const stgOptions: AuthOptions = {
     })
   ],
   callbacks: {
-    async jwt({token, user}) {
+    async jwt({ token, user }) {
+      let member = await prisma.member.findFirst({ where: { email: token.email ?? "" }, include: { roles: true } });
+      token.isAdmin = member!.roles.find(r => r.name === "admin") != undefined;
       return {...token, ...user};
+    },
+    async session({session, token}) {
+      // Send send the id_token to the client
+      session.id_token = token.id_token;
+
+      // session.roles = token.roles;
+      session.isAdmin = token.isAdmin;
+
+      return session;
     }
   }
 };

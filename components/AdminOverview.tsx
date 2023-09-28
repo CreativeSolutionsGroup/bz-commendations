@@ -42,7 +42,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
   const topMember = members.sendMembers[0];
 
   return (
-    <Box display="flex" flexDirection="row" height="100%" width="100%">
+    <Box display="flex" flexDirection="row">
       <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 525, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
         <Typography textAlign={"center"} fontSize={50} className={raleway.className}>Total Commendation Count:</Typography>
         <Typography textAlign={"center"} fontSize={200} fontWeight={900}>

@@ -1,5 +1,4 @@
 import stinger from "@/assets/stinger.png";
-import { TeamsList } from "@/types/admin";
 import { CommendationWithPeople, MemberWithTeams } from "@/types/commendation";
 import { ArrowCircleRight } from "@mui/icons-material";
 import {
@@ -17,7 +16,7 @@ import {
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
-import { Commendation, Team } from "@prisma/client";
+import { Team } from "@prisma/client";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import Image from "next/image";

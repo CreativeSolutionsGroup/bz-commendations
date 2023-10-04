@@ -105,13 +105,16 @@ export const getTimeRangeCommendations = async (dateRange: {
   };
 };
 
+// Gets the commendations with all their information
 export const getTeamCommendationsInRange = async (
   id: string,
   firstDate: Date,
   secondDate: Date
 ) => {
+  // Get the commendations sent by all users of the team
   const sentComms = await prisma.commendation.findMany({
     where: {
+      // AND case for created date and user team
       AND: [
         {
           createdAt: {
@@ -133,8 +136,10 @@ export const getTeamCommendationsInRange = async (
     },
   });
 
+  // Get the commendations received by the team
   const recvComms = await prisma.commendation.findMany({
     where: {
+      // And case for recipient and created date
       AND: [
         { createdAt: { gte: firstDate, lte: secondDate } },
         { recipient: { teams: { some: { id } } } },
@@ -149,6 +154,7 @@ export const getTeamCommendationsInRange = async (
     },
   });
 
+  // Return the list of commendations
   return { sentComms, recvComms };
 };
 

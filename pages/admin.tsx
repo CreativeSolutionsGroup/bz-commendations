@@ -4,7 +4,7 @@ import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
 import AdminOverview from "@/components/AdminOverview";
 import { TimeRangeCommendations } from "@/types/commendation";
-import { EmojiEvents, GridView, Group, Settings } from "@mui/icons-material";
+import { EmojiEvents, GridView, Group, Newspaper, Settings } from "@mui/icons-material";
 import { Button, Card, CircularProgress, Divider, Drawer, IconButton, List, ListItem, ListItemButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
@@ -58,6 +58,7 @@ export default function Admin() {
           <List>
             <ListItemButton onClick={() => { setViewMode("overview"); }}>
               <Box display={"flex"} flexDirection={"row"}>
+                <Newspaper />
                 <Typography ml={1} fontWeight="bold">Overview</Typography>
               </Box>
             </ListItemButton>
@@ -90,7 +91,7 @@ export default function Admin() {
           <List>
             <Box sx={{ display: "flex", alignItems: "center", marginRight: 2, marginTop: 1, marginLeft: 2 }}>
               <Box flexGrow={1} />
-              <Typography mr={1}>Start</Typography>
+              <Typography mr={1} fontWeight={700}>Start</Typography>
               <DatePicker
                 value={firstDate}
                 onChange={v => {
@@ -103,7 +104,7 @@ export default function Admin() {
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", marginRight: 2, marginTop: 1 }}>
               <Box flexGrow={1} />
-              <Typography mr={1}>End</Typography>
+              <Typography mr={1} fontWeight={700}>End</Typography>
               <DatePicker
                 value={secondDate}
                 onChange={v => {

@@ -4,22 +4,8 @@ import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
 import AdminOverview from "@/components/AdminOverview";
 import { TimeRangeCommendations } from "@/types/commendation";
-import { EmojiEvents, GridView, Group, Settings } from "@mui/icons-material";
-import {
-  Button,
-  Card,
-  CircularProgress,
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  Menu,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import { EmojiEvents, GridView, Group, Newspaper, Settings } from "@mui/icons-material";
+import { Button, Card, CircularProgress, Divider, Drawer, IconButton, List, ListItem, ListItemButton, Menu, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -92,9 +78,8 @@ export default function Admin() {
               }}
             >
               <Box display={"flex"} flexDirection={"row"}>
-                <Typography ml={1} fontWeight="bold">
-                  Overview
-                </Typography>
+                <Newspaper />
+                <Typography ml={1} fontWeight="bold">Overview</Typography>
               </Box>
             </ListItemButton>
             <ListItemButton
@@ -158,7 +143,7 @@ export default function Admin() {
               }}
             >
               <Box flexGrow={1} />
-              <Typography mr={1}>Start</Typography>
+              <Typography mr={1} fontWeight={700}>Start</Typography>
               <DatePicker
                 value={firstDate}
                 onChange={(v) => {
@@ -178,7 +163,7 @@ export default function Admin() {
               }}
             >
               <Box flexGrow={1} />
-              <Typography mr={1}>End</Typography>
+              <Typography mr={1} fontWeight={700}>End</Typography>
               <DatePicker
                 value={secondDate}
                 onChange={(v) => {
@@ -253,6 +238,13 @@ export default function Admin() {
           </>
         )}
       </Box>
+      { viewMode !== "overview" &&
+        <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
+          <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>
+            <Typography color={theme.palette.primary.main} fontWeight="bold">Commendation Count: {data.members?.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}</Typography>
+          </Card>
+        </Box>
+      }
     </Box>
   );
 }

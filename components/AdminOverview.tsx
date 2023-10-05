@@ -10,9 +10,10 @@ import bz from "@/assets/BZ-letters.png";
 import hash from "@/assets/bz-letters-hash.png";
 import Image from "next/image";
 import { ReactElement } from "react";
-import { Raleway } from "@next/font/google";
+import { Raleway, Cabin_Sketch } from "@next/font/google";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
+const cabin = Cabin_Sketch({weight: "700"});
 
 function DataChip({ label, icon }: { label: string | null, icon: ReactElement }) {
   return (
@@ -43,15 +44,8 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
 
   return (
     <Box display="flex" flexDirection="row">
-      <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 525, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
-        <Typography textAlign={"center"} fontSize={50} className={raleway.className}>Total Commendation Count:</Typography>
-        <Typography textAlign={"center"} fontSize={200} fontWeight={900}>
-          {members.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}
-        </Typography>
-      </Card>
-
       <Box display="flex" flexDirection="column" >
-        <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
+        <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 400, mx: 1 }}>
           <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
             <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeam.imageURL ?? bz.src} alt={topTeam.name + " Logo"} style={{ objectFit: "contain" }} />
           </Box>
@@ -61,7 +55,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
           </Box>
         </Card>
 
-        <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
+        <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 400, mx: 1 }}>
           <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
             <Image fill placeholder="blur" blurDataURL={hash.src} src={topMember.imageURL ?? bz.src} alt={topMember.name + " image"} style={{ objectFit: "contain" }} />
           </Box>
@@ -71,6 +65,15 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
           </Box>
         </Card>
       </Box>
+
+      <Card sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: 525, flexGrow: 1, marginTop: 3, mx: 1, backgroundImage: "radial-gradient(ellipse closest-side, #4b85ab, white)"  }}>
+        <Box display={"flex"} flexDirection={"column"}>
+          <Typography textAlign={"center"} fontSize={50} className={raleway.className}>Total Commendation Count:</Typography>
+          <Typography textAlign={"center"} fontSize={150} className={cabin.className}>
+            {members.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}
+          </Typography>
+        </Box>
+      </Card>
     </Box>
   );
 }

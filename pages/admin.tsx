@@ -157,6 +157,13 @@ export default function Admin() {
           </>
         } 
       </Box>
+      { viewMode !== "overview" &&
+        <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
+          <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>
+            <Typography color={theme.palette.primary.main} fontWeight="bold">Commendation Count: {data.members?.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}</Typography>
+          </Card>
+        </Box>
+      }
     </Box>
   );
 }

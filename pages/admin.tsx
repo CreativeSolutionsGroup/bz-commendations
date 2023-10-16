@@ -4,7 +4,9 @@ import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
 import AdminOverview from "@/components/AdminOverview";
 import { TimeRangeCommendations } from "@/types/commendation";
-import { EmojiEvents, GridView, Group, Newspaper } from "@mui/icons-material";
+import { EmojiEvents, Group, Newspaper } from "@mui/icons-material";
+import GroupsIcon from "@mui/icons-material/Groups";
+import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import { Button, Card, CircularProgress, Divider, Drawer, List, ListItemButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
@@ -88,9 +90,9 @@ export default function Admin() {
             }}
           >
             <Box display={"flex"} flexDirection={"row"}>
-              <GridView />
+              <GroupsIcon />
               <Typography ml={1} fontWeight="bold">
-                Square
+                CE Teams
               </Typography>
             </Box>
           </ListItemButton>
@@ -112,7 +114,7 @@ export default function Admin() {
             }}
           >
             <Box display={"flex"} flexDirection={"row"}>
-              <EmojiEvents />
+              <LeaderboardIcon />
               <Typography ml={1} fontWeight={700}>
                 Team Leaderboard
               </Typography>
@@ -126,7 +128,7 @@ export default function Admin() {
             <Box display={"flex"} flexDirection={"row"}>
               <Group />
               <Typography ml={1} fontWeight={700}>
-                Teams
+                My Teams
               </Typography>
             </Box>
           </ListItemButton>

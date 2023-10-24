@@ -10,10 +10,11 @@ import bz from "@/assets/BZ-letters.png";
 import hash from "@/assets/bz-letters-hash.png";
 import Image from "next/image";
 import { ReactElement } from "react";
-import { Raleway, Cabin_Sketch } from "@next/font/google";
+import { Raleway, Rubik } from "@next/font/google";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
-const cabin = Cabin_Sketch({weight: "700"});
+const lora = Rubik({ subsets: ["latin"], weight: "600"});
+//1: Arimo; 2: Roboto; 3: Rubik
 
 function DataChip({ label, icon }: { label: string | null, icon: ReactElement }) {
   return (
@@ -85,8 +86,8 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
 
       <Card sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: 525, width: 425, marginTop: 3, mx: 1 }}>
         <Box display={"flex"} flexDirection={"column"}>
-          <Typography textAlign={"center"} fontSize={50} className={raleway.className}>Total Commendation Count:</Typography>
-          <Typography textAlign={"center"} fontSize={150} className={raleway.className}>
+          <Typography textAlign={"center"} fontSize={40} className={raleway.className}>Total Commendations</Typography>
+          <Typography textAlign={"center"} fontSize={150} className={lora.className}>
             {members.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}
           </Typography>
         </Box>

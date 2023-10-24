@@ -87,7 +87,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
       <Card sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: 525, width: 425, marginTop: 3, mx: 1 }}>
         <Box display={"flex"} flexDirection={"column"}>
           <Typography textAlign={"center"} fontSize={40} className={raleway.className}>Total Commendations</Typography>
-          <Typography textAlign={"center"} fontSize={150} className={lora.className}>
+          <Typography textAlign={"center"} fontSize={150} className={raleway.className}>
             {members.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}
           </Typography>
         </Box>

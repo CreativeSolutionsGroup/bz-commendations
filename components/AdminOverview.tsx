@@ -57,9 +57,10 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
 
   return (
     <Box display="flex" flexDirection="row">
-      <Box display="flex" flexDirection="column" >
-        <Tooltip title="Top Sending Member">
-          <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 400, mx: 1 }}>
+      <Box display="flex" flexDirection="column">
+
+        <Tooltip title="Top Sending Member" placement="top">
+          <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 350, mx: 1 }}>
             <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
               <Image fill placeholder="blur" blurDataURL={hash.src} src={topMember.imageURL ?? bz.src} alt={topMember.name + " image"} style={{ objectFit: "contain" }} />
             </Box>
@@ -70,8 +71,8 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
           </Card>
         </Tooltip>
 
-        <Tooltip title="Top Receiving Member">
-          <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 400, mx: 1 }}>
+        <Tooltip title="Top Receiving Member" placement="top">
+          <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 350, mx: 1 }}>
             <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
               <Image fill placeholder="blur" blurDataURL={hash.src} src={topMemberRecv.imageURL ?? bz.src} alt={topMemberRecv.name + " image"} style={{ objectFit: "contain" }} />
             </Box>
@@ -83,18 +84,18 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
         </Tooltip>
       </Box>
 
-      <Card sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: 525, width: 425, marginTop: 3, mx: 1 }}>
+      <Card sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: 525, width: 500, marginTop: 3, mx: 1 }}>
         <Box display={"flex"} flexDirection={"column"}>
-          <Typography textAlign={"center"} fontSize={40} className={raleway.className}>Total Commendations</Typography>
+          <Typography textAlign={"center"} fontSize={40} className={raleway.className}>Total{"\n"}Commendations</Typography>
           <Typography textAlign={"center"} fontSize={150} className={raleway.className}>
             {members.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0)}
           </Typography>
         </Box>
       </Card>
 
-      <Box display="flex" flexDirection="column" >
-        <Tooltip title="Top Sending Team">
-          <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 400, mx: 1 }}>
+      <Box display="flex" flexDirection="column">
+        <Tooltip title="Top Sending Team"placement="top">
+          <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 350, mx: 1 }}>
             <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
               <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeam.imageURL ?? bz.src} alt={topTeam.name + " image"} style={{ objectFit: "contain" }} />
             </Box>
@@ -105,8 +106,8 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
           </Card>
         </Tooltip>
       
-        <Tooltip title="Top Receiving Team">
-          <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 400, mx: 1 }}>
+        <Tooltip title="Top Receiving Team" placement="top">
+          <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 350, mx: 1 }}>
             <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
               <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeamRecv.imageURL ?? bz.src} alt={topTeamRecv.name + " image"} style={{ objectFit: "contain" }} />
             </Box>
@@ -116,6 +117,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
             </Box>
           </Card>                
         </Tooltip>
+
       </Box>
     </Box>
   );

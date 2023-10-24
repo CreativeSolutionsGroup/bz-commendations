@@ -13,8 +13,7 @@ import { ReactElement } from "react";
 import { Raleway, Rubik } from "@next/font/google";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
-const lora = Rubik({ subsets: ["latin"], weight: "600"});
-//1: Arimo; 2: Roboto; 3: Rubik
+const rubik = Rubik({ subsets: ["latin"], weight: "600"});
 
 function DataChip({ label, icon }: { label: string | null, icon: ReactElement }) {
   return (
@@ -96,9 +95,8 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
       <Box display="flex" flexDirection="column" >
         <Tooltip title="Top Sending Team">
           <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 400, mx: 1 }}>
-
             <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
-              <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeam.imageURL ?? bz.src} alt={topTeam.name + " Logo"} style={{ objectFit: "contain" }} />
+              <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeam.imageURL ?? bz.src} alt={topTeam.name + " image"} style={{ objectFit: "contain" }} />
             </Box>
             <Box display={"flex"} mt={2} flexDirection="row">
               <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeam.name}</Typography>
@@ -110,7 +108,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
         <Tooltip title="Top Receiving Team">
           <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, width: 400, mx: 1 }}>
             <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
-              <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeamRecv.imageURL ?? bz.src} alt={topTeamRecv.name + " Logo"} style={{ objectFit: "contain" }} />
+              <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeamRecv.imageURL ?? bz.src} alt={topTeamRecv.name + " image"} style={{ objectFit: "contain" }} />
             </Box>
             <Box display={"flex"} mt={2} flexDirection="row">
               <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeamRecv.name}</Typography>

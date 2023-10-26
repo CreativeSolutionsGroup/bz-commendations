@@ -57,7 +57,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
 
   return (
     <Box display="flex" flexDirection="row">
-      <Box display="flex" flexDirection="column" width={"30%"}>
+      <Box display="flex" flexDirection="column" width={"30%"} minWidth={225}>
 
         <Tooltip title="Top Sending Member" placement="top">
           <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, mx: 1 }}>
@@ -84,7 +84,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
         </Tooltip>
       </Box>
 
-      <Card sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: 525, width: "40%", marginTop: 3, mx: 1 }}>
+      <Card sx={{ justifyContent: "center", alignItems: "center", display: "flex", height: 525, width: "40%", marginTop: 3, mx: 1, minWidth: 350}}>
         <Box display={"flex"} flexDirection={"column"}>
           <Typography textAlign={"center"} fontSize={40} className={raleway.className}>Total{"\n"}Commendations</Typography>
           <Typography textAlign={"center"} fontSize={150} className={raleway.className}>
@@ -93,7 +93,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
         </Box>
       </Card>
 
-      <Box display="flex" flexDirection="column" width={"30%"}>
+      <Box display="flex" flexDirection="column" width={"30%"} minWidth={225}>
         <Tooltip title="Top Sending Team"placement="top">
           <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, marginTop: 3, mx: 1 }}>
             <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
@@ -112,7 +112,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
               <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeamRecv.imageURL ?? bz.src} alt={topTeamRecv.name + " image"} style={{ objectFit: "contain" }} />
             </Box>
             <Box display={"flex"} mt={2} flexDirection="row">
-              <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeamRecv.name}</Typography>
+              <Typography textAlign={"center"} fontSize={20} className={raleway.className}>Information Group</Typography>
               <DataChip label={topTeamRecv.numCommendations.toString()} icon={<MoveToInbox />} />
             </Box>
           </Card>                

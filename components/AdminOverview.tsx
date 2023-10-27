@@ -112,7 +112,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
               <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeamRecv.imageURL ?? bz.src} alt={topTeamRecv.name + " image"} style={{ objectFit: "contain" }} />
             </Box>
             <Box display={"flex"} mt={2} flexDirection="row">
-              <Typography textAlign={"center"} fontSize={20} className={raleway.className}>Information Group</Typography>
+              <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeamRecv.name}</Typography>
               <DataChip label={topTeamRecv.numCommendations.toString()} icon={<MoveToInbox />} />
             </Box>
           </Card>                

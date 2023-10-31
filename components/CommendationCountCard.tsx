@@ -1,7 +1,6 @@
 import { CommendationStatInfo } from "@/types/admin";
 import { Avatar, Box, Paper, Typography } from "@mui/material";
-import Image from "next/image";
-
+import stinger from "@/assets/stinger.png";
 
 export default function CommendationCountCard({name, imageURL, numCommendations}: CommendationStatInfo) {
   return (
@@ -13,10 +12,10 @@ export default function CommendationCountCard({name, imageURL, numCommendations}
             height: "100%",
             width: 50,
           }}
-          src={imageURL ?? "https://via.placeholder.com/50?text="}
+          src={imageURL ?? stinger.src}
           alt={"User image"}
           
-          style={{objectFit: "contain", background:"white"}}
+          style={{objectFit: "contain", background: "white"}}
         />
       </Avatar> 
       <Typography ml={2} my={"auto"} fontSize={20} fontWeight={700} flexGrow={1}>{name}</Typography>

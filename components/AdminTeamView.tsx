@@ -1,19 +1,7 @@
 import stinger from "@/assets/stinger.png";
 import { CommendationWithPeople, MemberWithTeams } from "@/types/commendation";
 import { ArrowCircleRight } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Avatar, Box, FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Stack, Typography, useMediaQuery } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
 import { Team } from "@prisma/client";

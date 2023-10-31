@@ -215,7 +215,7 @@ export default function Admin() {
               className: raleway.className,
             }}
           >
-            Admin Dashboard
+            ADMIN DASHBOARD
           </Typography>
         </Box>
         {data.teams == null ? (

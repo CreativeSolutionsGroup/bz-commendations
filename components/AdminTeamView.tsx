@@ -157,7 +157,7 @@ export default function AdminTeamView({
         mx={2}
         display="flex"
         flexDirection="row"
-        justifyContent="space-between"
+        sx={{ justifyContent: "flex-end" }}
       >
         {!bigScreen ? (
           <FormControl>

@@ -7,7 +7,8 @@ import { TimeRangeCommendations } from "@/types/commendation";
 import { EmojiEvents, Group, Newspaper } from "@mui/icons-material";
 import GroupsIcon from "@mui/icons-material/Groups";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
-import { Button, Card, CircularProgress, Divider, Drawer, List, ListItemButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Button, Card, CircularProgress, Divider, Drawer, IconButton, List, ListItemButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -19,6 +20,8 @@ import theme from "@/config/theme";
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
 export default function Admin() {
+  const [open, setOpen] = useState(false);
+  const [drawerWidth, setDrawerWidth] = useState(0);
   const [viewMode, setViewMode] = useState("overview");
   const [data, setData] = useState<TimeRangeCommendations>({} as TimeRangeCommendations);
   const [firstDate, setFirstDate] = useState<dayjs.Dayjs | null>(dayjs().set("date", 1).set("hours", 1));
@@ -31,6 +34,14 @@ export default function Admin() {
   };
   const handleSettingsClose = () => {
     setSettingsAnchorEl(null);
+  };
+  const handleDrawerToggle = (view: string) => {
+    open ? setDrawerWidth(0) : setDrawerWidth(260);
+    setOpen(!open);
+
+    if(view !== "") {
+      setViewMode(view);
+    }
   };
 
   useEffect(() => {
@@ -54,156 +65,193 @@ export default function Admin() {
     return b ? b.pop() : "";
   }
 
-  const drawerWidth = 260;
+  const drawer = (
+    <>
+      <IconButton onClick={() => {handleDrawerToggle("");}}>
+        {theme.direction === "ltr" ? <MenuIcon /> : <MenuIcon />}
+      </IconButton>
+      <List>
+        <ListItemButton
+          onClick={() => {
+            handleDrawerToggle("overview");
+          }}
+        >
+          <Box display={"flex"} flexDirection={"row"}>
+            <Newspaper />
+            <Typography ml={1} fontWeight="bold">Overview</Typography>
+          </Box>
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            handleDrawerToggle("square");
+          }}
+        >
+          <Box display={"flex"} flexDirection={"row"}>
+            <GroupsIcon />
+            <Typography ml={1} fontWeight="bold">
+              CE Teams
+            </Typography>
+          </Box>
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            handleDrawerToggle("memberLeaderboard");
+          }}
+        >
+          <Box display={"flex"} flexDirection={"row"}>
+            <EmojiEvents />
+            <Typography ml={1} fontWeight={700}>
+              Member Leaderboard
+            </Typography>
+          </Box>
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            handleDrawerToggle("teamLeaderboard");
+          }}
+        >
+          <Box display={"flex"} flexDirection={"row"}>
+            <LeaderboardIcon />
+            <Typography ml={1} fontWeight={700}>
+              Team Leaderboard
+            </Typography>
+          </Box>
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => {
+            handleDrawerToggle("teams");
+          }}
+        >
+          <Box display={"flex"} flexDirection={"row"}>
+            <Group />
+            <Typography ml={1} fontWeight={700}>
+              My Teams
+            </Typography>
+          </Box>
+        </ListItemButton>
+      </List>
+      <Divider />
+      <List>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            marginRight: 2,
+            marginTop: 1,
+            marginLeft: 2,
+          }}
+        >
+          <Box flexGrow={1} />
+          <Typography mr={1} fontWeight={700}>Start</Typography>
+          <DatePicker
+            value={firstDate}
+            onChange={(v) => {
+              v && setFirstDate(v);
+              v && fetch(`/api/admin?first=${v}`, { method: "POST" });
+              handleSettingsClose();
+            }}
+            sx={{ width: 175, marginRight: 1 }}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            marginRight: 2,
+            marginTop: 1,
+          }}
+        >
+          <Box flexGrow={1} />
+          <Typography mr={1} fontWeight={700}>End</Typography>
+          <DatePicker
+            value={secondDate}
+            onChange={(v) => {
+              v && setSecondDate(v);
+              v && fetch(`/api/admin?second=${v}`, { method: "POST" });
+              handleSettingsClose();
+            }}
+            sx={{ width: 175, marginRight: 1 }}
+          />
+        </Box>
+        <Button
+          sx={{
+            float: "right",
+            marginTop: 1,
+            marginRight: 3,
+            marginBottom: 2,
+          }}
+          onClick={() => {
+            const first = dayjs().set("date", 1).set("hour", 1);
+            const second = dayjs();
+            setFirstDate(first);
+            fetch(`/api/admin?first=${first}`, { method: "POST" });
+            setSecondDate(second);
+            fetch(`/api/admin?second=${second}`, { method: "POST" });
+            handleSettingsClose();
+          }}
+        >
+          <Typography
+            color={theme.palette.primary.main}
+            fontWeight="bold"
+            textTransform="capitalize"
+          >
+            Reset Date Range
+          </Typography>
+        </Button>
+      </List>
+    </>
+  );
 
   return (
     <Box display={"flex"} flexDirection={"row"}>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          ["& .MuiDrawer-paper"]: {
-            position: "relative",
-            borderColor: "white",
+      {(true) ? <>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={() => {handleDrawerToggle("");}}
+          sx={{ ...(open && { display: "none" }) }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Drawer
+          sx={{
             width: drawerWidth,
-            boxSizing: "border-box",
-            mt: 1
-          },
-        }}
-        variant="permanent"
-        anchor="left"
-      >
-        <List>
-          <ListItemButton
-            onClick={() => {
-              setViewMode("overview");
-            }}
-          >
-            <Box display={"flex"} flexDirection={"row"}>
-              <Newspaper />
-              <Typography ml={1} fontWeight="bold">Overview</Typography>
-            </Box>
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              setViewMode("square");
-            }}
-          >
-            <Box display={"flex"} flexDirection={"row"}>
-              <GroupsIcon />
-              <Typography ml={1} fontWeight="bold">
-                CE Teams
-              </Typography>
-            </Box>
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              setViewMode("memberLeaderboard");
-            }}
-          >
-            <Box display={"flex"} flexDirection={"row"}>
-              <EmojiEvents />
-              <Typography ml={1} fontWeight={700}>
-                Member Leaderboard
-              </Typography>
-            </Box>
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              setViewMode("teamLeaderboard");
-            }}
-          >
-            <Box display={"flex"} flexDirection={"row"}>
-              <LeaderboardIcon />
-              <Typography ml={1} fontWeight={700}>
-                Team Leaderboard
-              </Typography>
-            </Box>
-          </ListItemButton>
-          <ListItemButton
-            onClick={() => {
-              setViewMode("teams");
-            }}
-          >
-            <Box display={"flex"} flexDirection={"row"}>
-              <Group />
-              <Typography ml={1} fontWeight={700}>
-                My Teams
-              </Typography>
-            </Box>
-          </ListItemButton>
-        </List>
-        <Divider />
-        <List>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              marginRight: 2,
-              marginTop: 1,
-              marginLeft: 2,
-            }}
-          >
-            <Box flexGrow={1} />
-            <Typography mr={1} fontWeight={700}>Start</Typography>
-            <DatePicker
-              value={firstDate}
-              onChange={(v) => {
-                v && setFirstDate(v);
-                v && fetch(`/api/admin?first=${v}`, { method: "POST" });
-                handleSettingsClose();
-              }}
-              sx={{ width: 175, marginRight: 1 }}
-            />
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              marginRight: 2,
-              marginTop: 1,
-            }}
-          >
-            <Box flexGrow={1} />
-            <Typography mr={1} fontWeight={700}>End</Typography>
-            <DatePicker
-              value={secondDate}
-              onChange={(v) => {
-                v && setSecondDate(v);
-                v && fetch(`/api/admin?second=${v}`, { method: "POST" });
-                handleSettingsClose();
-              }}
-              sx={{ width: 175, marginRight: 1 }}
-            />
-          </Box>
-          <Button
-            sx={{
-              float: "right",
-              marginTop: 1,
-              marginRight: 3,
-              marginBottom: 2,
-            }}
-            onClick={() => {
-              const first = dayjs().set("date", 1).set("hour", 1);
-              const second = dayjs();
-              setFirstDate(first);
-              fetch(`/api/admin?first=${first}`, { method: "POST" });
-              setSecondDate(second);
-              fetch(`/api/admin?second=${second}`, { method: "POST" });
-              handleSettingsClose();
-            }}
-          >
-            <Typography
-              color={theme.palette.primary.main}
-              fontWeight="bold"
-              textTransform="capitalize"
-            >
-                Reset Date Range
-            </Typography>
-          </Button>
-        </List>
-      </Drawer>
-      <Box width={`calc(100% - ${drawerWidth}px)`}>
+            flexShrink: 0,
+            ["& .MuiDrawer-paper"]: {
+              position: "relative",
+              borderColor: "white",
+              width: drawerWidth,
+              boxSizing: "border-box",
+              mt: 1,
+            },
+          }}
+          variant="temporary"
+          anchor="left"
+          open={open}
+        >
+          {drawer}
+        </Drawer>
+      </>
+        :
+        <Drawer
+          sx={{
+            width: 260,
+            flexShrink: 0,
+            ["& .MuiDrawer-paper"]: {
+              position: "relative",
+              borderColor: "white",
+              width: 260,
+              boxSizing: "border-box",
+              mt: 1,
+            },
+          }}
+          variant="permanent"
+          anchor="left"
+        > 
+          {drawer}
+        </Drawer>
+      }
+      <Box width={"100%"}>
         <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
           <Typography
             sx={{

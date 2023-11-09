@@ -4,11 +4,11 @@ import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
 import AdminOverview from "@/components/AdminOverview";
 import { TimeRangeCommendations } from "@/types/commendation";
-import { EmojiEvents, Group, Newspaper } from "@mui/icons-material";
+import { Close, EmojiEvents, Group, Newspaper } from "@mui/icons-material";
 import GroupsIcon from "@mui/icons-material/Groups";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, Card, CircularProgress, Divider, Drawer, IconButton, List, ListItemButton } from "@mui/material";
+import { Button, Card, CircularProgress, Divider, Drawer, IconButton, List, ListItemButton, useMediaQuery } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -26,6 +26,7 @@ export default function Admin() {
   const [data, setData] = useState<TimeRangeCommendations>({} as TimeRangeCommendations);
   const [firstDate, setFirstDate] = useState<dayjs.Dayjs | null>(dayjs().set("date", 1).set("hours", 1));
   const [secondDate, setSecondDate] = useState<dayjs.Dayjs | null>(dayjs());
+  const bigScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const [settingsAnchorEl, setSettingsAnchorEl] =
     useState<null | HTMLElement>();
   const settingsOpen = Boolean(settingsAnchorEl);
@@ -67,9 +68,13 @@ export default function Admin() {
 
   const drawer = (
     <>
-      <IconButton onClick={() => {handleDrawerToggle("");}}>
-        {theme.direction === "ltr" ? <MenuIcon /> : <MenuIcon />}
-      </IconButton>
+      {(!bigScreen) ? 
+        <IconButton onClick={() => {handleDrawerToggle("");}}>
+          {theme.direction === "ltr" ? <Close /> : <Close />}
+        </IconButton>
+        :
+        <></>
+      }
       <List>
         <ListItemButton
           onClick={() => {
@@ -204,15 +209,7 @@ export default function Admin() {
 
   return (
     <Box display={"flex"} flexDirection={"row"}>
-      {(true) ? <>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={() => {handleDrawerToggle("");}}
-          sx={{ ...(open && { display: "none" }) }}
-        >
-          <MenuIcon />
-        </IconButton>
+      {(!bigScreen) ? 
         <Drawer
           sx={{
             width: drawerWidth,
@@ -231,7 +228,6 @@ export default function Admin() {
         >
           {drawer}
         </Drawer>
-      </>
         :
         <Drawer
           sx={{
@@ -253,6 +249,18 @@ export default function Admin() {
       }
       <Box width={"100%"}>
         <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
+          {(!bigScreen) ? 
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={() => {handleDrawerToggle("");}}
+              sx={{ ...(open && { display: "none" }), height: 50}}
+            >
+              <MenuIcon />
+            </IconButton>
+            :
+            <></>
+          }
           <Typography
             sx={{
               textAlign: "center",

@@ -166,7 +166,9 @@ export default function AdminTeamView({
               <MenuItem key={0} value={"true"} sx={{ width: "fit-container", fontWeight: 700 }}>
                 <Box display={"flex"}>
                   <Image
-                    src={Send}}
+                  
+                    src={Send}
+                    
                     alt={"Team image"}
                     width={25}
                     height={25}

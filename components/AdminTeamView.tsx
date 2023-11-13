@@ -1,6 +1,6 @@
 import stinger from "@/assets/stinger.png";
 import { CommendationWithPeople, MemberWithTeams } from "@/types/commendation";
-import { ArrowCircleRight } from "@mui/icons-material";
+import { ArrowCircleRight, Send } from "@mui/icons-material";
 import { Avatar, Box, FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Stack, Typography, useMediaQuery } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
@@ -9,6 +9,8 @@ import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { SendIcon, Newspaper } from "@mui/icons-material";
+
 
 const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
   <Box flexGrow={1} px={1}>
@@ -145,26 +147,49 @@ export default function AdminTeamView({
         mx={2}
         display="flex"
         flexDirection="row"
-        sx={{ justifyContent: "flex-end" }}
+        sx={{ justifyContent: "space-between" }}
       >
         {!bigScreen ? (
           <FormControl>
             <InputLabel id="type-select-label" sx={{ mt: 1 }}>
-              Commendation Type
+              Type
             </InputLabel>
             <Select
-              label="Commendation Type"
+              label="Type"
               labelId="type-select-label"
               name="commType"
               value={sentSelected}
+              justify-content={"space-between"}
               onChange={(e) => setSentSelected(e.target.value === "true")}
-              sx={{ minWidth: "150px", height: "56px", mt: 1, mr: 1 }}
+              sx={{ minWidth: "150px", height: "56px", mt: 1, mr: 1}}
             >
-              <MenuItem key={0} value={"true"} sx={{ fontWeight: 700 }}>
-                Sent
+              <MenuItem key={0} value={"true"} sx={{ width: "fit-container", fontWeight: 700 }}>
+                <Box display={"flex"}>
+                  <Image
+                    src={Send}}
+                    alt={"Team image"}
+                    width={25}
+                    height={25}
+                    style={{ objectFit: "contain" }}
+                  />
+                  <Typography my={"auto"} fontWeight={700} ml={2}>
+                    Sent
+                  </Typography>
+                </Box>
               </MenuItem>
-              <MenuItem key={1} value={"false"} sx={{ fontWeight: 700 }}>
-                Received
+              <MenuItem key={1} value={"false"} sx={{ width: "fit-container", fontWeight: 700 }}>
+                <Box display={"flex"}>
+                  <Image
+                    src={Newspaper}
+                    alt={"Team image"}
+                    width={25}
+                    height={25}
+                    style={{ objectFit: "contain" }}
+                  />
+                  <Typography my={"auto"} fontWeight={700} ml={2} width={"fit-content"}>
+                    Received
+                  </Typography>
+                </Box>
               </MenuItem>
             </Select>
           </FormControl>
@@ -180,6 +205,7 @@ export default function AdminTeamView({
             labelId="team-select-label"
             name="team"
             value={teamSelected}
+            justify-content={"space-between"}
             onChange={(e: SelectChangeEvent) => setTeamSelected(e.target.value)}
             sx={{ minWidth: "100px", mt: 1 }}
           >

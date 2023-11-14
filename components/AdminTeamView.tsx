@@ -9,7 +9,8 @@ import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { SendIcon, Newspaper } from "@mui/icons-material";
+import { Newspaper } from "@mui/icons-material";
+import SendIcon from '@mui/icons-material/Send';
 
 
 const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
@@ -159,21 +160,15 @@ export default function AdminTeamView({
               labelId="type-select-label"
               name="commType"
               value={sentSelected}
-              justify-content={"space-between"}
+              justify-content={"space-between"} 
               onChange={(e) => setSentSelected(e.target.value === "true")}
               sx={{ minWidth: "150px", height: "56px", mt: 1, mr: 1}}
             >
               <MenuItem key={0} value={"true"} sx={{ width: "fit-container", fontWeight: 700 }}>
                 <Box display={"flex"}>
-                  <Image
-                  
-                    src={Send}
-                    
-                    alt={"Team image"}
-                    width={25}
-                    height={25}
-                    style={{ objectFit: "contain" }}
-                  />
+                  <Avatar sx={{width:25, height:25}}
+                    alt="Team image"
+                  ><SendIcon/></Avatar>
                   <Typography my={"auto"} fontWeight={700} ml={2}>
                     Sent
                   </Typography>
@@ -181,13 +176,9 @@ export default function AdminTeamView({
               </MenuItem>
               <MenuItem key={1} value={"false"} sx={{ width: "fit-container", fontWeight: 700 }}>
                 <Box display={"flex"}>
-                  <Image
-                    src={Newspaper}
-                    alt={"Team image"}
-                    width={25}
-                    height={25}
-                    style={{ objectFit: "contain" }}
-                  />
+                <Avatar sx={{width:25, height:25, }}
+                    alt="Team image"
+                  ><Newspaper/></Avatar>
                   <Typography my={"auto"} fontWeight={700} ml={2} width={"fit-content"}>
                     Received
                   </Typography>

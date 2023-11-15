@@ -33,6 +33,7 @@ const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
               fill
               src={comm.sender.imageURL ?? stinger.src}
               alt={comm.sender.name}
+              style={{background: "white"}}
             />
           </Avatar>
           <Stack ml={2}>
@@ -79,6 +80,7 @@ const recvCommendations = (commsRecv: Array<CommendationWithPeople>) => (
               fill
               src={comm.recipient.imageURL ?? stinger.src}
               alt={comm.recipient.name}
+              style={{background: "white"}}
             />
           </Avatar>
           <Stack ml={2}>

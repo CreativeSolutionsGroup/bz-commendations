@@ -176,7 +176,7 @@ export default function AdminTeamView({
               </MenuItem>
               <MenuItem key={1} value={"false"} sx={{ width: "fit-container", fontWeight: 700 }}>
                 <Box display={"flex"}>
-                <Avatar sx={{width:25, height:25, }}
+                  <Avatar sx={{width:25, height:25, }}
                     alt="Team image"
                   ><Newspaper/></Avatar>
                   <Typography my={"auto"} fontWeight={700} ml={2} width={"fit-content"}>

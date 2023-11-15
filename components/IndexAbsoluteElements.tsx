@@ -36,9 +36,13 @@ export default function IndexAbsoluteElements() {
           Successfully sent!
         </Alert>
       </Snackbar>
-      <Fab color="secondary" aria-label="teams" sx={{ position: "fixed", bottom: 16, right: 16 }} href={link} onClick={handleClick}>
-        <GroupsIcon />
-      </Fab>
+      {((router.pathname === "/team") || (router.pathname === "/")) ? 
+        <Fab color="secondary" aria-label="teams" sx={{ position: "fixed", bottom: 16, right: 16 }} href={link} onClick={handleClick}>
+          <GroupsIcon />
+        </Fab>
+        : 
+        <></>
+      }
     </>
   );
 }

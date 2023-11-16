@@ -56,13 +56,13 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
   const topTeamRecv = recvInfo[0];
   const topMemberRecv = members.recvMembers[0];
 
-  const theme = useTheme();
-  const largeScreen = useMediaQuery(theme.breakpoints.up("lg"));
-  const mediumScreen = useMediaQuery(theme.breakpoints.up("md"));
+  const Theme = useTheme();
+  const LargeScreen = useMediaQuery(Theme.breakpoints.up("lg"));
+  const MediumScreen = useMediaQuery(Theme.breakpoints.up("md"));
 
   const totalComms = members.sendMembers.reduce((prev, curr) => prev + curr.sentCommendations.length, 0);
 
-  const topSendingMember = () => {
+  function TopSendingMember() {
     return (
       <Tooltip title="Top Sending Member" placement="top">
         <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, mt: 2, mx: 1 }}>
@@ -78,7 +78,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
     );
   };
 
-  const topReceivingMember = () => {
+  function TopReceivingMember() {
     return(
       <Tooltip title="Top Receiving Member" placement="top">
         <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, mt: 2, mx: 1 }}>
@@ -92,8 +92,8 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
         </Card>
       </Tooltip>
     );
-  };
-  const topSendingTeam = () => {
+  }
+  function TopSendingTeam(){
     return(
       <Tooltip title="Top Sending Team"placement="top">
         <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, mt: 2, mx: 1 }}>
@@ -108,7 +108,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
       </Tooltip>
     );
   };
-  const topReceivingTeam = () => {
+  function TopReceivingTeam(){
     return(
       <Tooltip title="Top Receiving Team" placement="top">
         <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, mt: 2, mx: 1 }}>
@@ -126,11 +126,11 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
   
   return (
     <>
-      {largeScreen ?
+      {LargeScreen ?
         (<Box display="flex" flexDirection="row">
           <Box display="flex" flexDirection="column" width={"30%"} minWidth={225}>
-            {topSendingMember()}
-            {topReceivingMember()}
+            {TopSendingMember()}
+            {TopReceivingMember()}
           </Box>
 
           <Card sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "40%", mt: 2, mx: 1, minWidth: 350 }}>
@@ -141,14 +141,14 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
           </Card>
 
           <Box display="flex" flexDirection="column" width={"30%"} minWidth={"15"}>
-            {topSendingTeam()}
-            {topReceivingTeam()}
+            {TopSendingTeam()}
+            {TopReceivingTeam()}
           </Box>
-        </Box>) : mediumScreen ? (
+        </Box>) : MediumScreen ? (
           (<Box display="flex" flexDirection="column" alignItems={"center"}>
             <Box display="flex" flexDirection="row" width={"100%"} minWidth={225} >
-              {topSendingMember()}
-              {topReceivingMember()}
+              {TopSendingMember()}
+              {TopReceivingMember()}
             </Box>
 
             <Box display="flex" flexDirection="row" width={"100%"} minWidth={225} alignItems={"center"} justifyContent={"center"}>
@@ -161,8 +161,8 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
             </Box>
 
             <Box display="flex" flexDirection="row" width={"100%"} minWidth={"15"}>
-              {topSendingTeam()}
-              {topReceivingTeam()}
+              {TopSendingTeam()}
+              {TopReceivingTeam()}
             </Box>
           </Box>)
         ) : (
@@ -176,12 +176,12 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
               </Card>
             </Box>
             <Box display="flex" flexDirection="column" width={"90%"} minWidth={"30%"}>
-              {topSendingTeam()}
-              {topSendingMember()}
+              {TopSendingTeam()}
+              {TopSendingMember()}
             </Box>
             <Box display="flex" flexDirection="column"  width={"90%"} minWidth={"30%"}>
-              {topReceivingMember()}
-              {topReceivingTeam()}
+              {TopReceivingMember()}
+              {TopReceivingTeam()}
             </Box>
           </Box>
         )

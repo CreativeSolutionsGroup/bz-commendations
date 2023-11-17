@@ -15,7 +15,7 @@
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.6",
     "@mui/base": "^5.0.0-alpha.116",
-    "@mui/icons-material": "^5.11.0",
+    "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.11.14",
     "@mui/x-date-pickers": "^6.0.4",
     "@next/font": "13.1.1",

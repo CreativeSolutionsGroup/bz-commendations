@@ -4,17 +4,17 @@ import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
 import AdminOverview from "@/components/AdminOverview";
 import { TimeRangeCommendations } from "@/types/commendation";
-import { Close, EmojiEvents, Group, Newspaper } from "@mui/icons-material";
+import { EmojiEvents, Group, Newspaper } from "@mui/icons-material";
 import GroupsIcon from "@mui/icons-material/Groups";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, Card, CircularProgress, Divider, Drawer, IconButton, List, ListItemButton, useMediaQuery } from "@mui/material";
+import { Button, Card, CircularProgress, ClickAwayListener, Divider, Drawer, IconButton, List, ListItemButton, useMediaQuery } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { DatePicker } from "@mui/x-date-pickers";
 import { Raleway } from "@next/font/google";
 import dayjs from "dayjs";
-import { MouseEvent, useEffect, useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import theme from "@/config/theme";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
@@ -39,7 +39,7 @@ export default function Admin() {
   const handleDrawerToggle = (view: string) => {
     open ? setDrawerWidth(0) : setDrawerWidth(260);
     setOpen(!open);
-
+    console.log(view);
     if(view !== "") {
       setViewMode(view);
     }
@@ -68,13 +68,6 @@ export default function Admin() {
 
   const drawer = (
     <>
-      {(!bigScreen) ? 
-        <IconButton onClick={() => {handleDrawerToggle("");}}>
-          {theme.direction === "ltr" ? <Close /> : <Close />}
-        </IconButton>
-        :
-        <></>
-      }
       <List>
         <ListItemButton
           onClick={() => {
@@ -225,10 +218,12 @@ export default function Admin() {
           variant="temporary"
           anchor="left"
           open={open}
+          onClose={() => {handleDrawerToggle("");}}
         >
           {drawer}
         </Drawer>
         :
+        
         <Drawer
           sx={{
             width: 260,
@@ -246,7 +241,7 @@ export default function Admin() {
         > 
           {drawer}
         </Drawer>
-      }
+      }      
       <Box width={"100%"}>
         <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
           {(!bigScreen) ? 
@@ -295,6 +290,7 @@ export default function Admin() {
           </>
         )}
       </Box>
+      
       {/* viewMode !== "overview" &&
         <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
           <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>

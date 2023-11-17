@@ -4,7 +4,7 @@ import AdminSquareView from "@/components/AdminSquareView";
 import AdminTeamView from "@/components/AdminTeamView";
 import AdminOverview from "@/components/AdminOverview";
 import { TimeRangeCommendations } from "@/types/commendation";
-import { SendIcon, EmojiEvents, Group, Newspaper } from "@mui/icons-material";
+import { EmojiEvents, Group, Newspaper } from "@mui/icons-material";
 import GroupsIcon from "@mui/icons-material/Groups";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuIcon from "@mui/icons-material/Menu";

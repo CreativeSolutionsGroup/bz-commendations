@@ -1,4 +1,4 @@
-import { createCommendation, createTeamCommendation, emailToId, getMemberImage, getMemberTeamLeaders, getMemberWithTeams, idIsMember, sendBzEmail, sendBzText, updateMemberImageURL } from "@/lib/api/commendations";
+import { createCommendation, createTeamCommendation, emailToId, getMemberImage, getMemberTeamLeaders, getMemberWithTeams, idIsMember, readAllMembersFromTeam, sendBzEmail, sendBzText, updateMemberImageURL } from "@/lib/api/commendations";
 import { getTeam, getTimeRangeCommendations } from "@/lib/api/teams";
 import { revalidate } from "@/lib/revalidate";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -51,7 +51,6 @@ const sendMemberCommendation = async (
   );
 
 
-
   try {
     await Promise.all([pTeamEmail, pEmail, pText, pImage, revalidate("https://next.bz-cedarville.com", recipientEmail)]);
   } catch (e) {
@@ -68,17 +67,21 @@ const sendTeamCommendation = async (
   const msg = req.body.msg as string;
 
   const teamLeaders = await getMemberTeamLeaders([teamId]);
-  const teamLeadersEmails = teamLeaders.map(t => t.email);
+  const teamMembers = await readAllMembersFromTeam(teamId);
   const team = await getTeam(teamId);
+
+  const allMembers = [...teamLeaders, ...teamMembers];
+  const uniqueEmails = new Set();
+  const members = allMembers.filter(obj => !uniqueEmails.has(obj.email) && uniqueEmails.add(obj.email));
+  const memberEmails = members.map(t => t.email);
 
   // log the commendation
   const pCommendation = createTeamCommendation(
     sender, teamId, msg
   );
 
-  // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
-  const pTeamEmail = (teamLeadersEmails.length < 10) && sendBzEmail(
-    session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, team?.name as string, msg, { isTeam: true }
+  const pTeamEmail = sendBzEmail(
+    session?.user?.email as string, memberEmails, session?.user?.name as string, team?.name as string, msg, { isTeam: true }
   );
   try {
     await Promise.all([pCommendation, pTeamEmail]);

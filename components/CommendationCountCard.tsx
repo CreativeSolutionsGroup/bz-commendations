@@ -10,8 +10,10 @@ export default function CommendationCountCard({name, imageURL, numCommendations}
           component="img"
           sx={{
             height: "100%",
-            width: 50,
+            width: 50, objectFit: "fill"
           }}
+          
+          
           src={imageURL ?? stinger.src}
           alt={"User image"}
           

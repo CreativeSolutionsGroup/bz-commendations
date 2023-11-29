@@ -61,9 +61,14 @@ export default function MyCommendations({ uncleanComms = [] }: InferGetStaticPro
             ? <NotFound page="sent" />
             : <>{comms.map((comm, i) =>
               <Paper key={i} sx={{ mb: 2, mx: "auto", maxWidth: "44rem", p: 2, backgroundColor: grey[200], borderRadius: "18px" }}>
-                <Box sx={{ display: "flex", flexDirection: "row", width: "100%" }} minHeight="6.5rem">
+                <Box sx={{ display: "flex", flexDirection: "row" }} minHeight="6.5rem">
                   <Avatar>
-                    <Image fill src={comm.recipient.imageURL ?? stinger.src} alt={comm.recipient.name} />
+                    <Image
+                      fill
+                      src={comm.recipient.imageURL ?? stinger.src}
+                      alt={comm.recipient.name}
+                      style={{background: "white", objectFit: "contain"}}
+                    />
                   </Avatar>
                   <Stack ml={2} width="100%">
                     <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", width: "100%"}}>

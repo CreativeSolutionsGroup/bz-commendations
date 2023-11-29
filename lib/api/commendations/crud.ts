@@ -126,6 +126,24 @@ export const readAllMembers = async (currentUserEmail = "") => {
   });
 };
 
+export const readAllMembersFromTeam = async (teamId: string) => {
+  return await prisma.member.findMany({
+    where: {
+      teams: {
+        some: {
+          id: teamId
+        }
+      }
+    },
+    include: {
+      teams: true
+    },
+    orderBy: {
+      name: "asc"
+    }
+  });
+};
+
 
 /**
  * This function updates the profile picture of a given user

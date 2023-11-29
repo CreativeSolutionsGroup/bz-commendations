@@ -65,7 +65,7 @@ function renderRow(props: ListChildComponentProps) {
               alt=""
               placeholder="blur"
               blurDataURL={bz.src}
-              style={{ objectFit: "contain" }}
+              style={{ objectFit: "contain", background: "white" }}
             />
           ) : (
             <Person />

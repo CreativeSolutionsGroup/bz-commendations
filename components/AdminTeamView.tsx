@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Newspaper } from "@mui/icons-material";
-import SendIcon from '@mui/icons-material/Send';
+import SendIcon from "@mui/icons-material/Send";
 
 
 const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (

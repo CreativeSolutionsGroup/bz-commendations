@@ -1,4 +1,16 @@
-import { createCommendation, createTeamCommendation, emailToId, getMemberImage, getMemberTeamLeaders, getMemberWithTeams, idIsMember, readAllMembersFromTeam, sendBzEmail, sendBzText, updateMemberImageURL } from "@/lib/api/commendations";
+import {
+  createCommendation,
+  createTeamCommendation,
+  emailToId,
+  getMemberImage,
+  getMemberTeamLeaders,
+  getMemberWithTeams,
+  idIsMember,
+  readAllMembersFromTeam,
+  sendBzEmail,
+  sendBzText,
+  updateMemberImageURL,
+} from "@/lib/api/commendations";
 import { getTeam, getTimeRangeCommendations } from "@/lib/api/teams";
 import { revalidate } from "@/lib/revalidate";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -6,17 +18,19 @@ import { Session, getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 
 const sendMemberCommendation = async (
-  req: NextApiRequest, res: NextApiResponse, session: Session
+  req: NextApiRequest,
+  res: NextApiResponse,
+  session: Session
 ) => {
   const recipientId = req.body.recipient as string;
   const msg = req.body.msg as string;
-  const sender = await emailToId(session.user?.email ?? "") ?? "";
+  const sender = (await emailToId(session.user?.email ?? "")) ?? "";
 
   if (recipientId === sender) return res.redirect("/?success=false");
 
   // log the commendation
   const pCommendation = createCommendation(
-    sender as string, recipientId, msg
+sender as string, recipientId, msg
   );
   try {
     await pCommendation;
@@ -30,29 +44,51 @@ const sendMemberCommendation = async (
   if (recipient == null) return res.redirect("/?success=false");
 
   // we also want to send emails to the team leaders
-  const teamLeaders = await getMemberTeamLeaders(recipient.teams.map(t => t.id));
-  const teamLeadersEmails = teamLeaders.map(t => t.email);
+  const teamLeaders = await getMemberTeamLeaders(recipient.teams.map((t) => t.id));
+  const teamLeadersEmails = teamLeaders.map((t) => t.email);
 
   const recipientEmail = recipient.email;
 
-  const pImage = (await getMemberImage(sender) == null) && updateMemberImageURL(session?.user?.image as string, sender);
+  const pImage =
+    (await getMemberImage(sender)) == null &&
+    updateMemberImageURL(session?.user?.image as string, sender);
   // send email to the recip
   const pEmail = sendBzEmail(
-    session?.user?.email as string, [recipientEmail], session?.user?.name as string, "you", msg
+    session?.user?.email as string,
+    [recipientEmail],
+    session?.user?.name as string,
+    "you",
+    msg
   );
   // send text to the recip
-  const pText = (recipient.phone != null) ? sendBzText(
-    recipient.phone, session?.user?.name as string, msg
-  ) : null;
+  const pText =
+    recipient.phone != null
+      ? sendBzText(
+        recipient.phone, session?.user?.name as string, msg
+      )
+      : null;
 
   // inbuilt jank protection! if there are < 10 people you want to send an email to, go ahead.
-  const pTeamEmail = (teamLeadersEmails && teamLeadersEmails.length < 10) && sendBzEmail(
-    session?.user?.email as string, teamLeadersEmails, session?.user?.name as string, recipient.name, msg, { isTeam: true }
-  );
-
+  const pTeamEmail =
+    teamLeadersEmails &&
+    teamLeadersEmails.length < 10 &&
+    sendBzEmail(
+      session?.user?.email as string,
+      teamLeadersEmails.filter((v) => v !== recipientEmail && v !== session.user?.email),
+      session?.user?.name as string,
+      recipient.name,
+      msg,
+      { isTeam: true }
+    );
 
   try {
-    await Promise.all([pTeamEmail, pEmail, pText, pImage, revalidate("https://next.bz-cedarville.com", recipientEmail)]);
+    await Promise.all([
+      pTeamEmail,
+      pEmail,
+      pText,
+      pImage,
+      revalidate("https://next.bz-cedarville.com", recipientEmail),
+    ]);
   } catch (e) {
     console.error(`Revalidation failed ${JSON.stringify(e)}`);
   }
@@ -60,10 +96,12 @@ const sendMemberCommendation = async (
 };
 
 const sendTeamCommendation = async (
-  req: NextApiRequest, res: NextApiResponse, session: Session
+  req: NextApiRequest,
+  res: NextApiResponse,
+  session: Session
 ) => {
   const teamId = req.body.recipient as string;
-  const sender = await emailToId(session.user?.email ?? "") ?? "";
+  const sender = (await emailToId(session.user?.email ?? "")) ?? "";
   const msg = req.body.msg as string;
 
   const teamLeaders = await getMemberTeamLeaders([teamId]);
@@ -72,8 +110,8 @@ const sendTeamCommendation = async (
 
   const allMembers = [...teamLeaders, ...teamMembers];
   const uniqueEmails = new Set();
-  const members = allMembers.filter(obj => !uniqueEmails.has(obj.email) && uniqueEmails.add(obj.email));
-  const memberEmails = members.map(t => t.email);
+  const members = allMembers.filter((obj) => !uniqueEmails.has(obj.email) && uniqueEmails.add(obj.email) && obj.email !== session.user?.email);
+  const memberEmails = members.map((t) => t.email);
 
   // log the commendation
   const pCommendation = createTeamCommendation(
@@ -81,8 +119,14 @@ const sendTeamCommendation = async (
   );
 
   const pTeamEmail = sendBzEmail(
-    session?.user?.email as string, memberEmails, session?.user?.name as string, team?.name as string, msg, { isTeam: true }
+    session?.user?.email as string,
+    memberEmails,
+    session?.user?.name as string,
+    team?.name as string,
+    msg,
+    { isTeam: true }
   );
+  
   try {
     await Promise.all([pCommendation, pTeamEmail]);
   } catch (e) {
@@ -94,7 +138,8 @@ const sendTeamCommendation = async (
   res.redirect(302, "/team?success=true");
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest,
+  res: NextApiResponse) {
   const session = await getServerSession(
     req, res, authOptions
   );
@@ -120,7 +165,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.json(commendations);
       break;
     case "POST":
-      const sender = await emailToId((session?.user?.email) as string);
+      const sender = await emailToId(session?.user?.email as string);
 
       if (sender == null) {
         console.log("Error: Bad email");

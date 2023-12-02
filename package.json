@@ -34,7 +34,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-window": "^1.8.8",
-    "sharp": "^0.31.3",
+    "sharp": "^0.33.0",
     "twilio": "^4.7.2",
     "typescript": "4.9.4"
   },

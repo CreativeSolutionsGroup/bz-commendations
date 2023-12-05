@@ -1,8 +1,12 @@
 import { CommendationStatInfo, MembersWithCommendations } from "@/types/admin";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography,useMediaQuery } from "@mui/material";
 import CommendationCountCard from "./CommendationCountCard";
+import theme from "@/config/theme";
 
 export default function AdminMemberLeaderboardView({ members }: {members: MembersWithCommendations}) {
+  const bigScreen = useMediaQuery(theme.breakpoints.up("sm"));
+  
+  const spacing = (bigScreen) ? 8 : 2;
   
   // Order members by most to least commendations in each category
   members.sendMembers.sort((a, b) =>  b.sentCommendations.length - a.sentCommendations.length);
@@ -11,7 +15,7 @@ export default function AdminMemberLeaderboardView({ members }: {members: Member
   return (
     <Box display={"flex"} flexWrap={"wrap"}>
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
-        <Typography fontWeight={700} textAlign={"center"} fontSize={18} mt={8}>Sent</Typography>
+        <Typography fontWeight={700} textAlign={"center"} fontSize={18} mt={spacing}>Sent</Typography>
         {
           members.sendMembers.map((member) => (
             <CommendationCountCard key={member.id} id={member.id} name={member.name} imageURL={member.imageURL} numCommendations={member.sentCommendations.length}/>
@@ -19,7 +23,7 @@ export default function AdminMemberLeaderboardView({ members }: {members: Member
         }
       </Box>
       <Box display={"flex"} flexDirection={"column"} flexGrow={1}>
-        <Typography fontWeight={700} textAlign={"center"} fontSize={18} mt={8}>Received</Typography>
+        <Typography fontWeight={700} textAlign={"center"} fontSize={18} mt={spacing}>Received</Typography>
         {
           members.recvMembers.map((member) => (
             <CommendationCountCard key={member.id} id={member.id} name={member.name} imageURL={member.imageURL} numCommendations={member.commendations.length}/>

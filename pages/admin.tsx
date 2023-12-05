@@ -266,7 +266,7 @@ export default function Admin() {
               className: raleway.className,
             }}
           >
-            ADMIN DASHBOARD
+            {(bigScreen) ? "ADMIN DASHBOARD" : "ADMIN"}
           </Typography>
         </Box>
         {data.teams == null ? (

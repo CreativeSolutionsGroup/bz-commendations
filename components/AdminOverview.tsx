@@ -167,7 +167,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
           </Box>)
         ) : (
           <Box display="flex" flexDirection="column" alignItems={"center"}>
-            <Box display="flex" flexDirection="column" width={"90%"} minWidth={"30%"}>
+            <Box display="flex" flexDirection="column" width={"100%"} minWidth={"30%"}>
               <Card sx={{ maxHeight: "50%", display: "flex", flexDirection: "column", justifyContent: "center", height: 325, flexGrow: 1,  mt: 2, mx: 1}}>
                 <Typography textAlign={"center"} fontSize={40} className={raleway.className}>Total<br/>Commendations</Typography>
                 <Typography textAlign={"center"} fontSize={150} lineHeight={"100%"} className={raleway.className}>
@@ -175,11 +175,11 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
                 </Typography>
               </Card>
             </Box>
-            <Box display="flex" flexDirection="column" width={"90%"} minWidth={"30%"}>
+            <Box display="flex" flexDirection="column" width={"100%"} minWidth={"30%"}>
               {TopSendingTeam()}
               {TopSendingMember()}
             </Box>
-            <Box display="flex" flexDirection="column"  width={"90%"} minWidth={"30%"}>
+            <Box display="flex" flexDirection="column"  width={"100%"} minWidth={"30%"}>
               {TopReceivingMember()}
               {TopReceivingTeam()}
             </Box>

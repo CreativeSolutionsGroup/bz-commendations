@@ -127,7 +127,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
   return (
     <>
       {LargeScreen ?
-        (<Box display="flex" flexDirection="row">
+        (<Box display="flex" flexDirection="row" mb={2}>
           <Box display="flex" flexDirection="column" width={"30%"} minWidth={225}>
             {TopSendingMember()}
             {TopReceivingMember()}
@@ -145,7 +145,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
             {TopReceivingTeam()}
           </Box>
         </Box>) : MediumScreen ? (
-          (<Box display="flex" flexDirection="column" alignItems={"center"}>
+          (<Box display="flex" flexDirection="column" alignItems={"center"} mb={2}>
             <Box display="flex" flexDirection="row" width={"100%"} minWidth={225} >
               {TopSendingMember()}
               {TopReceivingMember()}
@@ -166,7 +166,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
             </Box>
           </Box>)
         ) : (
-          <Box display="flex" flexDirection="column" alignItems={"center"}>
+          <Box display="flex" flexDirection="column" alignItems={"center"} mb={2}>
             <Box display="flex" flexDirection="column" width={"100%"} minWidth={"30%"}>
               <Card sx={{ maxHeight: "50%", display: "flex", flexDirection: "column", justifyContent: "center", height: 325, flexGrow: 1,  mt: 2, mx: 1}}>
                 <Typography textAlign={"center"} fontSize={40} className={raleway.className}>Total<br/>Commendations</Typography>

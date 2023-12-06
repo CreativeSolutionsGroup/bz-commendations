@@ -223,7 +223,6 @@ export default function Admin() {
           {drawer}
         </Drawer>
         :
-        
         <Drawer
           sx={{
             width: 260,
@@ -261,7 +260,7 @@ export default function Admin() {
               textAlign: "center",
               fontSize: 30,
               fontWeight: 900,
-              marginTop: 1,
+              mt: 1,
               flexGrow: 1,
               className: raleway.className,
             }}

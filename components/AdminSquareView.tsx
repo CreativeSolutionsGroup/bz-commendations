@@ -20,7 +20,7 @@ export default function AdminSquareView({ teams }: { teams: TeamsList }) {
     {
       teams?.map((currentTeam, currentIndex) =>
         <Card key={currentIndex} sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, mt: 2, width: 300, mx: 1 }}>
-          <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={1}>
+          <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
             <Image fill placeholder="blur" blurDataURL={hash.src} src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain" }} />
           </Box>
           <Typography textAlign={"center"} fontSize={20} mt={2} className={raleway.className}>{currentTeam.name}</Typography>

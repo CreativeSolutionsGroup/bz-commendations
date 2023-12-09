@@ -262,6 +262,7 @@ export default function Admin() {
               fontWeight: 900,
               mt: 1,
               flexGrow: 1,
+              marginRight: (open) ? 0 : 5,
               className: raleway.className,
             }}
           >

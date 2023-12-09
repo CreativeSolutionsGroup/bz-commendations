@@ -1,6 +1,6 @@
 import stinger from "@/assets/stinger.png";
 import { CommendationWithPeople, MemberWithTeams } from "@/types/commendation";
-import { ArrowCircleRight, Send } from "@mui/icons-material";
+import { ArrowCircleRight, Send, MoveToInbox } from "@mui/icons-material";
 import { Avatar, Box, FormControl, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Stack, Typography, useMediaQuery } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
@@ -9,13 +9,10 @@ import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Newspaper } from "@mui/icons-material";
-import SendIcon from "@mui/icons-material/Send";
-
 
 const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
   <Box flexGrow={1} px={1}>
-    <Typography fontWeight={700} textAlign={"center"} fontSize={18} mb={1}>
+    <Typography fontWeight={700} textAlign={"center"} fontSize={18} mb={1} mt={2}>
       Sent
     </Typography>
     {commsSent?.map((comm, index: number) => (
@@ -62,7 +59,7 @@ const sentCommendations = (commsSent: Array<CommendationWithPeople>) => (
 
 const recvCommendations = (commsRecv: Array<CommendationWithPeople>) => (
   <Box flexGrow={1} px={1}>
-    <Typography fontWeight={700} textAlign={"center"} fontSize={18} mb={1}>
+    <Typography fontWeight={700} textAlign={"center"} fontSize={18} mb={1} mt={2}>
       Received
     </Typography>
     {commsRecv?.map((comm, index: number) => (
@@ -168,9 +165,7 @@ export default function AdminTeamView({
             >
               <MenuItem key={0} value={"true"} sx={{ width: "fit-container", fontWeight: 700 }}>
                 <Box display={"flex"}>
-                  <Avatar sx={{width:25, height:25}}
-                    alt="Team image"
-                  ><SendIcon/></Avatar>
+                  <Send/>
                   <Typography my={"auto"} fontWeight={700} ml={2}>
                     Sent
                   </Typography>
@@ -178,9 +173,7 @@ export default function AdminTeamView({
               </MenuItem>
               <MenuItem key={1} value={"false"} sx={{ width: "fit-container", fontWeight: 700 }}>
                 <Box display={"flex"}>
-                  <Avatar sx={{width:25, height:25, }}
-                    alt="Team image"
-                  ><Newspaper/></Avatar>
+                  <MoveToInbox/>
                   <Typography my={"auto"} fontWeight={700} ml={2} width={"fit-content"}>
                     Received
                   </Typography>

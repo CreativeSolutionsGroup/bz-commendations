@@ -16,14 +16,14 @@ function DataChip({ label, icon }: { label: string | null, icon: ReactElement })
 };
 
 export default function AdminSquareView({ teams }: { teams: TeamsList }) {
-  return (<Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={10}>
+  return (<Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"} mb={2}>
     {
       teams?.map((currentTeam, currentIndex) =>
-        <Card key={currentIndex} sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, marginTop: 3, width: 300, mx: 1 }}>
-          <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center">
+        <Card key={currentIndex} sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 350, flexGrow: 1, mt: 2, width: 300, mx: 1 }}>
+          <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
             <Image fill placeholder="blur" blurDataURL={hash.src} src={currentTeam.imageURL ?? bz.src} alt={currentTeam.name + " Logo"} style={{ objectFit: "contain" }} />
           </Box>
-          <Typography textAlign={"center"} fontSize={20} mt={3} className={raleway.className}>{currentTeam.name}</Typography>
+          <Typography textAlign={"center"} fontSize={20} mt={2} className={raleway.className}>{currentTeam.name}</Typography>
           <Box display={"flex"} mt={2}>
             <DataChip label={currentTeam.members.length.toString()} icon={<Group />} />
             <DataChip label={currentTeam.members.reduce((prev, curr) => prev + curr.sentCommendations.length, 0).toString()} icon={<Send />} />

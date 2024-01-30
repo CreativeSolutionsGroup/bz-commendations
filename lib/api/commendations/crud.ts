@@ -361,3 +361,19 @@ export const getMemberImage = async (id: string) => {
 
   return image?.imageURL;
 };
+
+/**
+ * This function deletes a member from the database and all their commendations
+ * 
+ * @param id The id of the member to be deleted
+ * @return The deleted member 
+ */
+export const removeMember = async (id: string) => {
+  const deletedMember = await prisma.member.delete({
+    where:{
+      id: id
+    }
+  });
+
+  return deletedMember;
+};

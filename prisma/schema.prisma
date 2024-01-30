@@ -13,8 +13,8 @@ model Commendation {
   recipientId String
   senderId    String
   createdAt   DateTime @default(now())
-  recipient   Member   @relation("recipient", fields: [recipientId], references: [id])
-  sender      Member   @relation("sender", fields: [senderId], references: [id])
+  recipient   Member   @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  sender      Member   @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 model TeamCommendation {
@@ -23,7 +23,7 @@ model TeamCommendation {
   teamId    String
   senderId  String
   createdAt DateTime @default(now())
-  sender    Member   @relation("sender", fields: [senderId], references: [id])
+  sender    Member   @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
   recipient Team     @relation("recipient", fields: [teamId], references: [id])
 }
 

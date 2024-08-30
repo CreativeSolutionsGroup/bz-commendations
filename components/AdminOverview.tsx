@@ -51,9 +51,9 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
   members.sendMembers.sort((a, b) => b.sentCommendations.length - a.sentCommendations.length);
   members.recvMembers.sort((a, b) => b.commendations.length - a.commendations.length);
 
-  const topTeam = sentInfo[0];
+  const topTeam = sentInfo[0].numCommendations === 0 ? null : sentInfo[0];
   const topMember = members.sendMembers[0];
-  const topTeamRecv = recvInfo[0];
+  const topTeamRecv = recvInfo[0].numCommendations === 0 ? null : recvInfo[0];
   const topMemberRecv = members.recvMembers[0];
 
   const Theme = useTheme();
@@ -67,11 +67,11 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
       <Tooltip title="Top Sending Member" placement="top">
         <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, mt: 2, mx: 1 }}>
           <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
-            <Image fill placeholder="blur" blurDataURL={hash.src} src={topMember.imageURL ?? bz.src} alt={topMember.name + " image"} style={{ objectFit: "contain" }} />
+            <Image fill placeholder="blur" blurDataURL={hash.src} src={topMember?.imageURL ?? bz.src} alt={topMember?.name + " image"} style={{ objectFit: "contain" }} />
           </Box>
           <Box display={"flex"} flexDirection="row" mt={2}>
-            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topMember.name}</Typography>
-            <DataChip label={topMember.sentCommendations.length.toString()} icon={<Send />} />
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topMember?.name ?? "None Sent"}</Typography>
+            <DataChip label={topMember?.sentCommendations.length.toString() ?? "0"} icon={<Send />} />
           </Box>
         </Card>
       </Tooltip>
@@ -83,11 +83,11 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
       <Tooltip title="Top Receiving Member" placement="top">
         <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, mt: 2, mx: 1 }}>
           <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
-            <Image fill placeholder="blur" blurDataURL={hash.src} src={topMemberRecv.imageURL ?? bz.src} alt={topMemberRecv.name + " image"} style={{ objectFit: "contain" }} />
+            <Image fill placeholder="blur" blurDataURL={hash.src} src={topMemberRecv?.imageURL ?? bz.src} alt={topMemberRecv?.name + " image"} style={{ objectFit: "contain" }} />
           </Box>
           <Box display={"flex"} flexDirection="row" mt={2}>
-            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topMemberRecv.name}</Typography>
-            <DataChip label={topMemberRecv.commendations.length.toString()} icon={<MoveToInbox />} />
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topMemberRecv?.name ?? "None Received"}</Typography>
+            <DataChip label={topMemberRecv?.commendations.length.toString() ?? "0"} icon={<MoveToInbox />} />
           </Box>
         </Card>
       </Tooltip>
@@ -98,11 +98,11 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
       <Tooltip title="Top Sending Team"placement="top">
         <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, mt: 2, mx: 1 }}>
           <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
-            <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeam.imageURL ?? bz.src} alt={topTeam.name + " image"} style={{ objectFit: "contain" }} />
+            <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeam?.imageURL ?? bz.src} alt={topTeam?.name + " image"} style={{ objectFit: "contain" }} />
           </Box>
           <Box display={"flex"} flexDirection="row" mt={2}>
-            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeam.name}</Typography>
-            <DataChip label={topTeam.numCommendations.toString()} icon={<Send />} />
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeam?.name  ?? "None Sent"}</Typography>
+            <DataChip label={topTeam?.numCommendations.toString() ?? "0"} icon={<Send />} />
           </Box>
         </Card>
       </Tooltip>
@@ -113,11 +113,11 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
       <Tooltip title="Top Receiving Team" placement="top">
         <Card sx={{ alignItems: "center", display: "flex", flexDirection: "column", height: 250, flexGrow: 1, mt: 2, mx: 1 }}>
           <Box position={"relative"} height={"60%"} width={"90%"} display="flex" justifyContent="center" mt={2}>
-            <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeamRecv.imageURL ?? bz.src} alt={topTeamRecv.name + " image"} style={{ objectFit: "contain" }} />
+            <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeamRecv?.imageURL ?? bz.src} alt={topTeamRecv?.name + " image"} style={{ objectFit: "contain" }} />
           </Box>
           <Box display={"flex"} flexDirection="row" mt={2}>
-            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeamRecv.name}</Typography>
-            <DataChip label={topTeamRecv.numCommendations.toString()} icon={<MoveToInbox />} />
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeamRecv?.name ?? "None Received"}</Typography>
+            <DataChip label={topTeamRecv?.numCommendations.toString() ?? "0"} icon={<MoveToInbox />} />
           </Box>
         </Card>
       </Tooltip>

@@ -70,7 +70,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
             <Image fill placeholder="blur" blurDataURL={hash.src} src={topMember?.imageURL ?? bz.src} alt={topMember?.name + " image"} style={{ objectFit: "contain" }} />
           </Box>
           <Box display={"flex"} flexDirection="row" mt={2}>
-            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topMember?.name ?? "No top sending member"}</Typography>
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topMember?.name ?? "None Sent"}</Typography>
             <DataChip label={topMember?.sentCommendations.length.toString() ?? "0"} icon={<Send />} />
           </Box>
         </Card>
@@ -86,7 +86,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
             <Image fill placeholder="blur" blurDataURL={hash.src} src={topMemberRecv?.imageURL ?? bz.src} alt={topMemberRecv?.name + " image"} style={{ objectFit: "contain" }} />
           </Box>
           <Box display={"flex"} flexDirection="row" mt={2}>
-            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topMemberRecv?.name ?? "No top receiving member"}</Typography>
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topMemberRecv?.name ?? "None Received"}</Typography>
             <DataChip label={topMemberRecv?.commendations.length.toString() ?? "0"} icon={<MoveToInbox />} />
           </Box>
         </Card>
@@ -101,7 +101,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
             <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeam?.imageURL ?? bz.src} alt={topTeam?.name + " image"} style={{ objectFit: "contain" }} />
           </Box>
           <Box display={"flex"} flexDirection="row" mt={2}>
-            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeam?.name  ?? "No top sending team"}</Typography>
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeam?.name  ?? "None Sent"}</Typography>
             <DataChip label={topTeam?.numCommendations.toString() ?? "0"} icon={<Send />} />
           </Box>
         </Card>
@@ -116,7 +116,7 @@ export default function AdminOverview({ members, teams }: { members: MembersWith
             <Image fill placeholder="blur" blurDataURL={hash.src} src={topTeamRecv?.imageURL ?? bz.src} alt={topTeamRecv?.name + " image"} style={{ objectFit: "contain" }} />
           </Box>
           <Box display={"flex"} flexDirection="row" mt={2}>
-            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeamRecv?.name ?? "No top receiving team"}</Typography>
+            <Typography textAlign={"center"} fontSize={20} className={raleway.className}>{topTeamRecv?.name ?? "None Received"}</Typography>
             <DataChip label={topTeamRecv?.numCommendations.toString() ?? "0"} icon={<MoveToInbox />} />
           </Box>
         </Card>

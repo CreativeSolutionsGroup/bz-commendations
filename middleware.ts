@@ -3,16 +3,9 @@ import { withAuth } from "next-auth/middleware";
 export default withAuth({
   callbacks: {
     authorized: ({ req, token }) => {
-      const { pathname, searchParams } = req.nextUrl;
+      const { pathname } = req.nextUrl;
       if (pathname === "/admin") {
         return token?.isAdmin ?? false;
-      }
-
-      if (pathname.includes("/me")) {
-        const email = searchParams.get("email");
-        // fix for #107
-        if (email == null) return true;
-        return email === token?.email;
       }
 
       // otherwise, if you were allowed to login, you're good.
@@ -22,5 +15,5 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: ["/", "/teamCommendation", "/admin", "/me/(.*)"],
+  matcher: ["/(.*)"],
 };

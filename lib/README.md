@@ -8,14 +8,14 @@ This directory contains the core functions of bz-commendations, including the va
 
 #### `revalidate`
 
-**Purpose**: Revalidates the given URL using Next ISR
+**Purpose**: Revalidate the given URL using Next ISR
 
 **Parameters**:
 
 - `hostname`: string - The host to revalidate
 - `email`: string - The endpoint on `/me` to revalidate
 
-**Returns**: None
+**Returns**: `Promise<void>`
 
 ---
 
@@ -31,7 +31,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `studentId`: string - The id associated with a student
 
-**Returns**: `string` - The name associated with the provided id, or an empty string if the id is not found.
+**Returns**: `Promise<string>` - The name associated with the provided id, or an empty string if the id is not found.
 
 ---
 
@@ -43,7 +43,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `sender`: string - An email address of the person you want the id for.
 
-**Returns**: `string | undefined` - The id of the member with the provided email address or undefined if no member is found.
+**Returns**: `Promise<string | undefined>` - The id of the member with the provided email address or undefined if no member is found.
 
 ---
 
@@ -81,7 +81,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 **Parameters**: None
 
-**Returns**: `Commendation[]` - A list of all Commendations
+**Returns**: `Promise<Commendation[]>` - A list of all Commendations
 
 ---
 
@@ -93,7 +93,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `currentUserEmail`: string (optional) - The email address of the current session user
 
-**Returns**: `(Member & { teams: Team[] })[]` - A list of members and their teams
+**Returns**: `Promise<(Member & { teams: Team[] })[]>` - A list of members and their teams
 
 ---
 
@@ -105,7 +105,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `teamId`: string - The id of the team
 
-**Returns**: `(Member & { teams: Team[] })[]` - A list of members and their teams, ordered by name ascending
+**Returns**: `Promise<(Member & { teams: Team[] })[]>` - A list of members and their teams, ordered by name ascending
 
 ---
 
@@ -130,7 +130,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `email`: string - The email address of the current session user
 
-**Returns**: `{ message: string; sender: { name: string; imageURL: string | null; }; }[]` - A list of commendations
+**Returns**: `Promise<{ message: string; sender: { name: string; imageURL: string | null; }; }[]>` - A list of commendations
 
 ---
 
@@ -142,7 +142,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `email`: string - The email address of the current session user
 
-**Returns**: `{ message: string; sender: { name: string; imageURL: string | null; }; }[]` - A list of team commendations
+**Returns**: `Promise<{ message: string; sender: { name: string; imageURL: string | null; }; }[]>` - A list of team commendations
 
 ---
 
@@ -154,7 +154,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `email`: string - The email address of the current session user
 
-**Returns**: `{ message: string; recipient: { name: string; imageURL: string | null; }; }[]` - A list of commendations
+**Returns**: `Promise<{ message: string; recipient: { name: string; imageURL: string | null; }; }[]>` - A list of commendations
 
 ---
 
@@ -166,7 +166,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `email`: string - The email address of the current session user
 
-**Returns**: `{ message: string; recipient: { name: string; imageURL: string | null; }; }[]` - A list of team commendations
+**Returns**: `Promise<{ message: string; recipient: { name: string; imageURL: string | null; }; }[]>` - A list of team commendations
 
 ---
 
@@ -178,7 +178,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `teams`: string[] - A list of the team ids that you want to get the team leaders for
 
-**Returns**: `Member[]` - A list of the team leaders
+**Returns**: `Promise<Member[]>` - A list of the team leaders
 
 ---
 
@@ -190,7 +190,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `id`: string - The id of a member
 
-**Returns**: `(Member & {teams: Team[];})` - An object containing the member and their teams
+**Returns**: `Promise<Member & {teams: Team[];}>` - An object containing the member and their teams
 
 ---
 
@@ -202,7 +202,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `id`: string - The id of a member
 
-**Returns**: `boolean` - Indicating the result of the test
+**Returns**: `Promise<boolean>` - Indicating the result of the test
 
 ---
 
@@ -214,7 +214,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `id`: string - The id of a member
 
-**Returns**: `string | undefined` - A string that represents an image URL
+**Returns**: `Promise<string | undefined>` - A string that represents an image URL
 
 ---
 
@@ -226,7 +226,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 - `id`: string - The id of the member to be deleted
 
-**Returns**: The deleted member
+**Returns**: `Promise<Member>` - The deleted member
 
 ---
 
@@ -244,13 +244,13 @@ This directory contains the core functions of bz-commendations, including the va
 - `recipientName`: string - name of the person receiving the commendation
 - `message`: string - message of the commendation
 
-**Returns**: Response from SES client sender
+**Returns**: `Promise<SESResponse>` - Response from SES client sender
 
 ---
 
 ### commendations/text.ts
 
-#### sendBzText
+#### `sendBzText`
 
 **Purpose**: Send an text to the recipient(s) with the commendation message using the twilio api.
 
@@ -260,7 +260,7 @@ This directory contains the core functions of bz-commendations, including the va
 - `senderName`: string - name of the person sending the commendation
 - `message`: string - message of the commendation
 
-**Returns**: None
+**Returns**: `Promise<void>`
 
 ---
 
@@ -308,10 +308,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 **Parameters**:
 
-- `dateRange`: object - An object specifying the date range
-  - `createdAt`: object
-    - `gte`: Date - The start date of the range
-    - `lte`: Date - The end date of the range
+- `dateRange`: { createdAt: { gte: Date; lte: Date } } - An object specifying the date range
 
 **Returns**: `Promise<TimeRangeCommendations>` - An object containing:
 
@@ -332,7 +329,7 @@ This directory contains the core functions of bz-commendations, including the va
 - `firstDate`: Date - The start date of the range
 - `secondDate`: Date - The end date of the range
 
-**Returns**: `Promise<object>` - An object containing:
+**Returns**: `Promise<{ sentComms: Commendation[]; recvComms: Commendation[] }>` - An object containing:
 
 - `sentComms`: Array of commendations sent by team members
 - `recvComms`: Array of commendations received by team members

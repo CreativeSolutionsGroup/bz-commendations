@@ -17,16 +17,16 @@ declare module "next-auth" {
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    id_token: unknown,
-    roles: Array<string>,
-    isAdmin: boolean
+    id_token: unknown;
+    roles: Array<string>;
+    isAdmin: boolean;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    roles: Array<string>,
-    isAdmin: boolean
+    roles: Array<string>;
+    isAdmin: boolean;
   }
 }
 
@@ -35,7 +35,7 @@ const stgOptions: AuthOptions = {
     CredentialsProvider({
       name: "Email",
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "Email" }
+        email: { label: "Email", type: "text", placeholder: "Email" },
       },
       async authorize(credentials) {
         if (!credentials) {
@@ -43,24 +43,28 @@ const stgOptions: AuthOptions = {
         }
         const user = await prisma.member.findFirst({
           where: {
-            email: credentials.email
-          }
+            email: credentials.email,
+          },
         });
         if (user) {
           return user;
         } else {
           return null;
         }
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      let member = await prisma.member.findFirst({ where: { email: token.email ?? "" }, include: { roles: true } });
-      token.isAdmin = member!.roles.find(r => r.name === "admin") != undefined;
-      return {...token, ...user};
+      let member = await prisma.member.findFirst({
+        where: { email: token.email ?? "" },
+        include: { roles: true },
+      });
+      token.isAdmin =
+        member!.roles.find((r) => r.name === "admin") != undefined;
+      return { ...token, ...user };
     },
-    async session({session, token}) {
+    async session({ session, token }) {
       // Send send the id_token to the client
       session.id_token = token.id_token;
 
@@ -68,8 +72,8 @@ const stgOptions: AuthOptions = {
       session.isAdmin = token.isAdmin;
 
       return session;
-    }
-  }
+    },
+  },
 };
 
 const defaultOptions: AuthOptions = {
@@ -77,13 +81,16 @@ const defaultOptions: AuthOptions = {
     GoogleProvider({
       clientId: process.env["GOOGLE_CLIENT_ID"],
       clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
-    })
+    }),
   ],
+  pages: {
+    signIn: "/signin",
+  },
   callbacks: {
     async signIn({ user: { email }, credentials }) {
-      return !!await prisma.member.count({
-        where: { email: email ?? "" }
-      });
+      return !!(await prisma.member.count({
+        where: { email: email ?? "" },
+      }));
     },
     async jwt({ token, account }) {
       // Persist the id_token to the token
@@ -91,10 +98,14 @@ const defaultOptions: AuthOptions = {
         token.id_token = account.id_token;
       }
 
-      let member = await prisma.member.findFirst({ where: { email: token.email ?? "" }, include: { roles: true } });
+      let member = await prisma.member.findFirst({
+        where: { email: token.email ?? "" },
+        include: { roles: true },
+      });
       // we think that member here is not undefined because `singIn` should have caught anyone not in the database.
       // token.roles = member!.roles.map(r => r.name);
-      token.isAdmin = member!.roles.find(r => r.name === "admin") != undefined;
+      token.isAdmin =
+        member!.roles.find((r) => r.name === "admin") != undefined;
 
       return token;
     },
@@ -106,10 +117,11 @@ const defaultOptions: AuthOptions = {
       session.isAdmin = token.isAdmin;
 
       return session;
-    }
-  }
+    },
+  },
 };
 
-export const authOptions: AuthOptions = process.env.BUILD_ENV === "stg" ? stgOptions : defaultOptions;
+export const authOptions: AuthOptions =
+  process.env.BUILD_ENV === "stg" ? stgOptions : defaultOptions;
 
 export default NextAuth(authOptions);

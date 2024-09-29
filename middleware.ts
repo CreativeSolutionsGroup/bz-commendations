@@ -4,6 +4,11 @@ export default withAuth({
   callbacks: {
     authorized: ({ req, token }) => {
       const { pathname } = req.nextUrl;
+
+      if (pathname === "/signin") {
+        return true;
+      }
+
       if (pathname === "/admin") {
         return token?.isAdmin ?? false;
       }

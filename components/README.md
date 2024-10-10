@@ -31,7 +31,8 @@ CommendationCountCard.tsx
 - Props: `{name, imageURL, numCommendations}: CommendationStatInfo`
 
 GoogleIcon.tsx
--
+- Description: This component was taken from Google Identity page here: https://developers.google.com/identity/branding-guidelines that allows programmers to use a pre-approved and public html button element of the Google icon. 
+- Props: none
 
 CommendationForm.tsx
 - Description: This component allows users to send a message (commendation) to another member or team--the `teamTab` prop is used to toggle between member and team recipients. `VirtualizedUserAutocomplete` is used to search for recipients efficiently. 

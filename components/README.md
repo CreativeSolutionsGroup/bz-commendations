@@ -30,8 +30,9 @@ CommendationCountCard.tsx
 - Description: This component is a reusable element used to display commendation information for several of the components discussed earlier. It displays the member name, picture, and number of commendations sent.
 - Props: `{name, imageURL, numCommendations}: CommendationStatInfo`
 
-GoogleIcon.tsx
--
+MicrosoftIcon.tsx
+- Description: This component was a .svg file taken the Microsoft Learn page here: https://learn.microsoft.com/en-us/entra/identity-platform/howto-add-branding-in-apps. With Microsoft's pre-approved sign-in button, bz-commendations can maintain a cohesive sign-in experience.
+-Props: none
 
 CommendationForm.tsx
 - Description: This component allows users to send a message (commendation) to another member or team--the `teamTab` prop is used to toggle between member and team recipients. `VirtualizedUserAutocomplete` is used to search for recipients efficiently. 

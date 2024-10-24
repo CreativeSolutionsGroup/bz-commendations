@@ -1,13 +1,14 @@
 import NextAuth, { AuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import AzureADProvider from "next-auth/providers/azure-ad";
 import { prisma } from "@/lib/api/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      GOOGLE_CLIENT_ID: string;
-      GOOGLE_CLIENT_SECRET: string;
+      MS_CLIENT_ID: string;
+      MS_CLIENT_SECRET: string;
+      MS_TENANT_ID: string;
     }
   }
 }
@@ -78,9 +79,10 @@ const stgOptions: AuthOptions = {
 
 const defaultOptions: AuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env["GOOGLE_CLIENT_ID"],
-      clientSecret: process.env["GOOGLE_CLIENT_SECRET"],
+    AzureADProvider({
+      clientId: process.env["MS_CLIENT_ID"] || "",
+      clientSecret: process.env["MS_CLIENT_SECRET"] || "",
+      tenantId: process.env["MS_TENANT_ID"],
     }),
   ],
   pages: {

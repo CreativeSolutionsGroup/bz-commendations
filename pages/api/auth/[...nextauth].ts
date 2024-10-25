@@ -83,6 +83,7 @@ const defaultOptions: AuthOptions = {
       clientId: process.env["MS_CLIENT_ID"] || "",
       clientSecret: process.env["MS_CLIENT_SECRET"] || "",
       tenantId: process.env["MS_TENANT_ID"],
+      /*authorization: { params: { scope: "User.Read openid offline_access" } },*/
     }),
   ],
   pages: {

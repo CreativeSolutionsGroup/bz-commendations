@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import { Person } from "@mui/icons-material";
 
 import bravo from "@/assets/BZ-flag-red.png";
 import zulu from "@/assets/BZ-flag.png";
@@ -103,12 +104,14 @@ export function Header() {
               }}
             >
               <Avatar sx={{ ml: 0.5 }}>
-                <Image
+                {(session?.user?.image) ? (
+                  <Image
                   fill
                   onLoadingComplete={() => setPfpLoading(false)}
                   src={session?.user?.image ?? ""}
                   alt=""
                 />
+                ) : <Person />}
               </Avatar>
             </IconButton>
           )}

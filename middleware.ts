@@ -3,7 +3,7 @@ import { withAuth } from "next-auth/middleware";
 export default withAuth({
   callbacks: {
     authorized: ({ req, token }) => {
-      const { pathname } = req.nextUrl;
+      const { pathname, searchParams } = req.nextUrl;
 
       if (pathname === "/signin") {
         return true;

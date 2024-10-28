@@ -49,9 +49,7 @@ sender as string, recipientId, msg
 
   const recipientEmail = recipient.email;
 
-  const pImage =
-    (await getMemberImage(sender)) == null &&
-    updateMemberImage(session?.user?.image as string, sender);
+  const pImage = await getMemberImage(sender);
 
   console.log("User: " + session?.user?.image);
   // send email to the recip

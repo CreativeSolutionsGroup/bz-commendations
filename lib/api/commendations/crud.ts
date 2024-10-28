@@ -153,12 +153,10 @@ export const readAllMembersFromTeam = async (teamId: string) => {
  * @returns This function returns `Promise<Member>`
  */
 export const updateMemberImage = async (image: string, id: string) => {
-  //const url = image.split("=");
-  //const highRes = url[0].concat("=s480-c");
 
   return await prisma.member.update({
     data: {
-      imageURL: image//highRes
+      imageURL: image
     },
     where: {
       id

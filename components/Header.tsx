@@ -21,7 +21,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { Raleway } from "@next/font/google";
 import { Analytics, Logout } from "@mui/icons-material";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useState } from "react";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
@@ -106,11 +106,11 @@ export function Header() {
               <Avatar sx={{ ml: 0.5 }}>
                 {(session?.user?.image) ? (
                   <Image
-                  fill
-                  onLoadingComplete={() => setPfpLoading(false)}
-                  src={session?.user?.image ?? ""}
-                  alt=""
-                />
+                    fill
+                    onLoadingComplete={() => setPfpLoading(false)}
+                    src={session?.user?.image ?? ""}
+                    alt=""
+                  />
                 ) : <Person />}
               </Avatar>
             </IconButton>

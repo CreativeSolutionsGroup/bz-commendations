@@ -53,7 +53,6 @@ function renderRow(props: ListChildComponentProps) {
   }
 
   const [optionProps, option] = dataSet;
-
   return (
     <MenuItem key={index} {...optionProps} {...props} sx={{ width: "100%" }}>
       <Box display="flex" flexDirection="row" width="100%">

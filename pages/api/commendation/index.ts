@@ -9,7 +9,7 @@ import {
   readAllMembersFromTeam,
   sendBzEmail,
   sendBzText,
-  updateMemberImageURL,
+  updateMemberImage,
 } from "@/lib/api/commendations";
 import { getTeam, getTimeRangeCommendations } from "@/lib/api/teams";
 import { revalidate } from "@/lib/revalidate";
@@ -49,9 +49,9 @@ sender as string, recipientId, msg
 
   const recipientEmail = recipient.email;
 
-  const pImage =
-    (await getMemberImage(sender)) == null &&
-    updateMemberImageURL(session?.user?.image as string, sender);
+  const pImage = await getMemberImage(sender);
+
+  console.log("User: " + session?.user?.image);
   // send email to the recip
   const pEmail = sendBzEmail(
     session?.user?.email as string,

@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import { Person } from "@mui/icons-material";
 
 import bravo from "@/assets/BZ-flag-red.png";
 import zulu from "@/assets/BZ-flag.png";
@@ -20,7 +21,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { Raleway } from "@next/font/google";
 import { Analytics, Logout } from "@mui/icons-material";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useState } from "react";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });
 
@@ -103,12 +104,14 @@ export function Header() {
               }}
             >
               <Avatar sx={{ ml: 0.5 }}>
-                <Image
-                  fill
-                  onLoadingComplete={() => setPfpLoading(false)}
-                  src={session?.user?.image ?? ""}
-                  alt=""
-                />
+                {(session?.user?.image) ? (
+                  <Image
+                    fill
+                    onLoadingComplete={() => setPfpLoading(false)}
+                    src={session?.user?.image ?? ""}
+                    alt=""
+                  />
+                ) : <Person />}
               </Avatar>
             </IconButton>
           )}

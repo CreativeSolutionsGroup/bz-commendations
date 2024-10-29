@@ -1,7 +1,9 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions, getServerSession } from "next-auth";
 import AzureADProvider from "next-auth/providers/azure-ad";
 import { prisma } from "@/lib/api/db";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { emailToId, updateMemberImage } from "@/lib/api/commendations";
+import { NextApiRequest, NextApiResponse } from "next";
 
 declare global {
   namespace NodeJS {
@@ -83,13 +85,18 @@ const defaultOptions: AuthOptions = {
       clientId: process.env["MS_CLIENT_ID"] || "",
       clientSecret: process.env["MS_CLIENT_SECRET"] || "",
       tenantId: process.env["MS_TENANT_ID"],
+      /*authorization: { params: { scope: "User.Read openid offline_access" } },*/
     }),
   ],
   pages: {
     signIn: "/signin",
   },
   callbacks: {
-    async signIn({ user: { email }, credentials }) {
+    async signIn({ user: { email, name, image }, credentials }) {
+      const userId = await emailToId(email ?? "") ?? "";
+      
+      if (image) await updateMemberImage(image, userId);
+
       return !!(await prisma.member.count({
         where: { email: email ?? "" },
       }));

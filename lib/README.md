@@ -109,7 +109,7 @@ This directory contains the core functions of bz-commendations, including the va
 
 ---
 
-#### `updateMemberImageURL`
+#### `updateMemberimageURL`
 
 **Purpose**: Updates the profile picture of a given user.
 

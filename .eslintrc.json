@@ -4,11 +4,13 @@
     "quotes": ["warn", "double"],
     "indent": ["warn", 2, { "SwitchCase": 1 }],
     "semi": ["error", "always"],
-    "function-paren-newline": ["error", { "minItems": 3 }],
-    "react/function-component-definition": ["error", {
-      "namedComponents": "function-declaration",
-      "unnamedComponents": "function-expression"
-    }],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": "function-declaration",
+        "unnamedComponents": "function-expression"
+      }
+    ],
     "func-names": ["error", "always"]
   }
 }

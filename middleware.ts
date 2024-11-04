@@ -3,10 +3,14 @@ import { withAuth } from "next-auth/middleware";
 export default withAuth({
   callbacks: {
     authorized: ({ req, token }) => {
-      const { pathname, searchParams } = req.nextUrl;
+      const { pathname } = req.nextUrl;
 
       if (pathname === "/signin") {
         return true;
+      }
+
+      if (!token) {
+        return false;
       }
 
       if (pathname === "/admin") {
@@ -14,10 +18,7 @@ export default withAuth({
       }
 
       if (pathname.includes("/me")) {
-        const email = searchParams.get("email");
-        // fix for #107
-        if (email == null) return true;
-        return email === token?.email;
+        return pathname.split("/").slice(-1)[0] === token.email;
       }
 
       // otherwise, if you were allowed to login, you're good.

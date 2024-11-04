@@ -1,12 +1,9 @@
-import { getServerSession } from "next-auth";
 import { withAuth } from "next-auth/middleware";
-import { redirect } from "next/dist/server/api-utils";
-import { NextRequest, NextResponse } from "next/server";
 
 export default withAuth({
   callbacks: {
     authorized: ({ req, token }) => {
-      const { pathname, searchParams, protocol, host, port } = req.nextUrl;
+      const { pathname } = req.nextUrl;
 
       if (pathname === "/signin") {
         return true;
@@ -18,6 +15,10 @@ export default withAuth({
 
       if (pathname === "/admin") {
         return token?.isAdmin ?? false;
+      }
+
+      if (pathname.includes("/me")) {
+        return pathname.split("/").slice(-1)[0] === token.email;
       }
 
       // otherwise, if you were allowed to login, you're good.

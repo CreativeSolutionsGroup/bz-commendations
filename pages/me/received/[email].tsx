@@ -2,7 +2,7 @@ import { BottomBar } from "@/components/BottomBar";
 import { prisma } from "@/lib/api/db";
 import { Avatar, Box, Grow, Paper, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
-import { Raleway } from "@next/font/google";
+import { Raleway } from "next/font/google";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -43,7 +43,7 @@ export async function getStaticProps({ params }: GetStaticPropsContext) {
   // Clean up error caused by "createdAt" property
   // https://stackoverflow.com/a/72837265
   const uncleanComms: typeof comms = JSON.parse(JSON.stringify(comms));
-
+  
   return {
     props: { uncleanComms },
     revalidate: 60,

@@ -96,8 +96,10 @@ function renderRow(props: ListChildComponentProps) {
 
 const OuterElementContext = createContext({});
 
-const OuterElementType = forwardRef<HTMLDivElement>
-(function CommendationOuter(props, ref) {
+const OuterElementType = forwardRef<HTMLDivElement>(function CommendationOuter(
+  props,
+  ref
+) {
   const outerProps = useContext(OuterElementContext);
   return (
     <div ref={ref} {...props} {...outerProps} style={{ overflowX: "clip" }} />

@@ -8,11 +8,22 @@ import { EmojiEvents, Group, Newspaper } from "@mui/icons-material";
 import GroupsIcon from "@mui/icons-material/Groups";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Button, Card, CircularProgress, ClickAwayListener, Divider, Drawer, IconButton, List, ListItemButton, useMediaQuery } from "@mui/material";
+import {
+  Button,
+  Card,
+  CircularProgress,
+  ClickAwayListener,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItemButton,
+  useMediaQuery,
+} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/system";
 import { DatePicker } from "@mui/x-date-pickers";
-import { Raleway } from "@next/font/google";
+import { Raleway } from "next/font/google";
 import dayjs from "dayjs";
 import React, { MouseEvent, useEffect, useState } from "react";
 import theme from "@/config/theme";
@@ -23,8 +34,12 @@ export default function Admin() {
   const [open, setOpen] = useState(false);
   const [drawerWidth, setDrawerWidth] = useState(0);
   const [viewMode, setViewMode] = useState("overview");
-  const [data, setData] = useState<TimeRangeCommendations>({} as TimeRangeCommendations);
-  const [firstDate, setFirstDate] = useState<dayjs.Dayjs | null>(dayjs().set("date", 1).set("hours", 1));
+  const [data, setData] = useState<TimeRangeCommendations>(
+    {} as TimeRangeCommendations
+  );
+  const [firstDate, setFirstDate] = useState<dayjs.Dayjs | null>(
+    dayjs().set("date", 1).set("hours", 1)
+  );
   const [secondDate, setSecondDate] = useState<dayjs.Dayjs | null>(dayjs());
   const bigScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const [settingsAnchorEl, setSettingsAnchorEl] =
@@ -40,7 +55,7 @@ export default function Admin() {
     open ? setDrawerWidth(0) : setDrawerWidth(260);
     setOpen(!open);
     console.log(view);
-    if(view !== "") {
+    if (view !== "") {
       setViewMode(view);
     }
   };
@@ -76,7 +91,9 @@ export default function Admin() {
         >
           <Box display={"flex"} flexDirection={"row"}>
             <Newspaper />
-            <Typography ml={1} fontWeight="bold">Overview</Typography>
+            <Typography ml={1} fontWeight="bold">
+              Overview
+            </Typography>
           </Box>
         </ListItemButton>
         <ListItemButton
@@ -140,7 +157,9 @@ export default function Admin() {
           }}
         >
           <Box flexGrow={1} />
-          <Typography mr={1} fontWeight={700}>Start</Typography>
+          <Typography mr={1} fontWeight={700}>
+            Start
+          </Typography>
           <DatePicker
             value={firstDate}
             onChange={(v) => {
@@ -160,7 +179,9 @@ export default function Admin() {
           }}
         >
           <Box flexGrow={1} />
-          <Typography mr={1} fontWeight={700}>End</Typography>
+          <Typography mr={1} fontWeight={700}>
+            End
+          </Typography>
           <DatePicker
             value={secondDate}
             onChange={(v) => {
@@ -202,7 +223,7 @@ export default function Admin() {
 
   return (
     <Box display={"flex"} flexDirection={"row"}>
-      {(!bigScreen) ? 
+      {!bigScreen ? (
         <Drawer
           sx={{
             width: drawerWidth,
@@ -218,11 +239,13 @@ export default function Admin() {
           variant="temporary"
           anchor="left"
           open={open}
-          onClose={() => {handleDrawerToggle("");}}
+          onClose={() => {
+            handleDrawerToggle("");
+          }}
         >
           {drawer}
         </Drawer>
-        :
+      ) : (
         <Drawer
           sx={{
             width: 260,
@@ -237,36 +260,38 @@ export default function Admin() {
           }}
           variant="permanent"
           anchor="left"
-        > 
+        >
           {drawer}
         </Drawer>
-      }      
+      )}
       <Box width={"100%"}>
         <Box display={"flex"} flexDirection={"row"} flexWrap={"wrap"}>
-          {(!bigScreen) ? 
+          {!bigScreen ? (
             <IconButton
               color="inherit"
               aria-label="open drawer"
-              onClick={() => {handleDrawerToggle("");}}
-              sx={{ ...(open && { display: "none" }), height: 50}}
+              onClick={() => {
+                handleDrawerToggle("");
+              }}
+              sx={{ ...(open && { display: "none" }), height: 50 }}
             >
               <MenuIcon />
             </IconButton>
-            :
+          ) : (
             <></>
-          }
+          )}
           <Typography
             sx={{
               textAlign: "center",
               fontSize: 30,
               fontWeight: 900,
               mt: 1,
-              mr: (open) ? 0 : 5,
+              mr: open ? 0 : 5,
               flexGrow: 1,
               className: raleway.className,
             }}
           >
-            {(bigScreen) ? "ADMIN DASHBOARD" : "ADMIN"}
+            {bigScreen ? "ADMIN DASHBOARD" : "ADMIN"}
           </Typography>
         </Box>
         {data.teams == null ? (
@@ -290,7 +315,7 @@ export default function Admin() {
           </>
         )}
       </Box>
-      
+
       {/* viewMode !== "overview" &&
         <Box sx={{ position: "fixed", bottom: 0, display: "flex" }}>
           <Card sx={{ marginLeft: 1, marginBottom: 1, fontSize: 20, padding: 1 }}>

@@ -19,7 +19,7 @@ import bz from "@/assets/BZ-letters-solid.png";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
-import { Raleway } from "@next/font/google";
+import { Raleway } from "next/font/google";
 import { Analytics, Logout } from "@mui/icons-material";
 import { MouseEvent, useState } from "react";
 
@@ -104,14 +104,16 @@ export function Header() {
               }}
             >
               <Avatar sx={{ ml: 0.5 }}>
-                {(session?.user?.image) ? (
+                {session?.user?.image ? (
                   <Image
                     fill
                     onLoadingComplete={() => setPfpLoading(false)}
                     src={session?.user?.image ?? ""}
                     alt=""
                   />
-                ) : <Person />}
+                ) : (
+                  <Person />
+                )}
               </Avatar>
             </IconButton>
           )}

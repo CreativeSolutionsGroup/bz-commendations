@@ -10,7 +10,7 @@ import bz from "@/assets/BZ-letters.png";
 import hash from "@/assets/bz-letters-hash.png";
 import Image from "next/image";
 import { ReactElement } from "react";
-import { Raleway, Rubik } from "@next/font/google";
+import { Raleway, Rubik } from "next/font/google";
 import { useTheme } from "@mui/material/styles";
 
 const raleway = Raleway({ subsets: ["latin"], weight: "900" });

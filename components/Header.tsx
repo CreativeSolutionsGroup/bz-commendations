@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
-import { Person } from "@mui/icons-material";
+import { BugReport, Person } from "@mui/icons-material";
 
 import bravo from "@/assets/BZ-flag-red.png";
 import zulu from "@/assets/BZ-flag.png";
@@ -78,7 +78,14 @@ export function Header() {
             COMMENDATIONS
           </Typography>
         </Link>
-        <Box ml="auto" display="flex">
+        <Box ml="auto">
+          <IconButton>
+            <Link href="https://forms.office.com/r/DbgedKRdxV" target="_blank" rel="noopener noreferrer">
+              <BugReport color="secondary" />
+            </Link>
+          </IconButton>
+        </Box>
+        <Box display="flex">
           {session?.isAdmin && (
             <IconButton>
               <Link href="/admin">
@@ -104,14 +111,16 @@ export function Header() {
               }}
             >
               <Avatar sx={{ ml: 0.5 }}>
-                {(session?.user?.image) ? (
+                {session?.user?.image ? (
                   <Image
                     fill
                     onLoadingComplete={() => setPfpLoading(false)}
                     src={session?.user?.image ?? ""}
                     alt=""
                   />
-                ) : <Person />}
+                ) : (
+                  <Person />
+                )}
               </Avatar>
             </IconButton>
           )}
